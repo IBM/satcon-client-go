@@ -66,7 +66,7 @@ var _ = Describe("Registering a Cluster", func() {
 	})
 
 	It("Sends a correct request", func() {
-		err := c.RegisterCluster(orgID, reg, token)
+		_, err := c.RegisterCluster(orgID, reg, token)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(HTTPClient.DoCallCount()).To(Equal(1))
 
