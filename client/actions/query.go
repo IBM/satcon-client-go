@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"strings"
 	"text/template"
 )
@@ -45,6 +46,13 @@ func BuildArgVarsList(args map[string]string) string {
 	}
 
 	return strings.Join(argVarStrings, ", ")
+}
+
+func BuildRequest(payload io.Reader, endpoint, token string) *http.Request {
+	req, _ := http.NewRequest(http.MethodPost, endpoint, payload)
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("authorization", fmt.Sprintf("Bearer %s", token))
+	return req
 }
 
 // BuildRequestBody takes the request(query)-specific variables template in and uses it to overlay

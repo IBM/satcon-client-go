@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 )
@@ -45,7 +44,7 @@ type DeleteClustersResponse struct {
 }
 
 type DeleteClustersResponseData struct {
-	Details DeleteClustersResponseDataDetails `json:"deleteClusterByClusterID,omitempty"`
+	Details *DeleteClustersResponseDataDetails `json:"deleteClusterByClusterID,omitempty"`
 }
 
 type DeleteClustersResponseDataDetails struct {
@@ -53,32 +52,27 @@ type DeleteClustersResponseDataDetails struct {
 	DeletedResourceCount int `json:"deletedResourceCount,omitempty"`
 }
 
-func (d *DeleteClustersResponseData) String() string {
+func (d *DeleteClustersResponseDataDetails) String() string {
 	var response string
-	if d.Details.DeletedClusterCount > 0 {
-		response = fmt.Sprintf("Deleted Clusters: %d\n", d.Details.DeletedClusterCount)
+	if d.DeletedClusterCount > 0 {
+		response = fmt.Sprintf("Deleted Clusters: %d\n", d.DeletedClusterCount)
 	}
 
-	if d.Details.DeletedResourceCount > 0 {
-		response += fmt.Sprintf("Deleted Resources: %d\n", d.Details.DeletedResourceCount)
+	if d.DeletedResourceCount > 0 {
+		response += fmt.Sprintf("Deleted Resources: %d\n", d.DeletedResourceCount)
 	}
 
 	return response
 }
 
-func (c *Client) DeleteClusterByClusterID(orgID, clusterID, token string) (*DeleteClustersResponseData, error) {
+func (c *Client) DeleteClusterByClusterID(orgID, clusterID, token string) (*DeleteClustersResponseDataDetails, error) {
 	var response DeleteClustersResponse
 
 	vars := NewDeleteClusterByClusterIDVariables(orgID, clusterID)
 
-	payload, err := actions.BuildRequestBody(DeleteClusterByClusterIDVarTemplate, vars, nil)
-	if err != nil {
-		return nil, fmt.Errorf("Unable to build request body: %s", err)
-	}
+	payload, _ := actions.BuildRequestBody(DeleteClusterByClusterIDVarTemplate, vars, nil)
 
-	req, _ := http.NewRequest(http.MethodPost, c.Endpoint, payload)
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", fmt.Sprintf("Bearer %s", token))
+	req := actions.BuildRequest(payload, c.Endpoint, token)
 
 	res, err := c.HTTPClient.Do(req)
 
@@ -96,7 +90,7 @@ func (c *Client) DeleteClusterByClusterID(orgID, clusterID, token string) (*Dele
 	}
 
 	if response.Data != nil {
-		return response.Data, err
+		return response.Data.Details, err
 	}
 
 	return nil, err

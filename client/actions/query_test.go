@@ -1,6 +1,8 @@
 package actions_test
 
 import (
+	"bytes"
+	"fmt"
 	"io/ioutil"
 	"reflect"
 	"strings"
@@ -55,6 +57,36 @@ var _ = Describe("Query", func() {
 			))
 
 			Expect(argVarList).NotTo(HaveSuffix(", "))
+		})
+	})
+
+	Describe("BuildRequest", func() {
+		var (
+			endpoint, token string
+			payload         *bytes.Buffer
+		)
+
+		BeforeEach(func() {
+			endpoint = "http://foo.bar"
+			token = "atoken"
+			payload = bytes.NewBuffer([]byte("stringifiedbody"))
+		})
+
+		It("Returns a valid request instance", func() {
+			req := BuildRequest(payload, endpoint, token)
+			Expect(req).NotTo(BeNil())
+		})
+
+		It("Populates the request with the required headers", func() {
+			req := BuildRequest(payload, endpoint, token)
+			Expect(req.Header).To(HaveKeyWithValue(
+				MatchRegexp(`[cC]ontent-[tT]ype`),
+				ContainElement("application/json"),
+			))
+			Expect(req.Header).To(HaveKeyWithValue(
+				MatchRegexp("[aA]uthorization"),
+				ContainElement(fmt.Sprintf("Bearer %s", token)),
+			))
 		})
 	})
 

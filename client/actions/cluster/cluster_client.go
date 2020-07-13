@@ -12,12 +12,12 @@ import (
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ClusterService
 type ClusterService interface {
 	// RegisterCluster registers a new cluster under the specified organization ID.
-	RegisterCluster(string, Registration, string) (RegisterClusterResponseDataDetails, error)
+	RegisterCluster(string, Registration, string) (*RegisterClusterResponseDataDetails, error)
 	// ClustersByOrgID lists the clusters registered under the specified organization.
 	ClustersByOrgID(string, string) (ClusterList, error)
 	// DeleteClusterByClusterID deletes the specified cluster from the specified org,
 	// including all resources under that cluster.
-	DeleteClusterByClusterID(string, string, string) (*DeleteClustersResponseData, error)
+	DeleteClusterByClusterID(string, string, string) (*DeleteClustersResponseDataDetails, error)
 }
 
 // Client is an implementation of a satcon client.

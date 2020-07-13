@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 )
@@ -27,30 +26,6 @@ type RegisterClusterVariables struct {
 	actions.GraphQLQuery
 	OrgID        string
 	Registration []byte
-}
-
-// RegisterClusterResponse is the response body we get upon a successful cluster
-// registration.
-type RegisterClusterResponse struct {
-	Data *RegisterClusterResponseData `json:"data,omitempty"`
-}
-
-type RegisterClusterResponseData struct {
-	Details RegisterClusterResponseDataDetails `json:"registerCluster"`
-}
-
-type RegisterClusterResponseDataDetails struct {
-	URL          string `json:"url"`
-	OrgID        string `json:"org_id"`
-	OrgKey       string `json:"orgKey,omitempty"`
-	ClusterID    string `json:"clusterId"`
-	RegState     string `json:"regState"`
-	Registration Registration
-}
-
-func (d RegisterClusterResponseDataDetails) String() string {
-	return fmt.Sprintf("URL: %s\nOrg ID: %s\nOrg Key: %s\nCluster ID: %s\nRegistration State: %s\nRegistration: %+v\n",
-		d.URL, d.OrgID, d.OrgKey, d.ClusterID, d.RegState, d.Registration)
 }
 
 // NewRegisterClusterVariables creates a correctly formed instance of RegisterClusterVariables.
@@ -80,21 +55,43 @@ func NewRegisterClusterVariables(orgID string, registration Registration) Regist
 	return vars
 }
 
-func (c *Client) RegisterCluster(orgID string, registration Registration, token string) (RegisterClusterResponseDataDetails, error) {
+// RegisterClusterResponse is the response body we get upon a successful cluster
+// registration.
+type RegisterClusterResponse struct {
+	Data *RegisterClusterResponseData `json:"data,omitempty"`
+}
+
+type RegisterClusterResponseData struct {
+	Details *RegisterClusterResponseDataDetails `json:"registerCluster"`
+}
+
+type RegisterClusterResponseDataDetails struct {
+	URL          string `json:"url"`
+	OrgID        string `json:"org_id"`
+	OrgKey       string `json:"orgKey,omitempty"`
+	ClusterID    string `json:"clusterId"`
+	RegState     string `json:"regState"`
+	Registration Registration
+}
+
+func (d RegisterClusterResponseDataDetails) String() string {
+	return fmt.Sprintf("URL: %s\nOrg ID: %s\nOrg Key: %s\nCluster ID: %s\nRegistration State: %s\nRegistration: %+v\n",
+		d.URL, d.OrgID, d.OrgKey, d.ClusterID, d.RegState, d.Registration)
+}
+
+func (c *Client) RegisterCluster(orgID string, registration Registration, token string) (*RegisterClusterResponseDataDetails, error) {
 	var response RegisterClusterResponse
 
 	vars := NewRegisterClusterVariables(orgID, registration)
 
-	payload, err := actions.BuildRequestBody(RegisterClusterVarTemplate, vars, nil)
+	payload, _ := actions.BuildRequestBody(RegisterClusterVarTemplate, vars, nil)
 
-	req, _ := http.NewRequest(http.MethodPost, c.Endpoint, payload)
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", fmt.Sprintf("Bearer %s", token))
+	req := actions.BuildRequest(payload, c.Endpoint, token)
 
 	res, err := c.HTTPClient.Do(req)
 
 	if err != nil {
-		return RegisterClusterResponseDataDetails{}, err
+		return nil, err
 	}
 
 	if res.Body != nil {
@@ -107,5 +104,5 @@ func (c *Client) RegisterCluster(orgID string, registration Registration, token 
 		return response.Data.Details, err
 	}
 
-	return RegisterClusterResponseDataDetails{}, err
+	return nil, err
 }

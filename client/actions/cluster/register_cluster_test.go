@@ -1,8 +1,10 @@
 package cluster_test
 
 import (
+	"bytes"
 	"encoding/json"
-	"fmt"
+	"errors"
+	"io/ioutil"
 	"net/http"
 
 	. "github.com/onsi/ginkgo"
@@ -65,20 +67,54 @@ var _ = Describe("Registering a Cluster", func() {
 		})
 	})
 
-	It("Sends a correct request", func() {
-		_, err := c.RegisterCluster(orgID, reg, token)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(HTTPClient.DoCallCount()).To(Equal(1))
+	Describe("RegisterCluster", func() {
+		var (
+			regResponse RegisterClusterResponse
+		)
 
-		req := HTTPClient.DoArgsForCall(0)
+		BeforeEach(func() {
+			regResponse = RegisterClusterResponse{
+				Data: &RegisterClusterResponseData{
+					Details: &RegisterClusterResponseDataDetails{
+						URL:          "https://over.there",
+						OrgID:        orgID,
+						OrgKey:       "whatshouldakeylooklike",
+						ClusterID:    "abcdabcd-abcd-abcd-abcd-abcdabcdabcd",
+						RegState:     "Faaaabulous!",
+						Registration: reg,
+					},
+				},
+			}
 
-		Expect(req.Header).To(HaveKeyWithValue(
-			MatchRegexp(`[cC]ontent-[tT]ype`),
-			ContainElement("application/json"),
-		))
-		Expect(req.Header).To(HaveKeyWithValue(
-			MatchRegexp("[aA]uthorization"),
-			ContainElement(fmt.Sprintf("Bearer %s", token)),
-		))
+			respBodyBytes, err := json.Marshal(regResponse)
+			Expect(err).NotTo(HaveOccurred())
+
+			response.Body = ioutil.NopCloser(bytes.NewReader(respBodyBytes))
+		})
+
+		It("Sends the http request", func() {
+			_, err := c.RegisterCluster(orgID, reg, token)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(HTTPClient.DoCallCount()).To(Equal(1))
+		})
+
+		It("Returns the cluster registration details", func() {
+			details, _ := c.RegisterCluster(orgID, reg, token)
+			Expect(details).NotTo(BeNil())
+
+			expected := regResponse.Data.Details
+			Expect(*details).To(Equal(*expected))
+		})
+
+		Context("When the http call errors", func() {
+			BeforeEach(func() {
+				HTTPClient.DoReturns(response, errors.New("Fart Monkeys!"))
+			})
+
+			It("Bubbles up the error", func() {
+				_, err := c.RegisterCluster(orgID, reg, token)
+				Expect(err).To(MatchError("Fart Monkeys!"))
+			})
+		})
 	})
 })

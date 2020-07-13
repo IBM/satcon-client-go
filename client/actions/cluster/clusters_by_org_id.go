@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"strings"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
@@ -41,7 +40,7 @@ func NewClustersByOrgIDVariables(orgID string) ClustersByOrgIDVariables {
 }
 
 type ClustersByOrgIDResponse struct {
-	Data ClustersByOrgIDResponseData `json:"data"`
+	Data *ClustersByOrgIDResponseData `json:"data"`
 }
 
 type ClustersByOrgIDResponseData struct {
@@ -113,14 +112,12 @@ func (c *Client) ClustersByOrgID(orgID, token string) (ClusterList, error) {
 
 	payload, err := actions.BuildRequestBody(ClustersByOrgIDVarTemplate, vars, nil)
 
-	req, _ := http.NewRequest(http.MethodPost, c.Endpoint, payload)
-	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", fmt.Sprintf("Bearer %s", token))
+	req := actions.BuildRequest(payload, c.Endpoint, token)
 
 	res, err := c.HTTPClient.Do(req)
 
 	if err != nil {
-		return ClusterList{}, err
+		return nil, err
 	}
 
 	// TODO: do more than simply dump the body to output.
@@ -130,9 +127,9 @@ func (c *Client) ClustersByOrgID(orgID, token string) (ClusterList, error) {
 		err = json.Unmarshal(body, &response)
 	}
 
-	if response.Data.Clusters != nil {
+	if response.Data != nil {
 		return response.Data.Clusters, err
 	}
 
-	return ClusterList{}, err
+	return nil, err
 }
