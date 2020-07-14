@@ -1,10 +1,9 @@
 package client
 
 import (
-	"net/http"
+	"github.ibm.com/coligo/satcon-client/client/actions/cluster"
 )
 
-//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . HTTPClient
-type HTTPClient interface {
-	Do(*http.Request) (*http.Response, error)
+type SatCon struct {
+	Clusters cluster.ClusterService
 }

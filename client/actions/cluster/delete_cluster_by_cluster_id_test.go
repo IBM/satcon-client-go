@@ -12,7 +12,7 @@ import (
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 	. "github.ibm.com/coligo/satcon-client/client/actions/cluster"
-	"github.ibm.com/coligo/satcon-client/client/clientfakes"
+	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
 )
 
 var _ = Describe("DeleteClusterByClusterId", func() {
@@ -20,13 +20,13 @@ var _ = Describe("DeleteClusterByClusterId", func() {
 		vars                              DeleteClusterByClusterIDVariables
 		endpoint, orgID, clusterID, token string
 		client                            ClusterService
-		HTTPClient                        *clientfakes.FakeHTTPClient
+		HTTPClient                        *webfakes.FakeHTTPClient
 		response                          *http.Response
 	)
 
 	BeforeEach(func() {
 		response = &http.Response{}
-		HTTPClient = &clientfakes.FakeHTTPClient{}
+		HTTPClient = &webfakes.FakeHTTPClient{}
 		Expect(HTTPClient.DoCallCount()).To(Equal(0))
 		HTTPClient.DoReturns(response, nil)
 		endpoint = "http://foo.bar"

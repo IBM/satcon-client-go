@@ -11,7 +11,7 @@ import (
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 	. "github.ibm.com/coligo/satcon-client/client/actions/cluster"
-	"github.ibm.com/coligo/satcon-client/client/clientfakes"
+	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
 )
 
 var _ = Describe("ClustersByOrgId", func() {
@@ -45,7 +45,7 @@ var _ = Describe("ClustersByOrgId", func() {
 		var (
 			token           string
 			client          ClusterService
-			httpClient      *clientfakes.FakeHTTPClient
+			httpClient      *webfakes.FakeHTTPClient
 			response        *http.Response
 			clusterResponse ClustersByOrgIDResponse
 		)
@@ -80,7 +80,7 @@ var _ = Describe("ClustersByOrgId", func() {
 				Body: ioutil.NopCloser(bytes.NewReader(respBodyBytes)),
 			}
 
-			httpClient = &clientfakes.FakeHTTPClient{}
+			httpClient = &webfakes.FakeHTTPClient{}
 			Expect(httpClient.DoCallCount()).To(Equal(0))
 			httpClient.DoReturns(response, nil)
 

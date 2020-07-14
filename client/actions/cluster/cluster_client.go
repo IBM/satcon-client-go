@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.ibm.com/coligo/satcon-client/client"
+	"github.ibm.com/coligo/satcon-client/client/web"
 )
 
 // ClusterService is the interface used to perform all cluster-centric actions
@@ -23,12 +23,12 @@ type ClusterService interface {
 // Client is an implementation of a satcon client.
 type Client struct {
 	Endpoint   string
-	HTTPClient client.HTTPClient
+	HTTPClient web.HTTPClient
 }
 
 // NewClient returns a configured instance of ClusterService which can then be used
 // to perform cluster queries against Satellite Config.
-func NewClient(endpointURL string, httpClient client.HTTPClient) (ClusterService, error) {
+func NewClient(endpointURL string, httpClient web.HTTPClient) (ClusterService, error) {
 	if endpointURL == "" {
 		return nil, errors.New("Must supply a valid endpoint URL")
 	}
