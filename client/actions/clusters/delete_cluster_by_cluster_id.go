@@ -1,16 +1,14 @@
-package cluster
+package clusters
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 )
 
 const (
-	QueryDeleteClusterByClusterID       = "deleteClusterByClusterID"
-	DeleteClusterByClusterIDVarTemplate = `{{define "vars"}}"org_id":"{{.OrgID}}","cluster_id":"{{.ClusterID}}"{{end}}`
+	QueryDeleteClusterByClusterID       = "deleteClusterByClusterId"
+	DeleteClusterByClusterIDVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","clusterId":"{{js .ClusterID}}"{{end}}`
 )
 
 type DeleteClusterByClusterIDVariables struct {
@@ -28,8 +26,8 @@ func NewDeleteClusterByClusterIDVariables(orgID, clusterID string) DeleteCluster
 	vars.Type = actions.QueryTypeMutation
 	vars.QueryName = QueryDeleteClusterByClusterID
 	vars.Args = map[string]string{
-		"org_id":     "String!",
-		"cluster_id": "String!",
+		"orgId":     "String!",
+		"clusterId": "String!",
 	}
 	vars.Returns = []string{
 		"deletedClusterCount",
@@ -44,7 +42,7 @@ type DeleteClustersResponse struct {
 }
 
 type DeleteClustersResponseData struct {
-	Details *DeleteClustersResponseDataDetails `json:"deleteClusterByClusterID,omitempty"`
+	Details *DeleteClustersResponseDataDetails `json:"deleteClusterByClusterId,omitempty"`
 }
 
 type DeleteClustersResponseDataDetails struct {
@@ -70,23 +68,10 @@ func (c *Client) DeleteClusterByClusterID(orgID, clusterID, token string) (*Dele
 
 	vars := NewDeleteClusterByClusterIDVariables(orgID, clusterID)
 
-	payload, _ := actions.BuildRequestBody(DeleteClusterByClusterIDVarTemplate, vars, nil)
-
-	req := actions.BuildRequest(payload, c.Endpoint, token)
-
-	res, err := c.HTTPClient.Do(req)
+	err := c.DoQuery(DeleteClusterByClusterIDVarTemplate, vars, nil, &response, token)
 
 	if err != nil {
 		return nil, err
-	}
-
-	if res.Body != nil {
-		defer res.Body.Close()
-		body, _ := ioutil.ReadAll(res.Body)
-		err = json.Unmarshal(body, &response)
-		if err != nil {
-			return nil, fmt.Errorf("Unable to unmarshal response: %s", err)
-		}
 	}
 
 	if response.Data != nil {

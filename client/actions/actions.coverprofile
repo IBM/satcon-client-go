@@ -1,0 +1,20 @@
+mode: atomic
+github.ibm.com/coligo/satcon-client/client/actions/query.go:32.51,35.25 2 9
+github.ibm.com/coligo/satcon-client/client/actions/query.go:39.2,39.39 1 9
+github.ibm.com/coligo/satcon-client/client/actions/query.go:35.25,37.3 1 19
+github.ibm.com/coligo/satcon-client/client/actions/query.go:42.54,45.25 2 9
+github.ibm.com/coligo/satcon-client/client/actions/query.go:49.2,49.42 1 9
+github.ibm.com/coligo/satcon-client/client/actions/query.go:45.25,47.3 1 19
+github.ibm.com/coligo/satcon-client/client/actions/query.go:52.76,57.2 4 2
+github.ibm.com/coligo/satcon-client/client/actions/query.go:68.119,72.37 3 10
+github.ibm.com/coligo/satcon-client/client/actions/query.go:76.2,82.18 2 9
+github.ibm.com/coligo/satcon-client/client/actions/query.go:88.2,89.16 2 9
+github.ibm.com/coligo/satcon-client/client/actions/query.go:93.2,94.16 2 9
+github.ibm.com/coligo/satcon-client/client/actions/query.go:98.2,100.16 3 8
+github.ibm.com/coligo/satcon-client/client/actions/query.go:104.2,104.17 1 7
+github.ibm.com/coligo/satcon-client/client/actions/query.go:72.37,74.3 1 1
+github.ibm.com/coligo/satcon-client/client/actions/query.go:82.18,83.27 1 1
+github.ibm.com/coligo/satcon-client/client/actions/query.go:83.27,85.4 1 1
+github.ibm.com/coligo/satcon-client/client/actions/query.go:89.16,91.3 1 0
+github.ibm.com/coligo/satcon-client/client/actions/query.go:94.16,96.3 1 1
+github.ibm.com/coligo/satcon-client/client/actions/query.go:100.16,102.3 1 1

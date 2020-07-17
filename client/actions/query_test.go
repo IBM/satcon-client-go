@@ -21,7 +21,7 @@ var _ = Describe("Query", func() {
 
 	BeforeEach(func() {
 		argMap = map[string]string{
-			"org_id":    "String!",
+			"orgId":     "String!",
 			"flavor":    "String!",
 			"dimension": "JSON!",
 		}
@@ -36,7 +36,7 @@ var _ = Describe("Query", func() {
 			// has no trailing comma/whitespace.
 			tokens := strings.Split(argList, ", ")
 			Expect(tokens).To(ConsistOf(
-				"$org_id: String!",
+				"$orgId: String!",
 				"$flavor: String!",
 				"$dimension: JSON!",
 			))
@@ -51,7 +51,7 @@ var _ = Describe("Query", func() {
 
 			tokens := strings.Split(argVarList, ", ")
 			Expect(tokens).To(ConsistOf(
-				"org_id: $org_id",
+				"orgId: $orgId",
 				"flavor: $flavor",
 				"dimension: $dimension",
 			))
@@ -104,7 +104,7 @@ var _ = Describe("Query", func() {
 		)
 
 		BeforeEach(func() {
-			requestTemplate = `{{define "vars"}}"first":"{{.First}}","last":"{{.Last}}"{{end}}`
+			requestTemplate = `{{define "vars"}}"first":"{{js .First}}","last":"{{js .Last}}"{{end}}`
 			vars = requestVars{
 				First: "Don",
 				Last:  "Quixote",
@@ -172,6 +172,59 @@ var _ = Describe("Query", func() {
 				Expect(b).To(MatchRegexp(`"variables":{[^}]*"%s":"%s"`,
 					k, v.FieldByName(strings.Title(k))))
 			}
+		})
+
+		Context("When additional helper functions are passed in", func() {
+			BeforeEach(func() {
+				requestTemplate = `{{define "vars"}}"first":"{{js (toUpper .First)}}"{{end}}`
+				funcs = template.FuncMap{
+					"toUpper": strings.ToUpper,
+				}
+			})
+
+			It("Merges the supplied function map with the defaults", func() {
+				buf, err := BuildRequestBody(requestTemplate, vars, funcs)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(buf).NotTo(BeNil())
+				b, _ := ioutil.ReadAll(buf)
+				Expect(b).To(MatchRegexp(strings.ToUpper(vars.First)))
+			})
+		})
+
+		Context("When the variable template does not escape js for all variables", func() {
+			BeforeEach(func() {
+				requestTemplate = `{{define "vars"}}"first":"{{js .First}}","last":"{{.Last}}"{{end}}`
+			})
+
+			It("Returns nil and an error", func() {
+				buf, err := BuildRequestBody(requestTemplate, vars, funcs)
+				Expect(buf).To(BeNil())
+				Expect(err).To(MatchError(MatchRegexp("All variables must be escaped")))
+			})
+		})
+
+		Context("When the variable template is not valid", func() {
+			BeforeEach(func() {
+				requestTemplate = `{{define "vars"}}{{js .First}}`
+			})
+
+			It("Returns nil and an error", func() {
+				buf, err := BuildRequestBody(requestTemplate, vars, funcs)
+				Expect(buf).To(BeNil())
+				Expect(err).To(MatchError(MatchRegexp("Unable to parse supplied template")))
+			})
+		})
+
+		Context("When the template references variables not part of the struct", func() {
+			BeforeEach(func() {
+				requestTemplate = `{{define "vars"}}"first":"{{js .Foo}}"{{end}}`
+			})
+
+			It("Returns nil and an error", func() {
+				buf, err := BuildRequestBody(requestTemplate, vars, funcs)
+				Expect(buf).To(BeNil())
+				Expect(err).To(MatchError(MatchRegexp("Unable to execute template")))
+			})
 		})
 	})
 })

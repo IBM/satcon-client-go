@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 	"text/template"
 )
@@ -64,7 +65,14 @@ func BuildRequest(payload io.Reader, endpoint, token string) *http.Request {
 // NOTE: The supplied template *must* include an inlined template definition for "vars",
 // e.g.:
 // `{{define "vars"}}"var_1":"{{.Var1}},"var2":"{{.Var2}}"{{end}}`
-func BuildRequestBody(requestTemplate string, vars interface{}, funcs template.FuncMap) (io.Reader, error) {
+func BuildRequestBody(requestTemplate string, vars interface{}, funcs template.FuncMap) (io.Reader, RequestBodyError) {
+	// First we scan to make sure all variables are escaped using the "js" built-in function
+	reString := `\{\{\w*(?:js){0}\w*\.`
+	re, _ := regexp.Compile(reString)
+	if re.MatchString(requestTemplate) {
+		return nil, errors.New("All variables must be escaped using 'js' built-in")
+	}
+
 	defaultFuncs := template.FuncMap{
 		"buildArgsList":    BuildArgsList,
 		"buildArgVarsList": BuildArgVarsList,
@@ -79,19 +87,24 @@ func BuildRequestBody(requestTemplate string, vars interface{}, funcs template.F
 
 	master, err := template.New("master").Funcs(defaultFuncs).Parse(QueryTemplate)
 	if err != nil {
-		return nil, errors.New("Unable to parse master template")
+		return nil, RequestBodyError(errors.New("Unable to parse master template"))
 	}
 
 	final, err := template.Must(master.Clone()).Parse(requestTemplate)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to parse supplied template: %s", err)
+		return nil, RequestBodyError(fmt.Errorf("Unable to parse supplied template: %s", err))
 	}
 
 	buf := &bytes.Buffer{}
 	err = final.Execute(buf, vars)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to execute template: %s", err)
+		return nil, RequestBodyError(fmt.Errorf("Unable to execute template: %s", err))
 	}
 
 	return buf, nil
+}
+
+// RequestBodyError is returned by BuildRequestBody for any error
+type RequestBodyError interface {
+	error
 }

@@ -1,8 +1,9 @@
-package cluster_test
+package clusters_test
 
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 
@@ -10,7 +11,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
-	. "github.ibm.com/coligo/satcon-client/client/actions/cluster"
+	. "github.ibm.com/coligo/satcon-client/client/actions/clusters"
 	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
 )
 
@@ -30,12 +31,12 @@ var _ = Describe("ClustersByOrgId", func() {
 			Expect(vars.QueryName).To(Equal(QueryClustersByOrgID))
 			Expect(vars.OrgID).To(Equal(orgID))
 			Expect(vars.Args).To(Equal(map[string]string{
-				"org_id": "String!",
+				"orgId": "String!",
 			}))
 			Expect(vars.Returns).To(ConsistOf(
-				"_id",
-				"org_id",
-				"cluster_id",
+				"id",
+				"orgId",
+				"clusterId",
 				"metadata",
 			))
 		})
@@ -44,7 +45,7 @@ var _ = Describe("ClustersByOrgId", func() {
 	Describe("ClustersByOrgID", func() {
 		var (
 			token           string
-			client          ClusterService
+			c               ClusterService
 			httpClient      *webfakes.FakeHTTPClient
 			response        *http.Response
 			clusterResponse ClustersByOrgIDResponse
@@ -84,19 +85,43 @@ var _ = Describe("ClustersByOrgId", func() {
 			Expect(httpClient.DoCallCount()).To(Equal(0))
 			httpClient.DoReturns(response, nil)
 
-			client, _ = NewClient("https://foo.bar", httpClient)
+			c, _ = NewClient("https://foo.bar", httpClient)
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := client.ClustersByOrgID(orgID, token)
+			_, err := c.ClustersByOrgID(orgID, token)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(httpClient.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the list of clusters", func() {
-			clusters, _ := client.ClustersByOrgID(orgID, token)
+			clusters, _ := c.ClustersByOrgID(orgID, token)
 			expected := clusterResponse.Data.Clusters
 			Expect(clusters).To(Equal(expected))
+		})
+
+		Context("When query execution errors", func() {
+			BeforeEach(func() {
+				httpClient.DoReturns(response, errors.New("Fart Monkeys!"))
+			})
+
+			It("Bubbles up the error", func() {
+				_, err := c.ClustersByOrgID(orgID, token)
+				Expect(err).To(MatchError(MatchRegexp("Fart Monkeys!")))
+			})
+		})
+
+		Context("When the response is empty for some reason", func() {
+			BeforeEach(func() {
+				respBodyBytes, _ := json.Marshal(ClustersByOrgIDResponse{})
+				response.Body = ioutil.NopCloser(bytes.NewReader(respBodyBytes))
+			})
+
+			It("Returns nil", func() {
+				clusters, err := c.ClustersByOrgID(orgID, token)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(clusters).To(BeNil())
+			})
 		})
 	})
 })

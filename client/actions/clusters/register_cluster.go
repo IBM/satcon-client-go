@@ -1,16 +1,16 @@
-package cluster
+package clusters
 
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	// "io/ioutil"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 )
 
 const (
 	QueryRegisterCluster       = "registerCluster"
-	RegisterClusterVarTemplate = `{{define "vars"}}"org_id":"{{.OrgID}}","registration":{{printf "%s" .Registration}}{{end}}`
+	RegisterClusterVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","registration":{{printf "%s" .Registration}}{{end}}`
 )
 
 // Registration is the encapsulation of the JSON registration body, which at this
@@ -40,12 +40,12 @@ func NewRegisterClusterVariables(orgID string, registration Registration) Regist
 	vars.Type = actions.QueryTypeMutation
 	vars.QueryName = QueryRegisterCluster
 	vars.Args = map[string]string{
-		"org_id":       "String!",
+		"orgId":        "String!",
 		"registration": "JSON!",
 	}
 	vars.Returns = []string{
 		"url",
-		"org_id",
+		"orgId",
 		"orgKey",
 		"clusterId",
 		"regState",
@@ -67,7 +67,7 @@ type RegisterClusterResponseData struct {
 
 type RegisterClusterResponseDataDetails struct {
 	URL          string `json:"url"`
-	OrgID        string `json:"org_id"`
+	OrgID        string `json:"orgId"`
 	OrgKey       string `json:"orgKey,omitempty"`
 	ClusterID    string `json:"clusterId"`
 	RegState     string `json:"regState"`
@@ -84,20 +84,10 @@ func (c *Client) RegisterCluster(orgID string, registration Registration, token 
 
 	vars := NewRegisterClusterVariables(orgID, registration)
 
-	payload, _ := actions.BuildRequestBody(RegisterClusterVarTemplate, vars, nil)
-
-	req := actions.BuildRequest(payload, c.Endpoint, token)
-
-	res, err := c.HTTPClient.Do(req)
+	err := c.DoQuery(RegisterClusterVarTemplate, vars, nil, &response, token)
 
 	if err != nil {
 		return nil, err
-	}
-
-	if res.Body != nil {
-		defer res.Body.Close()
-		body, _ := ioutil.ReadAll(res.Body)
-		err = json.Unmarshal(body, &response)
 	}
 
 	if response.Data != nil {

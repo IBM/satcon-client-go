@@ -1,4 +1,4 @@
-package cluster
+package clusters
 
 import (
 	"errors"
@@ -22,8 +22,7 @@ type ClusterService interface {
 
 // Client is an implementation of a satcon client.
 type Client struct {
-	Endpoint   string
-	HTTPClient web.HTTPClient
+	web.SatConClient
 }
 
 // NewClient returns a configured instance of ClusterService which can then be used
@@ -33,15 +32,16 @@ func NewClient(endpointURL string, httpClient web.HTTPClient) (ClusterService, e
 		return nil, errors.New("Must supply a valid endpoint URL")
 	}
 
-	if httpClient == nil {
-		return &Client{
-			Endpoint:   endpointURL,
-			HTTPClient: http.DefaultClient,
-		}, nil
+	s := web.SatConClient{
+		Endpoint:   endpointURL,
+		HTTPClient: http.DefaultClient,
+	}
+
+	if httpClient != nil {
+		s.HTTPClient = httpClient
 	}
 
 	return &Client{
-		Endpoint:   endpointURL,
-		HTTPClient: httpClient,
+		s,
 	}, nil
 }

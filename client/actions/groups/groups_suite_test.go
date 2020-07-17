@@ -1,4 +1,4 @@
-package cluster_test
+package groups_test
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestCluster(t *testing.T) {
+func TestGroups(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Cluster Suite")
+	RunSpecs(t, "Groups Suite")
 }

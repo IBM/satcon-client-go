@@ -1,4 +1,4 @@
-package cluster_test
+package clusters_test
 
 import (
 	"bytes"
@@ -11,7 +11,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
-	. "github.ibm.com/coligo/satcon-client/client/actions/cluster"
+	. "github.ibm.com/coligo/satcon-client/client/actions/clusters"
 	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
 )
 
@@ -53,12 +53,12 @@ var _ = Describe("Registering a Cluster", func() {
 			regBytes, _ := json.Marshal(reg)
 			Expect(vars.Registration).To(Equal(regBytes))
 			Expect(vars.Args).To(Equal(map[string]string{
-				"org_id":       "String!",
+				"orgId":        "String!",
 				"registration": "JSON!",
 			}))
 			Expect(vars.Returns).To(ConsistOf(
 				"url",
-				"org_id",
+				"orgId",
 				"orgKey",
 				"clusterId",
 				"regState",
@@ -106,14 +106,27 @@ var _ = Describe("Registering a Cluster", func() {
 			Expect(*details).To(Equal(*expected))
 		})
 
-		Context("When the http call errors", func() {
+		Context("When query execution errors", func() {
 			BeforeEach(func() {
 				HTTPClient.DoReturns(response, errors.New("Fart Monkeys!"))
 			})
 
 			It("Bubbles up the error", func() {
 				_, err := c.RegisterCluster(orgID, reg, token)
-				Expect(err).To(MatchError("Fart Monkeys!"))
+				Expect(err).To(MatchError(MatchRegexp("Fart Monkeys!")))
+			})
+		})
+
+		Context("When the response is empty for some reason", func() {
+			BeforeEach(func() {
+				respBodyBytes, _ := json.Marshal(RegisterClusterResponse{})
+				response.Body = ioutil.NopCloser(bytes.NewReader(respBodyBytes))
+			})
+
+			It("Returns nil", func() {
+				details, err := c.RegisterCluster(orgID, reg, token)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(details).To(BeNil())
 			})
 		})
 	})

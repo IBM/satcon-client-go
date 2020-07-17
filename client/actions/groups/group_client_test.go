@@ -1,4 +1,4 @@
-package cluster_test
+package groups_test
 
 import (
 	"net/http"
@@ -7,10 +7,10 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.ibm.com/coligo/satcon-client/client/actions/cluster"
+	. "github.ibm.com/coligo/satcon-client/client/actions/groups"
 )
 
-var _ = Describe("ClusterClient", func() {
+var _ = Describe("GroupClient", func() {
 	Describe("NewClient", func() {
 		var (
 			h        *http.Client

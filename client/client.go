@@ -1,9 +1,11 @@
 package client
 
 import (
-	"github.ibm.com/coligo/satcon-client/client/actions/cluster"
+	"github.ibm.com/coligo/satcon-client/client/actions/clusters"
+	"github.ibm.com/coligo/satcon-client/client/actions/groups"
 )
 
 type SatCon struct {
-	Clusters cluster.ClusterService
+	Clusters clusters.ClusterService
+	Groups   groups.GroupService
 }

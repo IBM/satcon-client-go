@@ -1,17 +1,17 @@
-package cluster
+package clusters
 
 import (
-	"encoding/json"
+	// "encoding/json"
 	"fmt"
-	"io/ioutil"
+	// "io/ioutil"
 	"strings"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 )
 
 const (
-	QueryClustersByOrgID       = "clustersByOrgID"
-	ClustersByOrgIDVarTemplate = `{{define "vars"}}"org_id":"{{.OrgID}}"{{end}}`
+	QueryClustersByOrgID       = "clustersByOrgId"
+	ClustersByOrgIDVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}"{{end}}`
 )
 
 type ClustersByOrgIDVariables struct {
@@ -27,12 +27,12 @@ func NewClustersByOrgIDVariables(orgID string) ClustersByOrgIDVariables {
 	vars.Type = actions.QueryTypeQuery
 	vars.QueryName = QueryClustersByOrgID
 	vars.Args = map[string]string{
-		"org_id": "String!",
+		"orgId": "String!",
 	}
 	vars.Returns = []string{
-		"_id",
-		"org_id",
-		"cluster_id",
+		"id",
+		"orgId",
+		"clusterId",
 		"metadata",
 	}
 
@@ -44,20 +44,20 @@ type ClustersByOrgIDResponse struct {
 }
 
 type ClustersByOrgIDResponseData struct {
-	Clusters ClusterList `json:"clustersByOrgID"`
+	Clusters ClusterList `json:"clustersByOrgId"`
 }
 
 type ClusterList []Cluster
 
 type Cluster struct {
-	ID        string `json:"_id,omitempty"`
-	OrgID     string `json:"org_id,omitempty"`
-	ClusterID string `json:"cluster_id,omitempty"`
+	ID        string `json:"id,omitempty"`
+	OrgID     string `json:"orgId,omitempty"`
+	ClusterID string `json:"clusterId,omitempty"`
 	// Metadata          []byte         `json:"metadata,omitempty"`
 	Metadata          interface{}    `json:"metadata,omitempty"`
 	Comments          []Comment      `json:"comments,omitempty"`
 	Registration      Registration   `json:"registration,omitempty"`
-	RegistrationState string         `json:"reg_state,omitempty"`
+	RegistrationState string         `json:"regState,omitempty"`
 	Groups            []ClusterGroup `json:"groups,omitempty"`
 	Created           string         `json:"created,omitempty"`
 	Updated           string         `json:"updated,omitempty"`
@@ -110,25 +110,14 @@ func (c *Client) ClustersByOrgID(orgID, token string) (ClusterList, error) {
 
 	vars := NewClustersByOrgIDVariables(orgID)
 
-	payload, err := actions.BuildRequestBody(ClustersByOrgIDVarTemplate, vars, nil)
-
-	req := actions.BuildRequest(payload, c.Endpoint, token)
-
-	res, err := c.HTTPClient.Do(req)
+	err := c.DoQuery(ClustersByOrgIDVarTemplate, vars, nil, &response, token)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// TODO: do more than simply dump the body to output.
-	if res.Body != nil {
-		defer res.Body.Close()
-		body, _ := ioutil.ReadAll(res.Body)
-		err = json.Unmarshal(body, &response)
-	}
-
 	if response.Data != nil {
-		return response.Data.Clusters, err
+		return response.Data.Clusters, nil
 	}
 
 	return nil, err

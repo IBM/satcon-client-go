@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.ibm.com/coligo/satcon-client/client/actions/cluster"
+	"github.ibm.com/coligo/satcon-client/client/actions/clusters"
 	"os"
 )
 
@@ -27,7 +27,7 @@ func init() {
 func main() {
 	flag.Parse()
 
-	c, _ := cluster.NewClient(endpoint, nil)
+	c, _ := clusters.NewClient(endpoint, nil)
 
 	var (
 		result interface{}
@@ -38,7 +38,7 @@ func main() {
 	case "ClustersByOrgID":
 		result, err = c.ClustersByOrgID(orgID, token)
 	case "RegisterCluster":
-		result, err = c.RegisterCluster(orgID, cluster.Registration{Name: clusterName}, token)
+		result, err = c.RegisterCluster(orgID, clusters.Registration{Name: clusterName}, token)
 	case "DeleteClusterByClusterID":
 		result, err = c.DeleteClusterByClusterID(orgID, clusterID, token)
 	}
