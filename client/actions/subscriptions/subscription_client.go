@@ -11,6 +11,7 @@ import (
 // in Satellite Config.
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . SubscriptionService
 type SubscriptionService interface {
+	Subscriptions(orgID, token string) (SubscriptionList, error)
 }
 
 // Client is an implementation of a satcon client.
