@@ -12,13 +12,14 @@ import (
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 	. "github.ibm.com/coligo/satcon-client/client/actions/clusters"
+	"github.ibm.com/coligo/satcon-client/client/types"
 	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
 )
 
 var _ = Describe("Registering a Cluster", func() {
 	var (
 		orgID, token string
-		reg          Registration
+		reg          types.Registration
 		c            ClusterService
 		HTTPClient   *webfakes.FakeHTTPClient
 		response     *http.Response
@@ -26,7 +27,7 @@ var _ = Describe("Registering a Cluster", func() {
 
 	BeforeEach(func() {
 		orgID = "someorg"
-		reg = Registration{
+		reg = types.Registration{
 			Name: "my_cluster",
 		}
 		token = "thisissupposedtobeatoken"

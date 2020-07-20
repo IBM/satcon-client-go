@@ -1,8 +1,6 @@
 package clusters
 
 import (
-	"fmt"
-
 	"github.ibm.com/coligo/satcon-client/client/actions"
 )
 
@@ -48,19 +46,6 @@ type DeleteClustersResponseData struct {
 type DeleteClustersResponseDataDetails struct {
 	DeletedClusterCount  int `json:"deletedClusterCount,omitempty"`
 	DeletedResourceCount int `json:"deletedResourceCount,omitempty"`
-}
-
-func (d *DeleteClustersResponseDataDetails) String() string {
-	var response string
-	if d.DeletedClusterCount > 0 {
-		response = fmt.Sprintf("Deleted Clusters: %d\n", d.DeletedClusterCount)
-	}
-
-	if d.DeletedResourceCount > 0 {
-		response += fmt.Sprintf("Deleted Resources: %d\n", d.DeletedResourceCount)
-	}
-
-	return response
 }
 
 func (c *Client) DeleteClusterByClusterID(orgID, clusterID, token string) (*DeleteClustersResponseDataDetails, error) {

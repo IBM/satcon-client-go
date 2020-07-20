@@ -12,6 +12,7 @@ import (
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 	. "github.ibm.com/coligo/satcon-client/client/actions/clusters"
+	"github.ibm.com/coligo/satcon-client/client/types"
 	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
 )
 
@@ -55,7 +56,7 @@ var _ = Describe("ClustersByOrgId", func() {
 			token = "notreallyatoken"
 			clusterResponse = ClustersByOrgIDResponse{
 				Data: &ClustersByOrgIDResponseData{
-					Clusters: ClusterList{
+					Clusters: types.ClusterList{
 						{
 							ID:        "asdf",
 							OrgID:     orgID,

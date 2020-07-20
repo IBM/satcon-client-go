@@ -6,18 +6,13 @@ import (
 	// "io/ioutil"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
+	"github.ibm.com/coligo/satcon-client/client/types"
 )
 
 const (
 	QueryRegisterCluster       = "registerCluster"
 	RegisterClusterVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","registration":{{printf "%s" .Registration}}{{end}}`
 )
-
-// Registration is the encapsulation of the JSON registration body, which at this
-// point is used primarily to specify the name of the cluster to register.
-type Registration struct {
-	Name string `json:"name"`
-}
 
 // RegisterClusterVariables are the variables specific to cluster registration.
 // These include the organization ID and the serialized registration.  Rather than
@@ -29,7 +24,7 @@ type RegisterClusterVariables struct {
 }
 
 // NewRegisterClusterVariables creates a correctly formed instance of RegisterClusterVariables.
-func NewRegisterClusterVariables(orgID string, registration Registration) RegisterClusterVariables {
+func NewRegisterClusterVariables(orgID string, registration types.Registration) RegisterClusterVariables {
 	regBytes, _ := json.Marshal(registration)
 
 	vars := RegisterClusterVariables{
@@ -71,7 +66,7 @@ type RegisterClusterResponseDataDetails struct {
 	OrgKey       string `json:"orgKey,omitempty"`
 	ClusterID    string `json:"clusterId"`
 	RegState     string `json:"regState"`
-	Registration Registration
+	Registration types.Registration
 }
 
 func (d RegisterClusterResponseDataDetails) String() string {
@@ -79,7 +74,7 @@ func (d RegisterClusterResponseDataDetails) String() string {
 		d.URL, d.OrgID, d.OrgKey, d.ClusterID, d.RegState, d.Registration)
 }
 
-func (c *Client) RegisterCluster(orgID string, registration Registration, token string) (*RegisterClusterResponseDataDetails, error) {
+func (c *Client) RegisterCluster(orgID string, registration types.Registration, token string) (*RegisterClusterResponseDataDetails, error) {
 	var response RegisterClusterResponse
 
 	vars := NewRegisterClusterVariables(orgID, registration)
