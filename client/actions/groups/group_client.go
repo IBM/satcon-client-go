@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.ibm.com/coligo/satcon-client/client/types"
 	"github.ibm.com/coligo/satcon-client/client/web"
 )
 
@@ -11,7 +12,7 @@ import (
 // in Satellite Config.
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . GroupService
 type GroupService interface {
-	Groups(orgID, token string) (GroupList, error)
+	Groups(orgID, token string) (types.GroupList, error)
 	AddGroup(orgID, name, token string) (*AddGroupResponseDataDetails, error)
 	GroupClusters(orgID, uuid string, clusters []string, token string) (*GroupClustersResponseDataDetails, error)
 }
@@ -40,19 +41,4 @@ func NewClient(endpointURL string, httpClient web.HTTPClient) (GroupService, err
 	return &Client{
 		s,
 	}, nil
-}
-
-type GroupList []Group
-
-type Group struct {
-	UUID    string    `json:"uuid,omitempty"`
-	OrgID   string    `json:"orgId,omitempty"`
-	Name    string    `json:"name,omitempty"`
-	Owner   BasicUser `json:"owner,omitempty"`
-	Created string    `json:"created,omitempty"`
-}
-
-type BasicUser struct {
-	ID   string `json:"_id,omitempty"`
-	Name string `json:"name,omitempty"`
 }

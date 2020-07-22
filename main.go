@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.ibm.com/coligo/satcon-client/cli"
 	"github.ibm.com/coligo/satcon-client/client/actions/clusters"
 	"github.ibm.com/coligo/satcon-client/client/actions/subscriptions"
+	"github.ibm.com/coligo/satcon-client/client/types"
 )
 
 var (
@@ -41,7 +43,7 @@ func main() {
 	case "ClustersByOrgID":
 		result, err = c.ClustersByOrgID(orgID, token)
 	case "RegisterCluster":
-		result, err = c.RegisterCluster(orgID, clusters.Registration{Name: clusterName}, token)
+		result, err = c.RegisterCluster(orgID, types.Registration{Name: clusterName}, token)
 	case "DeleteClusterByClusterID":
 		result, err = c.DeleteClusterByClusterID(orgID, clusterID, token)
 	case "Subscriptions":
@@ -51,6 +53,7 @@ func main() {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "KABOOM", err)
 	} else {
-		fmt.Fprintf(os.Stdout, "%s\n", result)
+		//fmt.Fprintf(os.Stdout, "%s\n", result)
+		cli.Print(result)
 	}
 }

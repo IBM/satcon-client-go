@@ -36,11 +36,11 @@ func NewClustersByOrgIDVariables(orgID string) ClustersByOrgIDVariables {
 }
 
 type ClustersByOrgIDResponse struct {
-	Data *ClustersByOrgIDResponseData `json:"data"`
+	Data *ClustersByOrgIDResponseData `json:"data,omitempty"`
 }
 
 type ClustersByOrgIDResponseData struct {
-	Clusters types.ClusterList `json:"clustersByOrgId"`
+	Clusters types.ClusterList `json:"clustersByOrgId,omitempty"`
 }
 
 func (c *Client) ClustersByOrgID(orgID, token string) (types.ClusterList, error) {

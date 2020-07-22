@@ -12,6 +12,7 @@ import (
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 	. "github.ibm.com/coligo/satcon-client/client/actions/subscriptions"
+	"github.ibm.com/coligo/satcon-client/client/types"
 	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
 )
 
@@ -35,10 +36,13 @@ var _ = Describe("SubscriptionsByOrgId", func() {
 				"orgId": "String!",
 			}))
 			Expect(vars.Returns).To(ConsistOf(
-				"id",
 				"orgId",
 				"name",
+				"uuid",
 				"groups",
+				"channelName",
+				"channelUuid",
+				"version",
 			))
 		})
 	})
@@ -58,7 +62,7 @@ var _ = Describe("SubscriptionsByOrgId", func() {
 
 			subscriptionsResponse = SubscriptionsResponse{
 				Data: &SubscriptionsResponseData{
-					Subscriptions: SubscriptionList{
+					Subscriptions: types.SubscriptionList{
 						{
 							UUID:  "hal",
 							OrgID: orgID,
