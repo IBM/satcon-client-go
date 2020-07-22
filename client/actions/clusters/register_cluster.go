@@ -57,15 +57,15 @@ type RegisterClusterResponse struct {
 }
 
 type RegisterClusterResponseData struct {
-	Details *RegisterClusterResponseDataDetails `json:"registerCluster"`
+	Details *RegisterClusterResponseDataDetails `json:"registerCluster,omitempty"`
 }
 
 type RegisterClusterResponseDataDetails struct {
-	URL          string `json:"url"`
-	OrgID        string `json:"orgId"`
+	URL          string `json:"url,omitempty"`
+	OrgID        string `json:"orgId,omitempty"`
 	OrgKey       string `json:"orgKey,omitempty"`
-	ClusterID    string `json:"clusterId"`
-	RegState     string `json:"regState"`
+	ClusterID    string `json:"clusterId,omitempty"`
+	RegState     string `json:"regState,omitempty"`
 	Registration types.Registration
 }
 

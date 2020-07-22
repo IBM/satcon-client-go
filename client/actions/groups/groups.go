@@ -2,6 +2,7 @@ package groups
 
 import (
 	"github.ibm.com/coligo/satcon-client/client/actions"
+	"github.ibm.com/coligo/satcon-client/client/types"
 )
 
 const (
@@ -35,14 +36,14 @@ func NewGroupsVariables(orgID string) GroupsVariables {
 }
 
 type GroupsResponse struct {
-	Data *GroupsResponseData `json:"data"`
+	Data *GroupsResponseData `json:"data,omitempty"`
 }
 
 type GroupsResponseData struct {
-	Groups GroupList `json:"groups"`
+	Groups types.GroupList `json:"groups,omitempty"`
 }
 
-func (c *Client) Groups(orgID, token string) (GroupList, error) {
+func (c *Client) Groups(orgID, token string) (types.GroupList, error) {
 	var response GroupsResponse
 
 	vars := NewGroupsVariables(orgID)

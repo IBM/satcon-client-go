@@ -48,7 +48,7 @@ type GroupClustersResponse struct {
 }
 
 type GroupClustersResponseData struct {
-	Details *GroupClustersResponseDataDetails `json:"groupClusters"`
+	Details *GroupClustersResponseDataDetails `json:"groupClusters,omitempty"`
 }
 
 type GroupClustersResponseDataDetails struct {

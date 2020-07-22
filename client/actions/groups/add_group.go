@@ -45,7 +45,7 @@ type AddGroupResponse struct {
 }
 
 type AddGroupResponseData struct {
-	Details *AddGroupResponseDataDetails `json:"addGroup"`
+	Details *AddGroupResponseDataDetails `json:"addGroup,omitempty"`
 }
 
 type AddGroupResponseDataDetails struct {

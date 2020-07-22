@@ -1,22 +1,24 @@
 package subscriptions
 
 import (
-	"fmt"
-	"strings"
-
 	"github.ibm.com/coligo/satcon-client/client/actions"
+	"github.ibm.com/coligo/satcon-client/client/types"
 )
 
 const (
-	QuerySubscriptions       = "subscriptions"
+	//QuerySubscriptions specifies the query
+	QuerySubscriptions = "subscriptions"
+	//SubscriptionsVarTemplate is the template used to create the graphql query
 	SubscriptionsVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}"{{end}}`
 )
 
+//SubscriptionsVariables are the variables used for the subscription query
 type SubscriptionsVariables struct {
 	actions.GraphQLQuery
 	OrgID string
 }
 
+//NewSubscriptionsVariables generates variables used for query
 func NewSubscriptionsVariables(orgID string) SubscriptionsVariables {
 	vars := SubscriptionsVariables{
 		OrgID: orgID,
@@ -28,91 +30,29 @@ func NewSubscriptionsVariables(orgID string) SubscriptionsVariables {
 		"orgId": "String!",
 	}
 	vars.Returns = []string{
-		"id",
 		"orgId",
 		"name",
+		"uuid",
 		"groups",
+		"channelName",
+		"channelUuid",
+		"version",
 	}
 
 	return vars
 }
 
+//SubscriptionsResponse response from query
 type SubscriptionsResponse struct {
-	Data *SubscriptionsResponseData `json:"data"`
+	Data *SubscriptionsResponseData `json:"data,omitempty"`
 }
 
+// SubscriptionsResponseData data response from query
 type SubscriptionsResponseData struct {
-	Subscriptions SubscriptionList `json:"subscriptions"`
+	Subscriptions types.SubscriptionList `json:"subscriptions,omitempty"`
 }
 
-type SubscriptionList []Subscription
-
-func (l SubscriptionList) String() string {
-	if len(l) == 0 {
-		return "[]"
-	}
-
-	subscriptions := make([]string, 1)
-
-	for _, s := range l {
-		subscriptions = append(subscriptions, fmt.Sprintf("UUID: %s\nOrgID: %s\nName: %s\n", s.UUID, s.OrgID, s.Name))
-	}
-	return strings.Join(subscriptions, "\n==\n")
-}
-
-type Subscription struct {
-	UUID        string              `json:"uuid,omitempty"`
-	OrgID       string              `json:"orgId,omitempty"`
-	Name        string              `json:"name,omitempty"`
-	Groups      []SubscriptionGroup `json:"groups,omitempty"`
-	ChannelUUID string              `json:"channelUuid,omitempty"`
-	ChannelName string              `json:"channelName,omitempty"`
-	Channel     Channel             `json:"channel,omitempty"`
-	Version     string              `json:"version,omitempty"`
-	VersionUUID string              `json:"versionUuid,omitempty"`
-	Owner       BasicUser           `json:"owner,omitempty"`
-	Created     string              `json:"created,omitempty"`
-	Updated     string              `json:"updated,omitempty"`
-}
-
-type SubscriptionGroup struct {
-	Scalar string `json:"scalar"`
-}
-
-type Channel struct {
-	UUID     string           `json:"uuid"`
-	OrgID    string           `json:"orgId"`
-	Name     string           `json:"name"`
-	Created  string           `json:"created"`
-	Versions []ChannelVersion `json:"versions"`
-}
-
-type ChannelVersion struct {
-	UUID        string `json:"uuid"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Location    string `json:"location"`
-	Created     string `json:"created"`
-}
-
-type BasicChannelSubscriptions struct {
-	UUID        string              `json:"uuid"`
-	OrgID       string              `json:"orgId"`
-	Name        string              `json:"name"`
-	Groups      []SubscriptionGroup `json:"groups"`
-	ChannelUUID string              `json:"channelUuid"`
-	ChannelName string              `json:"channelName"`
-	Version     string              `json:"version"`
-	Created     string              `json:"created"`
-	Updated     string              `json:"updated"`
-}
-
-type BasicUser struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-func (c *Client) Subscriptions(orgID, token string) (SubscriptionList, error) {
+func (c *Client) Subscriptions(orgID, token string) (types.SubscriptionList, error) {
 	var response SubscriptionsResponse
 
 	vars := NewSubscriptionsVariables(orgID)

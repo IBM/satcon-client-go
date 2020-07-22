@@ -12,6 +12,7 @@ import (
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
 	. "github.ibm.com/coligo/satcon-client/client/actions/groups"
+	"github.ibm.com/coligo/satcon-client/client/types"
 	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
 )
 
@@ -55,7 +56,7 @@ var _ = Describe("Groups", func() {
 			token = "notreallyatoken"
 			groupsResponse = GroupsResponse{
 				Data: &GroupsResponseData{
-					Groups: GroupList{
+					Groups: types.GroupList{
 						{
 							UUID:  "asdf",
 							OrgID: orgID,
