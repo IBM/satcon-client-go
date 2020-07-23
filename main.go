@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fatih/color"
 	"github.ibm.com/coligo/satcon-client/cli"
 	"github.ibm.com/coligo/satcon-client/client/actions/clusters"
 	"github.ibm.com/coligo/satcon-client/client/actions/subscriptions"
@@ -48,12 +49,15 @@ func main() {
 		result, err = c.DeleteClusterByClusterID(orgID, clusterID, token)
 	case "Subscriptions":
 		result, err = s.Subscriptions(orgID, token)
+	default:
+		red := color.New(color.FgRed, color.Bold).PrintfFunc()
+		red("%s is not a valid action\n", action)
+		os.Exit(0)
 	}
 
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "KABOOM", err)
 	} else {
-		//fmt.Fprintf(os.Stdout, "%s\n", result)
 		cli.Print(result)
 	}
 }
