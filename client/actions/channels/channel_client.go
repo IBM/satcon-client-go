@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.ibm.com/coligo/satcon-client/client/types"
 	"github.ibm.com/coligo/satcon-client/client/web"
 )
 
@@ -11,6 +12,9 @@ import (
 // in Satellite Config.
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ChannelService
 type ChannelService interface {
+	AddChannel(orgId, name, token string) (*AddChannelResponseDataDetails, error)
+	Channels(orgId, token string) (types.ChannelList, error)
+	RemoveChannel(orgId, uuid, token string) (*RemoveChannelResponseDataDetails, error)
 }
 
 // Client is an implementation of a satcon client.
