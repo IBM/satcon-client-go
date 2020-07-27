@@ -5,6 +5,19 @@ type BasicUser struct {
 	Name string `json:"name,omitempty"`
 }
 
+type BasicChannelSubscription struct {
+	UUID        string   `json:"uuid,omitempty"`
+	OrgID       string   `json:"orgId,omitempty"`
+	Name        string   `json:"name,omitempty"`
+	Groups      []string `json:"groups,omitempty"`
+	ChannelUUID string   `json:"channelUuid,omitempty"`
+	ChannelName string   `json:"channelName,omitempty"`
+	Version     string   `json:"version,omitempty"`
+	VersionUUID string   `json:"versionUuid,omitempty"`
+	Created     string   `json:"created,omitempty"`
+	Updated     string   `json:"updated,omitempty"`
+}
+
 type ChannelSubscription struct {
 	UUID        string    `json:"uuid,omitempty"`
 	OrgID       string    `json:"orgId,omitempty"`
@@ -45,13 +58,15 @@ type ClusterGroup struct {
 type ClusterGroupList []ClusterGroup
 
 type Channel struct {
-	UUID          string                `json:"uuid,omitempty"`
-	OrgID         string                `json:"orgId,omitempty"`
-	Name          string                `json:"name,omitempty"`
-	Created       string                `json:"created,omitempty"`
-	Versions      []ChannelVersion      `json:"versions,omitempty"`
-	Subscriptions []ChannelSubscription `json:"subscriptions,omitempty"`
+	UUID          string                     `json:"uuid,omitempty"`
+	OrgID         string                     `json:"orgId,omitempty"`
+	Name          string                     `json:"name,omitempty"`
+	Created       string                     `json:"created,omitempty"`
+	Versions      []ChannelVersion           `json:"versions,omitempty"`
+	Subscriptions []BasicChannelSubscription `json:"subscriptions,omitempty"`
 }
+
+type ChannelList []Channel
 
 type ChannelVersion struct {
 	UUID        string `json:"uuid,omitempty"`
