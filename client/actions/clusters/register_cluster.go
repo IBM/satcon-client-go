@@ -3,6 +3,7 @@ package clusters
 import (
 	"encoding/json"
 	"fmt"
+
 	// "io/ioutil"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
