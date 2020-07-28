@@ -12,6 +12,7 @@ import (
 // in Satellite Config.
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . SubscriptionService
 type SubscriptionService interface {
+	AddSubscription(orgID, name, channelUuid, versionUuid string, groups []string, token string) (*AddSubscriptionResponseDataDetails, error)
 	Subscriptions(orgID, token string) (types.SubscriptionList, error)
 }
 

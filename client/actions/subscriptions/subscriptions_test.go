@@ -103,9 +103,9 @@ var _ = Describe("SubscriptionsByOrgId", func() {
 		})
 
 		It("Returns the list of subscriptions", func() {
-			clusters, _ := c.Subscriptions(orgID, token)
+			subscriptions, _ := c.Subscriptions(orgID, token)
 			expected := subscriptionsResponse.Data.Subscriptions
-			Expect(clusters).To(Equal(expected))
+			Expect(subscriptions).To(Equal(expected))
 		})
 
 		Context("When query execution errors", func() {
@@ -126,9 +126,9 @@ var _ = Describe("SubscriptionsByOrgId", func() {
 			})
 
 			It("Returns nil", func() {
-				clusters, err := c.Subscriptions(orgID, token)
+				subscriptions, err := c.Subscriptions(orgID, token)
 				Expect(err).NotTo(HaveOccurred())
-				Expect(clusters).To(BeNil())
+				Expect(subscriptions).To(BeNil())
 			})
 		})
 
