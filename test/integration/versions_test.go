@@ -10,7 +10,7 @@ import (
 	. "github.ibm.com/coligo/satcon-client/test/integration"
 )
 
-var _ = Describe("Subscriptions", func() {
+var _ = Describe("Versions", func() {
 	var (
 		token string
 		c     client.SatCon
@@ -19,29 +19,33 @@ var _ = Describe("Subscriptions", func() {
 	BeforeEach(func() {
 		var err error
 		c, _ = client.New(testConfig.SatConEndpoint, nil)
-		Expect(c.Subscriptions).NotTo(BeNil())
+		Expect(c.Versions).NotTo(BeNil())
 
 		token, err = GetToken(testConfig.APIKey, testConfig.IAMEndpoint)
 		Expect(err).NotTo(HaveOccurred())
 		Expect(token).NotTo(BeZero())
 	})
 
-	Describe("Subscription Lifecycle", func() {
+	Describe("Version Lifecycle", func() {
 		var (
-			subscriptionName string
+			versionName string
 		)
 
 		BeforeEach(func() {
-			subscriptionName = RandStringBytes(8)
-			fmt.Println("Using subscription name: ", subscriptionName)
+			versionName = RandStringBytes(8)
+			fmt.Println("Using version name: ", versionName)
 		})
 
-		It("Lists the subscriptions, creates our new subscription, lists again and finds it, deletes it, and finally lists to see that it's gone", func() {
-			subscriptionList, err := c.Subscriptions.Subscriptions(testConfig.OrgID, token)
-			Expect(err).NotTo(HaveOccurred())
-			for _, e := range subscriptionList {
-				Expect(e.Name).NotTo(Equal(subscriptionName))
-			}
+		//TODO WRITE THESE TESTS
+		It("Lists the versions, creates our new version, lists again and finds it, deletes it, and finally lists to see that it's gone", func() {
+			//TODO need API to return a list of all channel versions
+			/*
+				versionList, err := c.Versions.Versions(testConfig.OrgID, token)
+				Expect(err).NotTo(HaveOccurred())
+				for _, e := range versionList {
+					Expect(e.Name).NotTo(Equal(versionName))
+				}
+			*/
 
 			// TODO before we can add a subscription, we need to be able to add a new channel and version so that we can pass channelUuid and versionUuid as arguments
 		})

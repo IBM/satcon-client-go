@@ -25,6 +25,7 @@ var _ = Describe("Client", func() {
 			Expect(s.Groups).NotTo(BeNil())
 			Expect(s.Resources).NotTo(BeNil())
 			Expect(s.Subscriptions).NotTo(BeNil())
+			Expect(s.Versions).NotTo(BeNil())
 		})
 	})
 })
