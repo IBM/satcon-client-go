@@ -6,6 +6,7 @@ import (
 	"github.ibm.com/coligo/satcon-client/client/actions/groups"
 	"github.ibm.com/coligo/satcon-client/client/actions/resources"
 	"github.ibm.com/coligo/satcon-client/client/actions/subscriptions"
+	"github.ibm.com/coligo/satcon-client/client/actions/versions"
 	"github.ibm.com/coligo/satcon-client/client/web"
 )
 
@@ -15,6 +16,7 @@ type SatCon struct {
 	Groups        groups.GroupService
 	Resources     resources.ResourceService
 	Subscriptions subscriptions.SubscriptionService
+	Versions      versions.VersionService
 }
 
 func New(endpointURL string, httpClient web.HTTPClient) (SatCon, error) {
@@ -39,6 +41,10 @@ func New(endpointURL string, httpClient web.HTTPClient) (SatCon, error) {
 		return SatCon{}, err
 	}
 	s.Subscriptions, err = subscriptions.NewClient(endpointURL, httpClient)
+	if err != nil {
+		return SatCon{}, err
+	}
+	s.Versions, err = versions.NewClient(endpointURL, httpClient)
 	if err != nil {
 		return SatCon{}, err
 	}

@@ -11,4 +11,6 @@ require (
 	github.com/onsi/gomega v1.10.1
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
+	k8s.io/apimachinery v0.18.6
+	sigs.k8s.io/yaml v1.2.0
 )

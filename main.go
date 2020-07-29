@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"flag"
 	"fmt"
 	"os"
@@ -10,12 +11,14 @@ import (
 	"github.ibm.com/coligo/satcon-client/cli"
 	"github.ibm.com/coligo/satcon-client/client/actions/clusters"
 	"github.ibm.com/coligo/satcon-client/client/actions/subscriptions"
+	"github.ibm.com/coligo/satcon-client/client/actions/versions"
 	"github.ibm.com/coligo/satcon-client/client/types"
 )
 
 var (
 	action, endpoint, clusterName, orgID, clusterID, token string
-	subscriptionName, channelUuid, versionUuid             string
+	subscriptionName, channelUuid, versionUuid, filePath   string
+	versionName, description, content                      string
 	groups                                                 Groups
 )
 
@@ -45,6 +48,10 @@ func init() {
 	flag.StringVar(&channelUuid, "channelUuid", "", "-channelUuid <channelUuid>")
 	flag.StringVar(&versionUuid, "versionUuid", "", "-versionUuid <versionUuid>")
 	flag.Var(&groups, "g", "-g <group1> -g <...> -g <groupN>")
+	flag.StringVar(&filePath, "f", "", "-f path/to/version.yml")
+	flag.StringVar(&versionName, "v", "", "-v <versionName>")
+	flag.StringVar(&description, "d", "", "-d <description>")
+	flag.StringVar(&content, "content", "", "-content <yaml_as_string>")
 }
 
 func main() {
@@ -52,6 +59,7 @@ func main() {
 
 	c, _ := clusters.NewClient(endpoint, nil)
 	s, _ := subscriptions.NewClient(endpoint, nil)
+	v, _ := versions.NewClient(endpoint, nil)
 
 	var (
 		result interface{}
@@ -69,6 +77,20 @@ func main() {
 		result, err = s.Subscriptions(orgID, token)
 	case "AddSubscription":
 		result, err = s.AddSubscription(orgID, subscriptionName, channelUuid, versionUuid, groups, token)
+	case "AddChannelVersion":
+		var versionContent []byte
+		if strings.Compare(filePath, "") != 0 {
+			encodedBytes, err := cli.MarshalYAMLFromFile(filePath)
+			if err != nil {
+				break
+			}
+			versionContent, err = base64.StdEncoding.DecodeString(string(encodedBytes))
+		} else {
+			versionContent = []byte(content)
+		}
+		result, err = v.AddChannelVersion(orgID, channelUuid, versionName, versionContent, description, token)
+	case "RemoveChannelVersion":
+		result, err = v.RemoveChannelVersion(orgID, versionUuid, token)
 	default:
 		red := color.New(color.FgRed, color.Bold).PrintfFunc()
 		red("%s is not a valid action\n", action)
