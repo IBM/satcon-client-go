@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.ibm.com/coligo/satcon-client/client/types"
 	"github.ibm.com/coligo/satcon-client/client/web"
 )
 
@@ -13,6 +14,7 @@ import (
 type VersionService interface {
 	AddChannelVersion(orgId, channelUuid, name string, content []byte, description, token string) (*AddChannelVersionResponseDataDetails, error)
 	RemoveChannelVersion(orgId, uuid, token string) (*RemoveChannelVersionResponseDataDetails, error)
+	ChannelVersionByName(orgID, channelName, versionName, token string) (*types.DeployableVersion, error)
 }
 
 // Client is an implementation of a satcon client.
