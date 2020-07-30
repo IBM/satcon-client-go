@@ -82,6 +82,18 @@ type Comment struct {
 	Created string `json:"created,omitempty"`
 }
 
+type DeployableVersion struct {
+	OrgID       string `json:"orgId,omitempty"`
+	UUID        string `json:"uuid,omitempty"`
+	ChannelID   string `json:"channelId,omitempty"`
+	ChannelName string `json:"channelName,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Type        string `json:"type,omitempty"`
+	Description string `json:"description,omitempty"`
+	Content     string `json:"content,omitempty"`
+	Created     string `json:"created,omitempty"`
+}
+
 type GroupList []Group
 
 type Group struct {
