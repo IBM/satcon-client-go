@@ -28,8 +28,9 @@ const (
 	FLAG_VERSION_UUID = "version"
 	FLAG_GROUPS       = "g"
 
-	FLAG_FILENAME    = "f"
-	FLAG_DESCRIPTION = "desc"
+	FLAG_FILENAME     = "f"
+	FLAG_DESCRIPTION  = "desc"
+	FLAG_CHANNEL_NAME = "channelName"
 
 	ActionList     = "list"
 	ActionRegister = "register"
@@ -37,6 +38,7 @@ const (
 	ActionAdd      = "add"
 	ActionClusters = "clusters"
 	ActionRemove   = "remove"
+	ActionGet      = "get"
 )
 
 var (
@@ -88,4 +90,5 @@ func init() {
 	VersionCmd.StringVar(&(versionMetadata.ChannelUUID), FLAG_CHANNEL_UUID, "", fmt.Sprintf("-%s <channel_uuid>", FLAG_CHANNEL_UUID))
 	VersionCmd.StringVar(&(versionMetadata.Filename), FLAG_FILENAME, "", fmt.Sprintf("-%s <path_to_yaml>", FLAG_FILENAME))
 	VersionCmd.StringVar(&(versionMetadata.Description), FLAG_DESCRIPTION, "", fmt.Sprintf("-%s <description>", FLAG_DESCRIPTION))
+	VersionCmd.StringVar(&(versionMetadata.ChannelName), FLAG_CHANNEL_NAME, "", fmt.Sprintf("-%s <channel_name>", FLAG_CHANNEL_NAME))
 }

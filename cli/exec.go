@@ -30,6 +30,7 @@ type SubscriptionMetadata struct {
 
 type VersionMetadata struct {
 	ChannelUUID string
+	ChannelName string
 	Filename    string
 	Content     []byte
 	Description string
@@ -129,6 +130,10 @@ func (cmd *SubCommand) execute(s *client.SatCon) (interface{}, error) {
 		case ActionAdd:
 			result, err = s.Subscriptions.AddSubscription(cmd.OrgID, cmd.Name, subscriptionMetadata.ChannelUUID,
 				subscriptionMetadata.VersionUUID, subscriptionMetadata.Groups, cmd.Token)
+		case ActionDelete:
+			fallthrough
+		case ActionRemove:
+			result, err = s.Subscriptions.RemoveSubscription(cmd.OrgID, cmd.Id, cmd.Token)
 		default:
 			err = fmt.Errorf("%s is not a recognized action for resource type %s", cmd.Action, cmd.Resource)
 		}
@@ -152,6 +157,8 @@ func (cmd *SubCommand) execute(s *client.SatCon) (interface{}, error) {
 			fallthrough
 		case ActionRemove:
 			result, err = s.Versions.RemoveChannelVersion(cmd.OrgID, cmd.Id, cmd.Token)
+		case ActionGet:
+			result, err = s.Versions.ChannelVersionByName(cmd.OrgID, versionMetadata.ChannelName, cmd.Name, cmd.Token)
 		default:
 			err = fmt.Errorf("%s is not a recognized action for resource type %s", cmd.Action, cmd.Resource)
 		}
