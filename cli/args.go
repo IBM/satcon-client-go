@@ -22,14 +22,21 @@ const (
 	FLAG_ENDPOINT = "e"
 	FLAG_TOKEN    = "t"
 
+	FLAG_CLUSTERS = "c"
+
 	FLAG_CHANNEL_UUID = "channel"
 	FLAG_VERSION_UUID = "version"
 	FLAG_GROUPS       = "g"
+
+	FLAG_FILENAME    = "f"
+	FLAG_DESCRIPTION = "desc"
 
 	ActionList     = "list"
 	ActionRegister = "register"
 	ActionDelete   = "delete"
 	ActionAdd      = "add"
+	ActionClusters = "clusters"
+	ActionRemove   = "remove"
 )
 
 var (
@@ -69,9 +76,16 @@ func init() {
 		fs.StringVar(&(subCmd.Token), FLAG_TOKEN, "", fmt.Sprintf("-%s <IAM token>", FLAG_TOKEN))
 	}
 
+	// Group-specific arguments
+	GroupCmd.Var(&(groupMetadata.Clusters), FLAG_CLUSTERS, fmt.Sprintf("-%s <cluster_id> [ -%s <cluster_id_1> ... -%s <cluster_id_n> ]", FLAG_CLUSTERS, FLAG_CLUSTERS, FLAG_CLUSTERS))
+
 	// Subscription-specific arguments
 	SubscriptionCmd.StringVar(&(subscriptionMetadata.ChannelUUID), FLAG_CHANNEL_UUID, "", fmt.Sprintf("-%s <channel_uuid>", FLAG_CHANNEL_UUID))
 	SubscriptionCmd.StringVar(&(subscriptionMetadata.VersionUUID), FLAG_VERSION_UUID, "", fmt.Sprintf("-%s <channel_uuid>", FLAG_VERSION_UUID))
 	SubscriptionCmd.Var(&(subscriptionMetadata.Groups), FLAG_GROUPS, fmt.Sprintf("-%s <group_id>", FLAG_GROUPS))
 
+	// Version-specific arguments
+	VersionCmd.StringVar(&(versionMetadata.ChannelUUID), FLAG_CHANNEL_UUID, "", fmt.Sprintf("-%s <channel_uuid>", FLAG_CHANNEL_UUID))
+	VersionCmd.StringVar(&(versionMetadata.Filename), FLAG_FILENAME, "", fmt.Sprintf("-%s <path_to_yaml>", FLAG_FILENAME))
+	VersionCmd.StringVar(&(versionMetadata.Description), FLAG_DESCRIPTION, "", fmt.Sprintf("-%s <description>", FLAG_DESCRIPTION))
 }
