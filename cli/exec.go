@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"io/ioutil"
 	"strings"
 
 	"github.ibm.com/coligo/satcon-client/client"
@@ -146,7 +147,8 @@ func (cmd *SubCommand) execute(s *client.SatCon) (interface{}, error) {
 				break
 			}
 
-			versionMetadata.Content, err = MarshalYAMLFromFile(versionMetadata.Filename)
+			// versionMetadata.Content, err = MarshalYAMLFromFile(versionMetadata.Filename)
+			versionMetadata.Content, err = ioutil.ReadFile(versionMetadata.Filename)
 			if err != nil {
 				err = fmt.Errorf("Unable to read content file %s: %s", versionMetadata.Filename, err)
 				break
