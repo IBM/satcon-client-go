@@ -15,7 +15,7 @@ import (
 	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
 )
 
-var _ = Describe("Removing a Channel", func() {
+var _ = Describe("Removing a Subscription", func() {
 	var (
 		orgID, uuid, token string
 		c                  SubscriptionService
@@ -25,7 +25,7 @@ var _ = Describe("Removing a Channel", func() {
 
 	BeforeEach(func() {
 		orgID = "someorg"
-		uuid = "somechannel"
+		uuid = "somesubscription"
 		token = "thisissupposedtobeatoken"
 
 		h = &webfakes.FakeHTTPClient{}
