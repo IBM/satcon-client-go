@@ -32,6 +32,10 @@ const (
 	FLAG_DESCRIPTION  = "desc"
 	FLAG_CHANNEL_NAME = "channelName"
 
+	FLAG_CLUSTER_ID = "clusterID"
+	FLAG_FILTER     = "filter"
+	FLAG_LIMIT      = "l"
+
 	ActionList     = "list"
 	ActionRegister = "register"
 	ActionDelete   = "delete"
@@ -94,4 +98,9 @@ func init() {
 	VersionCmd.StringVar(&(versionMetadata.Filename), FLAG_FILENAME, "", fmt.Sprintf("-%s <path_to_yaml>", FLAG_FILENAME))
 	VersionCmd.StringVar(&(versionMetadata.Description), FLAG_DESCRIPTION, "", fmt.Sprintf("-%s <description>", FLAG_DESCRIPTION))
 	VersionCmd.StringVar(&(versionMetadata.ChannelName), FLAG_CHANNEL_NAME, "", fmt.Sprintf("-%s <channel_name>", FLAG_CHANNEL_NAME))
+
+	//Resource-specific commands
+	ResourceCmd.StringVar(&(resourceMetadata.ClusterID), FLAG_CLUSTER_ID, "", fmt.Sprintf("-%s <cluster_id>", FLAG_CLUSTER_ID))
+	ResourceCmd.StringVar(&(resourceMetadata.Filter), FLAG_FILTER, "", fmt.Sprintf("-%s <kind>", FLAG_FILTER))
+	ResourceCmd.StringVar(&(resourceMetadata.Limit), FLAG_LIMIT, "50", fmt.Sprintf("-%s <limit>", FLAG_LIMIT))
 }

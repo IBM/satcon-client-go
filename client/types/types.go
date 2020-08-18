@@ -18,6 +18,7 @@ type BasicChannelSubscription struct {
 	Updated     string   `json:"updated,omitempty"`
 }
 
+// ChannelSubscription encapsulates a channel's subscription data
 type ChannelSubscription struct {
 	UUID        string    `json:"uuid,omitempty"`
 	OrgID       string    `json:"orgId,omitempty"`
@@ -46,6 +47,11 @@ type Cluster struct {
 	Created           string         `json:"created,omitempty"`
 	Updated           string         `json:"updated,omitempty"`
 	Dirty             bool           `json:"dirty,omitempty"`
+}
+
+type ClusterInfo struct {
+	ClusterID string `json:"clusterId,omitempty"`
+	Name      string `json:"name,omitempty"`
 }
 
 type ClusterList []Cluster
@@ -112,6 +118,44 @@ type Registration struct {
 	Name string `json:"name,omitempty"`
 }
 
+// Resource encapsulates satellite cluster resources
+type Resource struct {
+	ID                 string              `json:"id,omitempty"`
+	OrgID              string              `json:"orgId,omitempty"`
+	ClusterID          string              `json:"clusterId,omitempty"`
+	Cluster            ClusterInfo         `json:"cluster,omitempty"`
+	HistId             string              `json:"histId,omitempty"`
+	SelfLink           string              `json:"selfLink,omitempty"`
+	Hash               string              `json:"hash,omitempty"`
+	Data               string              `json:"data,omitempty"`
+	Deleted            bool                `json:"deleted,omitempty"`
+	Created            string              `json:"created,omitempty"`
+	Updated            string              `json:"updated,omitempty"`
+	LastModified       string              `json:"lastModified,omitempty"`
+	SearchableData     SearchableData      `json:"searchableData,omitempty"`
+	SearchableDataHash string              `json:"searchableDataHash,omitempty"`
+	Subscription       ChannelSubscription `json:"subscription,omitempty"`
+}
+
+// ResourceList encapsulates list of resource
+type ResourceList struct {
+	Count     int        `json:"count,omitempty"`
+	Resources []Resource `json:"resources,omitempty"`
+}
+
+// SearchableData encapsulates cluster resource data
+type SearchableData struct {
+	Kind                 string `json:"kind,omitempty"`
+	Name                 string `json:"name,omitempty"`
+	Namespace            string `json:"namespace,omitempty"`
+	APIVersion           string `json:"apiVersion,omitempty"`
+	Annotations          string `json:"annotations[\"kubernetes_io_psp\"],omitempty"`
+	ImageID              string `json:"imageID,omitempty"`
+	Image                string `json:"image,omitempty"`
+	SearchableExpression string `json:"searchableExpression,omitempty"`
+}
+
+// Subscription encapsulates satellite subscription data
 type Subscription struct {
 	UUID        string    `json:"uuid,omitempty"`
 	OrgID       string    `json:"orgId,omitempty"`
@@ -127,4 +171,5 @@ type Subscription struct {
 	Updated     string    `json:"updated,omitempty"`
 }
 
+// SubscriptionList list of subscriptions
 type SubscriptionList []Subscription

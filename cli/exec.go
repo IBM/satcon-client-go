@@ -3,6 +3,7 @@ package cli
 import (
 	"fmt"
 	"io/ioutil"
+	"strconv"
 	"strings"
 
 	"github.ibm.com/coligo/satcon-client/client"
@@ -41,6 +42,12 @@ type VersionMetadata struct {
 	Description string
 }
 
+type ResourceMetadata struct {
+	Filter    string
+	ClusterID string
+	Limit     string
+}
+
 type Clusters []string
 
 func (c *Clusters) String() string {
@@ -69,6 +76,7 @@ var (
 	groupMetadata        GroupMetadata
 	subscriptionMetadata SubscriptionMetadata
 	versionMetadata      VersionMetadata
+	resourceMetadata     ResourceMetadata
 )
 
 func TargetResource(resourceType string) {
@@ -168,6 +176,19 @@ func (cmd *SubCommand) execute(s *client.SatCon) (interface{}, error) {
 			result, err = s.Versions.RemoveChannelVersion(cmd.OrgID, cmd.Id, cmd.Token)
 		case ActionGet:
 			result, err = s.Versions.ChannelVersionByName(cmd.OrgID, versionMetadata.ChannelName, cmd.Name, cmd.Token)
+		default:
+			err = fmt.Errorf("%s is not a recognized action for resource type %s", cmd.Action, cmd.Resource)
+		}
+
+	case TypeResource:
+		switch cmd.Action {
+		case ActionGet:
+			limit, err := strconv.Atoi(resourceMetadata.Limit)
+			if err != nil {
+				err = fmt.Errorf("Unable to convert %s to integer value", resourceMetadata.Limit)
+				break
+			}
+			result, err = s.Resources.ResourcesByCluster(cmd.OrgID, resourceMetadata.ClusterID, resourceMetadata.Filter, limit, cmd.Token)
 		default:
 			err = fmt.Errorf("%s is not a recognized action for resource type %s", cmd.Action, cmd.Resource)
 		}

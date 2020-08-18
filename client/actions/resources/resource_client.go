@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.ibm.com/coligo/satcon-client/client/types"
 	"github.ibm.com/coligo/satcon-client/client/web"
 )
 
@@ -11,6 +12,7 @@ import (
 // in Satellite Config.
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ResourceService
 type ResourceService interface {
+	ResourcesByCluster(orgID, clusterID, filter string, limit int, token string) (*types.ResourceList, error)
 }
 
 // Client is an implementation of a satcon client.
