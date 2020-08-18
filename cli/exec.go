@@ -19,6 +19,10 @@ type SubCommand struct {
 	Token    string
 }
 
+type ChannelMetadata struct {
+	ChannelUUID string
+}
+
 type GroupMetadata struct {
 	Clusters Clusters
 }
@@ -61,6 +65,7 @@ func (g *Groups) Set(v string) error {
 
 var (
 	subCmd               SubCommand
+	channelMetadata      ChannelMetadata
 	groupMetadata        GroupMetadata
 	subscriptionMetadata SubscriptionMetadata
 	versionMetadata      VersionMetadata
@@ -90,6 +95,8 @@ func (cmd *SubCommand) execute(s *client.SatCon) (interface{}, error) {
 		switch cmd.Action {
 		case ActionAdd:
 			result, err = s.Channels.AddChannel(cmd.OrgID, cmd.Name, cmd.Token)
+		case ActionGet:
+			result, err = s.Channels.ChannelByName(cmd.OrgID, cmd.Name, cmd.Token)
 		case ActionList:
 			result, err = s.Channels.Channels(cmd.OrgID, cmd.Token)
 		case ActionDelete:

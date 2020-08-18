@@ -2,6 +2,7 @@ package integration_test
 
 import (
 	"fmt"
+	"strings"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -39,10 +40,13 @@ var _ = Describe("Channels", func() {
 		It("Lists the channels, creates our new channel, lists again and finds it, deletes it, and finally lists to see that it's gone", func() {
 			channelList, err := c.Channels.Channels(testConfig.OrgID, token)
 			Expect(err).NotTo(HaveOccurred())
-			// TODO: Iterate through the list and check that none of them is our channel
-			// for _, channel := range channelList {
-			// 	Expect(channel.)
-			// }
+			found := false
+			for _, channel := range channelList {
+				if strings.Compare(channel.Name, channelName) == 0 {
+					found = true
+				}
+			}
+			Expect(found).To(BeFalse())
 
 			details, err := c.Channels.AddChannel(testConfig.OrgID, channelName, token)
 			Expect(err).NotTo(HaveOccurred())
@@ -53,7 +57,7 @@ var _ = Describe("Channels", func() {
 
 			channelList, err = c.Channels.Channels(testConfig.OrgID, token)
 			Expect(err).NotTo(HaveOccurred())
-			found := false
+			found = false
 			for _, channel := range channelList {
 				if channel.UUID == details.UUID {
 					found = true
@@ -61,9 +65,25 @@ var _ = Describe("Channels", func() {
 			}
 			Expect(found).To(BeTrue())
 
+			channel, err := c.Channels.Channel(testConfig.OrgID, details.UUID, token)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(channel).NotTo(BeNil())
+
+			channelByName, err := c.Channels.ChannelByName(testConfig.OrgID, channelName, token)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(channelByName).NotTo(BeNil())
+
 			rmDetails, err := c.Channels.RemoveChannel(testConfig.OrgID, details.UUID, token)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(rmDetails.Success).To(BeTrue())
+
+			channelByName, err = c.Channels.ChannelByName(testConfig.OrgID, channelName, token)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(channelByName).To(BeNil())
+
+			channel, err = c.Channels.Channel(testConfig.OrgID, details.UUID, token)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(channel).To(BeNil())
 
 			channelList, err = c.Channels.Channels(testConfig.OrgID, token)
 			Expect(err).NotTo(HaveOccurred())

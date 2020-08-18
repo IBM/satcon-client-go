@@ -76,6 +76,8 @@ type ChannelVersion struct {
 	Created     string `json:"created,omitempty"`
 }
 
+type ChannelVersionList []ChannelVersion
+
 type Comment struct {
 	UserId  string `json:"user_id,omitempty"`
 	Content string `json:"content,omitempty"`

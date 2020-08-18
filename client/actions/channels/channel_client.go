@@ -13,6 +13,8 @@ import (
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ChannelService
 type ChannelService interface {
 	AddChannel(orgId, name, token string) (*AddChannelResponseDataDetails, error)
+	Channel(orgId, uuid, token string) (*types.Channel, error)
+	ChannelByName(orgID, channelName, token string) (*types.Channel, error)
 	Channels(orgId, token string) (types.ChannelList, error)
 	RemoveChannel(orgId, uuid, token string) (*RemoveChannelResponseDataDetails, error)
 }

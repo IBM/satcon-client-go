@@ -78,6 +78,9 @@ func init() {
 		fs.StringVar(&(subCmd.Token), FLAG_TOKEN, "", fmt.Sprintf("-%s <IAM token>", FLAG_TOKEN))
 	}
 
+	// Channel-specific arguments
+	ChannelCmd.StringVar(&(channelMetadata.ChannelUUID), FLAG_CHANNEL_UUID, "", fmt.Sprintf("-%s <channel_uuid>", FLAG_CHANNEL_UUID))
+
 	// Group-specific arguments
 	GroupCmd.Var(&(groupMetadata.Clusters), FLAG_CLUSTERS, fmt.Sprintf("-%s <cluster_id> [ -%s <cluster_id_1> ... -%s <cluster_id_n> ]", FLAG_CLUSTERS, FLAG_CLUSTERS, FLAG_CLUSTERS))
 
