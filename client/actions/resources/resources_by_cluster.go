@@ -19,7 +19,7 @@ type ResourcesByClusterVariables struct {
 	Limit     int
 }
 
-// NewResourcesByVariables returns necessary variables for query
+// NewResourcesByClusterVariables returns necessary variables for query
 func NewResourcesByClusterVariables(orgID, clusterID, filter string, limit int) ResourcesByClusterVariables {
 	vars := ResourcesByClusterVariables{
 		OrgID:     orgID,

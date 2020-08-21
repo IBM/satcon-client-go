@@ -21,7 +21,6 @@ type SatConClient struct {
 
 func (s *SatConClient) DoQuery(requestTemplate string, vars interface{}, funcs template.FuncMap, result interface{}, token string) error {
 	payload, err := actions.BuildRequestBody(requestTemplate, vars, funcs)
-
 	if err != nil {
 		return err
 	}
@@ -29,7 +28,6 @@ func (s *SatConClient) DoQuery(requestTemplate string, vars interface{}, funcs t
 	req := actions.BuildRequest(payload, s.Endpoint, token)
 
 	response, err := s.HTTPClient.Do(req)
-
 	if err != nil {
 		return err
 	}

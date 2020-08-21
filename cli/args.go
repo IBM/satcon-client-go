@@ -32,9 +32,14 @@ const (
 	FLAG_DESCRIPTION  = "desc"
 	FLAG_CHANNEL_NAME = "channelName"
 
-	FLAG_CLUSTER_ID = "clusterID"
-	FLAG_FILTER     = "filter"
-	FLAG_LIMIT      = "l"
+	FLAG_CLUSTER_ID          = "clusterID"
+	FLAG_FILTER              = "filter"
+	FLAG_LIMIT               = "l"
+	FLAG_FROM_DATE           = "from"
+	FLAG_TO_DATE             = "to"
+	FLAG_KINDS               = "k"
+	FLAG_SORT                = "sort"
+	FLAG_SUBSCRIPTIONS_LIMIT = "sl"
 
 	ActionList     = "list"
 	ActionRegister = "register"
@@ -103,4 +108,9 @@ func init() {
 	ResourceCmd.StringVar(&(resourceMetadata.ClusterID), FLAG_CLUSTER_ID, "", fmt.Sprintf("-%s <cluster_id>", FLAG_CLUSTER_ID))
 	ResourceCmd.StringVar(&(resourceMetadata.Filter), FLAG_FILTER, "", fmt.Sprintf("-%s <kind>", FLAG_FILTER))
 	ResourceCmd.StringVar(&(resourceMetadata.Limit), FLAG_LIMIT, "50", fmt.Sprintf("-%s <limit>", FLAG_LIMIT))
+	ResourceCmd.StringVar(&(resourceMetadata.SubscriptionsLimit), FLAG_SUBSCRIPTIONS_LIMIT, "50", fmt.Sprintf("-%s <subscriptions_limit>", FLAG_SUBSCRIPTIONS_LIMIT))
+	ResourceCmd.StringVar(&(resourceMetadata.FromDate), FLAG_FROM_DATE, "", fmt.Sprintf("-%s <from_date>", FLAG_FROM_DATE))
+	ResourceCmd.StringVar(&(resourceMetadata.ToDate), FLAG_TO_DATE, "", fmt.Sprintf("-%s <to_date>", FLAG_TO_DATE))
+	ResourceCmd.Var(&(resourceMetadata.Kinds), FLAG_KINDS, fmt.Sprintf("-%s <kind>", FLAG_KINDS))
+	ResourceCmd.Var(&(resourceMetadata.Sort), FLAG_SORT, fmt.Sprintf("-%s <field:[descending order? true|false]>", FLAG_SORT))
 }
