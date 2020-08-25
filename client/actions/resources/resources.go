@@ -57,7 +57,7 @@ func NewResourcesVariables(orgID, filter, fromDate, toDate string, limit int, ki
 	}
 	vars.Returns = []string{
 		"count",
-		"resources{id, orgId, clusterId, cluster{clusterId, name}, selfLink, hash, data, deleted, created, updated, lastModified, searchableData, searchableDataHash, subscription{uuid, orgId, name, groups, channelUuid, channelName, version, versionUuid, owner{id, name}, created, updated}}",
+		"resources{id, orgId, clusterId, cluster{clusterId, name}, selfLink, hash, data, deleted, created, updated, lastModified, searchableData, searchableDataHash, subscription{uuid, orgId, name, groups, channelUuid, channelName, version, versionUuid, created, updated}}",
 	}
 
 	return vars

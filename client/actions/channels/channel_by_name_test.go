@@ -80,7 +80,7 @@ var _ = Describe("ChannelByName", func() {
 								Created:     "then2",
 							},
 						},
-						Subscriptions: []types.BasicChannelSubscription{
+						Subscriptions: []types.ChannelSubscription{
 							{
 								Groups:      []string{"group-1", "group-2"},
 								Name:        "this-subscription",
