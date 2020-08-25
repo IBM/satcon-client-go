@@ -88,9 +88,6 @@ var _ = Describe("ResourcesByCluster", func() {
 									Name:                 "watch-keeper-abcdefg-xxxx",
 									Namespace:            "razeedeploy",
 									APIVersion:           "v1",
-									Annotations:          "ibm-privileged-psp",
-									ImageID:              "quay.io/razee/watch-keeper",
-									Image:                "quay.io/razee/watch-keeper:tag",
 									SearchableExpression: "Pod:watch-keeper-abcdefg-xxxx:razeedeploy:v1:ibm-privileged-psp:quay.io/razee/watch-keeper",
 								},
 								SearchableDataHash: "s34rchableH@$H",
@@ -101,7 +98,7 @@ var _ = Describe("ResourcesByCluster", func() {
 									Groups:      []string{"subscription-group-1", "subscription-group-2"},
 									ChannelUUID: "channel-uuid",
 									ChannelName: "channel-name",
-									Channel: types.Channel{
+									Channel: &types.Channel{
 										UUID:    "another-uuid",
 										OrgID:   "the-orgID-again",
 										Name:    "channel-name-once-again",

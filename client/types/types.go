@@ -20,18 +20,18 @@ type BasicChannelSubscription struct {
 
 // ChannelSubscription encapsulates a channel's subscription data
 type ChannelSubscription struct {
-	UUID        string    `json:"uuid,omitempty"`
-	OrgID       string    `json:"orgId,omitempty"`
-	Name        string    `json:"name,omitempty"`
-	Groups      []string  `json:"groups,omitempty"`
-	ChannelUUID string    `json:"channelUuid,omitempty"`
-	ChannelName string    `json:"channelName,omitempty"`
-	Channel     Channel   `json:"channel,omitempty"`
-	Version     string    `json:"version,omitempty"`
-	VersionUUID string    `json:"versionUuid,omitempty"`
-	Owner       BasicUser `json:"owner,omitempty"`
-	Created     string    `json:"created,omitempty"`
-	Updated     string    `json:"updated,omitempty"`
+	UUID        string     `json:"uuid,omitempty"`
+	OrgID       string     `json:"orgId,omitempty"`
+	Name        string     `json:"name,omitempty"`
+	Groups      []string   `json:"groups,omitempty"`
+	ChannelUUID string     `json:"channelUuid,omitempty"`
+	ChannelName string     `json:"channelName,omitempty"`
+	Channel     *Channel   `json:"channel,omitempty"`
+	Version     string     `json:"version,omitempty"`
+	VersionUUID string     `json:"versionUuid,omitempty"`
+	Owner       *BasicUser `json:"owner,omitempty"`
+	Created     string     `json:"created,omitempty"`
+	Updated     string     `json:"updated,omitempty"`
 }
 
 type Cluster struct {
@@ -64,12 +64,12 @@ type ClusterGroup struct {
 type ClusterGroupList []ClusterGroup
 
 type Channel struct {
-	UUID          string                     `json:"uuid,omitempty"`
-	OrgID         string                     `json:"orgId,omitempty"`
-	Name          string                     `json:"name,omitempty"`
-	Created       string                     `json:"created,omitempty"`
-	Versions      []ChannelVersion           `json:"versions,omitempty"`
-	Subscriptions []BasicChannelSubscription `json:"subscriptions,omitempty"`
+	UUID          string                `json:"uuid,omitempty"`
+	OrgID         string                `json:"orgId,omitempty"`
+	Name          string                `json:"name,omitempty"`
+	Created       string                `json:"created,omitempty"`
+	Versions      []ChannelVersion      `json:"versions,omitempty"`
+	Subscriptions []ChannelSubscription `json:"subscriptions,omitempty"`
 }
 
 type ChannelList []Channel
@@ -149,9 +149,6 @@ type SearchableData struct {
 	Name                 string `json:"name,omitempty"`
 	Namespace            string `json:"namespace,omitempty"`
 	APIVersion           string `json:"apiVersion,omitempty"`
-	Annotations          string `json:"annotations[\"kubernetes_io_psp\"],omitempty"`
-	ImageID              string `json:"imageID,omitempty"`
-	Image                string `json:"image,omitempty"`
 	SearchableExpression string `json:"searchableExpression,omitempty"`
 }
 
