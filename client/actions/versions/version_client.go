@@ -14,6 +14,7 @@ import (
 type VersionService interface {
 	AddChannelVersion(orgId, channelUuid, name string, content []byte, description, token string) (*AddChannelVersionResponseDataDetails, error)
 	RemoveChannelVersion(orgId, uuid, token string) (*RemoveChannelVersionResponseDataDetails, error)
+	ChannelVersion(orgID, channelUuid, versionUuid, token string) (*types.DeployableVersion, error)
 	ChannelVersionByName(orgID, channelName, versionName, token string) (*types.DeployableVersion, error)
 }
 
