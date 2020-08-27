@@ -76,10 +76,16 @@ var _ = Describe("Versions", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(versionDetails).NotTo(BeNil())
 
-			// Verify that channel version exists
-			getVersionDetails, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
+			// Verify that channel version exists (query by name)
+			channelVersionByNameDetails, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(getVersionDetails).NotTo(BeNil())
+			Expect(channelVersionByNameDetails).NotTo(BeNil())
+
+			// Verify the channel version exists (query by UUID)
+			channelVersionDetails, err := c.Versions.ChannelVersion(testConfig.OrgID, channelVersionByNameDetails.ChannelID, channelVersionByNameDetails.UUID, token)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(channelVersionDetails).NotTo(BeNil())
+			Expect(channelVersionDetails.Name).To(MatchRegexp(versionName))
 
 			// Remove channel version
 			removeVersionDetails, err := c.Versions.RemoveChannelVersion(testConfig.OrgID, versionDetails.VersionUUID, token)
@@ -87,9 +93,9 @@ var _ = Describe("Versions", func() {
 			Expect(removeVersionDetails).NotTo(BeNil())
 
 			// Verify that channel version has been removed
-			getVersionDetails, err = c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
+			channelVersionByNameDetails, err = c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(getVersionDetails).To(BeNil())
+			Expect(channelVersionByNameDetails).To(BeNil())
 
 			// Delete channel
 			removeChannelDetails, err := c.Channels.RemoveChannel(testConfig.OrgID, channelDetails.UUID, token)
