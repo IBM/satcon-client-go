@@ -12,6 +12,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.ibm.com/coligo/satcon-client/client/actions"
+	"github.ibm.com/coligo/satcon-client/client/types"
 	. "github.ibm.com/coligo/satcon-client/client/web"
 	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
 )
@@ -28,6 +29,10 @@ func (b *BadBody) Close() error {
 
 var _ = Describe("Client", func() {
 	Describe("SatConClient", func() {
+		type QueryResponse struct {
+			Name string `json:"name"`
+		}
+
 		var (
 			s        *SatConClient
 			h        *webfakes.FakeHTTPClient
@@ -47,10 +52,6 @@ var _ = Describe("Client", func() {
 			type QueryVars struct {
 				actions.GraphQLQuery
 				Name string
-			}
-
-			type QueryResponse struct {
-				Name string `json:"name"`
 			}
 
 			var (
@@ -140,6 +141,37 @@ var _ = Describe("Client", func() {
 					Expect(ok).To(BeTrue())
 				})
 			})
+
+		})
+
+		Describe("CheckResponseForErrors", func() {
+			var errorResponse *types.RequestError
+
+			BeforeEach(func() {
+				errorResponse = &types.RequestError{
+					Errors: []types.RequestErrorDetails{
+						{
+							Message: "ah darn",
+						},
+					},
+				}
+			})
+
+			It("Returns an error when error messages are detected", func() {
+				body, _ := json.Marshal(errorResponse)
+				err := CheckResponseForErrors(body)
+				Expect(err).To(HaveOccurred())
+			})
+
+			It("Does not error when error messages are not detected", func() {
+				respBodyBytes, _ := json.Marshal(QueryResponse{
+					Name: "joe",
+				})
+
+				err := CheckResponseForErrors(respBodyBytes)
+				Expect(err).NotTo(HaveOccurred())
+			})
+
 		})
 	})
 })

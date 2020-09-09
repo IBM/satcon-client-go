@@ -102,6 +102,14 @@ type DeployableVersion struct {
 	Created     string `json:"created,omitempty"`
 }
 
+type RequestError struct {
+	Errors []RequestErrorDetails `json:"errors,omitempty"`
+}
+
+type RequestErrorDetails struct {
+	Message string `json:"message,omitempty"`
+}
+
 type GroupList []Group
 
 type Group struct {

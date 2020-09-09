@@ -77,12 +77,14 @@ var _ = Describe("Channels", func() {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(rmDetails.Success).To(BeTrue())
 
+			// Confirm channel has been removed using the channelName
 			channelByName, err = c.Channels.ChannelByName(testConfig.OrgID, channelName, token)
-			Expect(err).NotTo(HaveOccurred())
+			Expect(err).To(HaveOccurred())
 			Expect(channelByName).To(BeNil())
 
+			// Confirm channel has been removed using the channelUuid
 			channel, err = c.Channels.Channel(testConfig.OrgID, details.UUID, token)
-			Expect(err).NotTo(HaveOccurred())
+			Expect(err).To(HaveOccurred())
 			Expect(channel).To(BeNil())
 
 			channelList, err = c.Channels.Channels(testConfig.OrgID, token)

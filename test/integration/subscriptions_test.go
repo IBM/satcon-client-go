@@ -65,7 +65,7 @@ var _ = Describe("Subscriptions", func() {
 			// TODO before we can add a subscription, we need to be able to add a new channel and version so that we can pass channelUuid and versionUuid as arguments
 			// Demonstrate channel version does not exist for the arguments of the current channelName and versionName
 			version, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
-			Expect(err).NotTo(HaveOccurred())
+			Expect(err).To(HaveOccurred())
 			Expect(version).NotTo(Equal(versionName))
 
 			// Create a channel
@@ -133,7 +133,7 @@ var _ = Describe("Subscriptions", func() {
 
 			// Verify that channel version has been removed
 			getVersionDetails, err = c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
-			Expect(err).NotTo(HaveOccurred())
+			Expect(err).To(HaveOccurred())
 			Expect(getVersionDetails).To(BeNil())
 
 			// Delete channel
