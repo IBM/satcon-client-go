@@ -52,7 +52,7 @@ var _ = Describe("Versions", func() {
 			"to get the version by name again to show it no longer exists", func() {
 			// Demonstrate channel version does not exist for the arguments of the current channelName and versionName
 			version, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
-			Expect(err).NotTo(HaveOccurred())
+			Expect(err).To(HaveOccurred())
 			Expect(version).NotTo(Equal(versionName))
 
 			// Create a channel
@@ -94,7 +94,7 @@ var _ = Describe("Versions", func() {
 
 			// Verify that channel version has been removed
 			channelVersionByNameDetails, err = c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
-			Expect(err).NotTo(HaveOccurred())
+			Expect(err).To(HaveOccurred())
 			Expect(channelVersionByNameDetails).To(BeNil())
 
 			// Delete channel
