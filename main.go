@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/fatih/color"
@@ -27,7 +26,8 @@ func main() {
 	result, err := cli.Execute(os.Args[1], &c)
 
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "KABOOM", err)
+		stdError := color.New(color.FgRed, color.Bold).FprintlnFunc()
+		stdError(os.Stderr, "KABOOM", err)
 	} else {
 		cli.Print(result)
 	}

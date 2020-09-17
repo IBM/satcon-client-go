@@ -239,21 +239,24 @@ func (cmd *SubCommand) execute(s *client.SatCon) (interface{}, error) {
 		}
 
 	case TypeResource:
+		var (
+			limit, subscriptionLimit int
+		)
 		switch cmd.Action {
 		case ActionGet:
-			limit, err := strconv.Atoi(resourceMetadata.Limit)
+			limit, err = strconv.Atoi(resourceMetadata.Limit)
 			if err != nil {
 				err = fmt.Errorf("Unable to convert %s to integer value", resourceMetadata.Limit)
 				break
 			}
 			result, err = s.Resources.ResourcesByCluster(cmd.OrgID, resourceMetadata.ClusterID, resourceMetadata.Filter, limit, cmd.Token)
 		case ActionList:
-			limit, err := strconv.Atoi(resourceMetadata.Limit)
+			limit, err = strconv.Atoi(resourceMetadata.Limit)
 			if err != nil {
 				err = fmt.Errorf("Unable to convert %s to int value", resourceMetadata.Limit)
 				break
 			}
-			subscriptionLimit, err := strconv.Atoi(resourceMetadata.SubscriptionsLimit)
+			subscriptionLimit, err = strconv.Atoi(resourceMetadata.SubscriptionsLimit)
 			if err != nil {
 				err = fmt.Errorf("Unable to convert %s to int value", resourceMetadata.SubscriptionsLimit)
 				break
