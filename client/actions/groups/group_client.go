@@ -14,6 +14,7 @@ import (
 type GroupService interface {
 	Groups(orgID, token string) (types.GroupList, error)
 	AddGroup(orgID, name, token string) (*AddGroupResponseDataDetails, error)
+	RemoveGroupByName(orgID, name, token string) (*RemoveGroupByNameResponseDataDetails, error)
 	GroupClusters(orgID, uuid string, clusters []string, token string) (*GroupClustersResponseDataDetails, error)
 }
 

@@ -46,12 +46,14 @@ var _ = Describe("Subscriptions", func() {
 		BeforeEach(func() {
 			channelName = RandStringBytes(8)
 			versionName = RandStringBytes(8)
+			group1 := RandStringBytes(8)
+			group2 := RandStringBytes(8)
 			subscriptionName = RandStringBytes(8)
 			fmt.Println("Using channel name: ", channelName)
 			fmt.Println("Using version name: ", versionName)
 			fmt.Println("Using subscription name: ", subscriptionName)
 			description = fmt.Sprintf("Integration test version: %s for channel: %s", versionName, channelName)
-			groups = []string{"integration-1", "integration-2"}
+			groups = []string{group1, group2}
 		})
 
 		It("Lists the subscriptions, creates our new subscription, lists again and finds it, deletes it, and finally lists to see that it's gone", func() {
@@ -151,6 +153,13 @@ var _ = Describe("Subscriptions", func() {
 				}
 			}
 			Expect(found).To(BeFalse())
+
+			// Remove the groups
+			for _, g := range groups {
+				rg, err := c.Groups.RemoveGroupByName(testConfig.OrgID, g, token)
+				Expect(rg.UUID).NotTo(BeEmpty())
+				Expect(err).NotTo(HaveOccurred())
+			}
 
 		})
 	})
