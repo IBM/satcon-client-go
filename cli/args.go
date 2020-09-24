@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	DefaultEndpoint = "https://config.satellite.test.cloud.ibm.com/graphql"
+	DefaultEndpoint = "https://config.satellite.cloud.ibm.com/graphql"
 
 	TypeChannel      = "channel"
 	TypeCluster      = "cluster"
