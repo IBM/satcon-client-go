@@ -38,7 +38,7 @@ func NewResourcesByClusterVariables(orgID, clusterID, filter string, limit int) 
 	}
 	vars.Returns = []string{
 		"count",
-		"resources{id, orgId, clusterId, cluster{clusterId, name}, selfLink, hash, data, deleted, created, updated, lastModified, searchableData, searchableDataHash, subscription{uuid, orgId, name, groups, channelUuid, channelName, version, versionUuid, owner{id, name}, created, updated}}",
+		"resources{id, orgId, clusterId, selfLink, searchableData, subscription{uuid, orgId, name, groups, channel{uuid, orgId, name, created}, version}}",
 	}
 
 	return vars

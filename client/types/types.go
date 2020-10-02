@@ -153,11 +153,12 @@ type ResourceList struct {
 
 // SearchableData encapsulates cluster resource data
 type SearchableData struct {
-	Kind                 string `json:"kind,omitempty"`
-	Name                 string `json:"name,omitempty"`
-	Namespace            string `json:"namespace,omitempty"`
-	APIVersion           string `json:"apiVersion,omitempty"`
-	SearchableExpression string `json:"searchableExpression,omitempty"`
+	Kind                 string                 `json:"kind,omitempty"`
+	Name                 string                 `json:"name,omitempty"`
+	Namespace            string                 `json:"namespace,omitempty"`
+	APIVersion           string                 `json:"apiVersion,omitempty"`
+	SearchableExpression string                 `json:"searchableExpression,omitempty"`
+	Errors               map[string]interface{} `json:"errors,omitempty"`
 }
 
 // Subscription encapsulates satellite subscription data
