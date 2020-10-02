@@ -74,7 +74,7 @@ func CheckResponseForErrors(body []byte) error {
 			return err
 		}
 
-		if errorDetails != nil {
+		if errorDetails.Errors != nil {
 			var errorMessage string
 			for i := range errorDetails.Errors {
 				errorMessage += fmt.Sprintf("%s ", errorDetails.Errors[i].Message)

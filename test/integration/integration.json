@@ -1,7 +1,7 @@
 {
   "apiKey": "",
   "token": "",
-  "iamEndpoint": "https://iam.test.cloud.ibm.com/identity/token",
-  "satconEndpoint": "https://config.satellite.test.cloud.ibm.com/graphql",
+  "iamEndpoint": "https://iam.cloud.ibm.com/identity/token",
+  "satconEndpoint": "https://config.satellite.cloud.ibm.com/graphql",
   "orgId": "d4653c3af7a142fe957a3602f467f183"
 }
