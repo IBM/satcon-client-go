@@ -27,5 +27,17 @@ var _ = Describe("Client", func() {
 			Expect(s.Subscriptions).NotTo(BeNil())
 			Expect(s.Versions).NotTo(BeNil())
 		})
+
+		It("Errors when endpointURL is empty", func() {
+			s, err := New("", nil)
+			Expect(err).To(HaveOccurred())
+			Expect(s.Channels).To(BeNil())
+			Expect(s.Clusters).To(BeNil())
+			Expect(s.Groups).To(BeNil())
+			Expect(s.Resources).To(BeNil())
+			Expect(s.Subscriptions).To(BeNil())
+			Expect(s.Versions).To(BeNil())
+
+		})
 	})
 })

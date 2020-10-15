@@ -1,12 +1,10 @@
 # satcon-client
 
-This is the repo for the golang API client for [Satellite Config](https://github.ibm.com/alchemy-containers/satellite-config).  This client is developed and maintained by the IBM Code Engine product team, not the Satellite Config/Razee team - please direct questions/comments/issues to the correct team.
-
 ## Usage
 
 Although the purpose of the library is to insulate users to some extent from the details of the SatCon API, an understanding of key concepts and, in some cases, actual API details is required to use it successfully.  Users new to Satellite Config and/or Razee (the IBM-developed open source tooling that is the core of Satellite Config) may want to visit these links to gain familiarity:
 
-- [Satellite Config API in staging](https://config.satellite.test.cloud.ibm.com/graphql) - includes the SatCon API spec and schema, which can help with understanding entity details and relationships
+- [Satellite Config API Schema](https://github.com/razee-io/Razeedash-api/tree/master/app/apollo/schema) - can help with understanding entity details and relationships
 - [Razee.io docs](https://github.com/razee-io/Razee/blob/master/README.md) - primarily useful for users wanting to understand more of what's under the covers
 
 ### Key objects in Satellite Config
@@ -16,7 +14,7 @@ There are six primary entity classes in SatCon, at least from a user perspective
 1. **Cluster** - represents an actual kubernetes cluster to be managed via SatCon
 1. **Group** - clusters to be managed similarly are collected into groups to facilitate organized and simplified distribution of resources
 1. **Channel** - a channel collects a set of configurations which can then be distributed to cluster groups
-1. **Version** - within a channel, a version represents a configuration (which can itself contain one or more kubernetes objects to be created/configured, e.g. a single Version could encapulate both a Pod and a ConfigMap) which can be distributed via a subscription
+1. **Version** - within a channel, a version represents a configuration (which can itself contain one or more kubernetes objects to be created/configured, e.g. a single Version could encapsulate both a Pod and a ConfigMap) which can be distributed via a subscription
 1. **Subscription** - a subscription associates a cluster group with a version and the owning channel, so that the SatCon agent will then know to pull that configuration down and apply it to every cluster within that group
 1. **Resource** - configurations applied to clusters produce resources, which are essentially just that - representations of kubernetes resources which have been deployed to the cluster(s)
 
@@ -45,8 +43,10 @@ The integration tests are run as a suite of [Ginkgo](https://github.com/onsi/gin
 Next, navigate to the `test/integration` directory and update the `integration.json` config file.
 
 - Set `apiKey` to an IAM API key with sufficient permissions.  _Be sure not to push any commits that contain actual credentials._
-- Set `iamEndpoint` to the IAM token endpoint you want to use.  This is prepopulated with the staging IAM token endpoint, but you can change it to the production one if you want.  (_Note: this will not work pre-SatCon beta._)
-- Set `satconEndpoint` to the Satellite Config API endpoint you want to use.  This is also prepopulated with the staging SatCon endpoint.
+- Set `iamEndpoint` to the IAM token endpoint you want to use.  This is prepopulated with the production IAM token endpoint.
+- Set `satconEndpoint` to the Satellite Config API endpoint you want to use.  This is also prepopulated with the production SatCon endpoint.
 - Set `orgId` to the Satellite organization ID you will use for running the tests.  At this time, the tests only support using a single orgId value for all of the tests.
 
 Then, from that same directory, you can just run `ginkgo .` to execute the integration suite.  This is a much simpler suite than e.g. the [CF Acceptance Tests](https://github.com/cloudfoundry/cf-acceptance-tests), and there is not currently a way to execute only a specific set of tests other than to use the ginkgo-specific focus/pending prefixes within the test code files themselves.
+
+#### [Contribution Guidelines for this project](docs/CONTRIBUTING.md)
