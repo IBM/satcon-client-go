@@ -3,5 +3,5 @@
   "token": "",
   "iamEndpoint": "https://iam.cloud.ibm.com/identity/token",
   "satconEndpoint": "https://config.satellite.cloud.ibm.com/graphql",
-  "orgId": "d4653c3af7a142fe957a3602f467f183"
+  "orgId": ""
 }
