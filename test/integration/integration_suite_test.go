@@ -3,9 +3,9 @@ package integration_test
 import (
 	"testing"
 
+	. "github.com/IBM/satcon-client-go/test/integration"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	. "github.ibm.com/coligo/satcon-client/test/integration"
 )
 
 const (

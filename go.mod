@@ -1,4 +1,4 @@
-module github.ibm.com/coligo/satcon-client
+module github.com/IBM/satcon-client-go
 
 go 1.14
 

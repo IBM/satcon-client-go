@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.ibm.com/coligo/satcon-client/client/types"
-	"github.ibm.com/coligo/satcon-client/client/web"
+	"github.com/IBM/satcon-client-go/client/types"
+	"github.com/IBM/satcon-client-go/client/web"
 )
 
 // VersionService is the interface used to perform all channel-version-centric actions

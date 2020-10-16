@@ -1,13 +1,13 @@
 package client
 
 import (
-	"github.ibm.com/coligo/satcon-client/client/actions/channels"
-	"github.ibm.com/coligo/satcon-client/client/actions/clusters"
-	"github.ibm.com/coligo/satcon-client/client/actions/groups"
-	"github.ibm.com/coligo/satcon-client/client/actions/resources"
-	"github.ibm.com/coligo/satcon-client/client/actions/subscriptions"
-	"github.ibm.com/coligo/satcon-client/client/actions/versions"
-	"github.ibm.com/coligo/satcon-client/client/web"
+	"github.com/IBM/satcon-client-go/client/actions/channels"
+	"github.com/IBM/satcon-client-go/client/actions/clusters"
+	"github.com/IBM/satcon-client-go/client/actions/groups"
+	"github.com/IBM/satcon-client-go/client/actions/resources"
+	"github.com/IBM/satcon-client-go/client/actions/subscriptions"
+	"github.com/IBM/satcon-client-go/client/actions/versions"
+	"github.com/IBM/satcon-client-go/client/web"
 )
 
 type SatCon struct {

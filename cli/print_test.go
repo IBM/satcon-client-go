@@ -4,9 +4,9 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.ibm.com/coligo/satcon-client/cli"
-	"github.ibm.com/coligo/satcon-client/client/actions/clusters"
-	"github.ibm.com/coligo/satcon-client/client/types"
+	. "github.com/IBM/satcon-client-go/cli"
+	"github.com/IBM/satcon-client-go/client/actions/clusters"
+	"github.com/IBM/satcon-client-go/client/types"
 )
 
 var _ = Describe("Print", func() {

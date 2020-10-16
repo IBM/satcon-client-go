@@ -10,10 +10,10 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.ibm.com/coligo/satcon-client/client/actions"
-	. "github.ibm.com/coligo/satcon-client/client/actions/subscriptions"
-	"github.ibm.com/coligo/satcon-client/client/types"
-	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
+	"github.com/IBM/satcon-client-go/client/actions"
+	. "github.com/IBM/satcon-client-go/client/actions/subscriptions"
+	"github.com/IBM/satcon-client-go/client/types"
+	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("SubscriptionsByOrgId", func() {

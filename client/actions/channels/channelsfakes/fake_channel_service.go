@@ -4,7 +4,7 @@ package channelsfakes
 import (
 	"sync"
 
-	"github.ibm.com/coligo/satcon-client/client/actions/channels"
+	"github.com/IBM/satcon-client-go/client/actions/channels"
 )
 
 type FakeChannelService struct {
