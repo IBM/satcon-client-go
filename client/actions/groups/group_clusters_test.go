@@ -11,9 +11,9 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.ibm.com/coligo/satcon-client/client/actions"
-	. "github.ibm.com/coligo/satcon-client/client/actions/groups"
-	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
+	"github.com/IBM/satcon-client-go/client/actions"
+	. "github.com/IBM/satcon-client-go/client/actions/groups"
+	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("GroupClusters", func() {

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.ibm.com/coligo/satcon-client/client/web"
+	"github.com/IBM/satcon-client-go/client/web"
 )
 
 type FakeHTTPClient struct {

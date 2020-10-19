@@ -7,8 +7,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.ibm.com/coligo/satcon-client/client"
-	. "github.ibm.com/coligo/satcon-client/test/integration"
+	"github.com/IBM/satcon-client-go/client"
+	. "github.com/IBM/satcon-client-go/test/integration"
 )
 
 var _ = Describe("Channels", func() {

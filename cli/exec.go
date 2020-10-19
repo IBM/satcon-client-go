@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.ibm.com/coligo/satcon-client/client"
-	"github.ibm.com/coligo/satcon-client/client/actions/resources"
-	"github.ibm.com/coligo/satcon-client/client/types"
+	"github.com/IBM/satcon-client-go/client"
+	"github.com/IBM/satcon-client-go/client/actions/resources"
+	"github.com/IBM/satcon-client-go/client/types"
 )
 
 type SubCommand struct {

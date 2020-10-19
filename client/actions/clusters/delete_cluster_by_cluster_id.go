@@ -1,7 +1,7 @@
 package clusters
 
 import (
-	"github.ibm.com/coligo/satcon-client/client/actions"
+	"github.com/IBM/satcon-client-go/client/actions"
 )
 
 const (

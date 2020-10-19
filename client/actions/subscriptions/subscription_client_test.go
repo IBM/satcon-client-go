@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.ibm.com/coligo/satcon-client/client/actions/subscriptions"
+	. "github.com/IBM/satcon-client-go/client/actions/subscriptions"
 )
 
 var _ = Describe("ClusterClient", func() {

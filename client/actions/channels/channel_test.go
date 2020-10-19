@@ -10,10 +10,10 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"github.ibm.com/coligo/satcon-client/client/actions"
-	. "github.ibm.com/coligo/satcon-client/client/actions/channels"
-	"github.ibm.com/coligo/satcon-client/client/types"
-	"github.ibm.com/coligo/satcon-client/client/web/webfakes"
+	"github.com/IBM/satcon-client-go/client/actions"
+	. "github.com/IBM/satcon-client-go/client/actions/channels"
+	"github.com/IBM/satcon-client-go/client/types"
+	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("Channels", func() {

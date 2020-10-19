@@ -1,6 +1,6 @@
 package groups
 
-import "github.ibm.com/coligo/satcon-client/client/actions"
+import "github.com/IBM/satcon-client-go/client/actions"
 
 const (
 	QueryRemoveGroup       = "removeGroup"

@@ -4,7 +4,7 @@ package subscriptionsfakes
 import (
 	"sync"
 
-	"github.ibm.com/coligo/satcon-client/client/actions/subscriptions"
+	"github.com/IBM/satcon-client-go/client/actions/subscriptions"
 )
 
 type FakeSubscriptionService struct {

@@ -4,7 +4,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.ibm.com/coligo/satcon-client/client"
+	. "github.com/IBM/satcon-client-go/client"
 )
 
 var _ = Describe("Client", func() {

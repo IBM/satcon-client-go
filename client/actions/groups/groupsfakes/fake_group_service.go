@@ -4,7 +4,7 @@ package groupsfakes
 import (
 	"sync"
 
-	"github.ibm.com/coligo/satcon-client/client/actions/groups"
+	"github.com/IBM/satcon-client-go/client/actions/groups"
 )
 
 type FakeGroupService struct {

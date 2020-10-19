@@ -11,7 +11,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.ibm.com/coligo/satcon-client/client/actions"
+	. "github.com/IBM/satcon-client-go/client/actions"
 )
 
 var _ = Describe("Query", func() {

@@ -1,8 +1,8 @@
 package subscriptions
 
 import (
-	"github.ibm.com/coligo/satcon-client/client/actions"
-	"github.ibm.com/coligo/satcon-client/client/types"
+	"github.com/IBM/satcon-client-go/client/actions"
+	"github.com/IBM/satcon-client-go/client/types"
 )
 
 const (

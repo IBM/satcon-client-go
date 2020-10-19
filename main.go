@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
+	"github.com/IBM/satcon-client-go/cli"
+	"github.com/IBM/satcon-client-go/client"
 	"github.com/fatih/color"
-	"github.ibm.com/coligo/satcon-client/cli"
-	"github.ibm.com/coligo/satcon-client/client"
 )
 
 const (

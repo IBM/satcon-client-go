@@ -4,7 +4,7 @@ package clustersfakes
 import (
 	"sync"
 
-	"github.ibm.com/coligo/satcon-client/client/actions/clusters"
+	"github.com/IBM/satcon-client-go/client/actions/clusters"
 )
 
 type FakeClusterService struct {
