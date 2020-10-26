@@ -1,0 +1,20 @@
+language: go
+
+go:
+  - 1.15
+os:
+  - linux
+env:
+  global:
+    - GO111MODULE=on
+branches:
+  only:
+    - main
+before_install:
+  - echo -e "machine github.com\n  login $GIT_TOKEN" > ~/.netrc
+  - chmod 600 ~/.netrc
+install: true
+before_script:
+  - go mod tidy
+script:
+  - test/coverage.sh
