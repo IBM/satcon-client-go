@@ -5,6 +5,13 @@ import (
 	. "github.com/onsi/gomega"
 
 	. "github.com/IBM/satcon-client-go/client"
+
+	"github.com/IBM/satcon-client-go/client/actions/channels/channelsfakes"
+	"github.com/IBM/satcon-client-go/client/actions/clusters/clustersfakes"
+	"github.com/IBM/satcon-client-go/client/actions/groups/groupsfakes"
+	"github.com/IBM/satcon-client-go/client/actions/resources/resourcesfakes"
+	"github.com/IBM/satcon-client-go/client/actions/subscriptions/subscriptionsfakes"
+	"github.com/IBM/satcon-client-go/client/actions/versions/versionsfakes"
 )
 
 var _ = Describe("Client", func() {
@@ -38,6 +45,36 @@ var _ = Describe("Client", func() {
 			Expect(s.Subscriptions).To(BeNil())
 			Expect(s.Versions).To(BeNil())
 
+		})
+	})
+
+	Describe("NewTesting", func() {
+		var (
+			ch *channelsfakes.FakeChannelService
+			cl *clustersfakes.FakeClusterService
+			gr *groupsfakes.FakeGroupService
+			re *resourcesfakes.FakeResourceService
+			su *subscriptionsfakes.FakeSubscriptionService
+			ve *versionsfakes.FakeVersionService
+		)
+
+		BeforeEach(func() {
+			ch = &channelsfakes.FakeChannelService{}
+			cl = &clustersfakes.FakeClusterService{}
+			gr = &groupsfakes.FakeGroupService{}
+			re = &resourcesfakes.FakeResourceService{}
+			su = &subscriptionsfakes.FakeSubscriptionService{}
+			ve = &versionsfakes.FakeVersionService{}
+		})
+
+		It("Creates a client containing only fakes", func() {
+			sc := NewTesting("foo", nil)
+			Expect(sc.Channels).To(BeAssignableToTypeOf(ch))
+			Expect(sc.Clusters).To(BeAssignableToTypeOf(cl))
+			Expect(sc.Groups).To(BeAssignableToTypeOf(gr))
+			Expect(sc.Resources).To(BeAssignableToTypeOf(re))
+			Expect(sc.Subscriptions).To(BeAssignableToTypeOf(su))
+			Expect(sc.Versions).To(BeAssignableToTypeOf(ve))
 		})
 	})
 })

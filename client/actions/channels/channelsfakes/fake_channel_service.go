@@ -5,16 +5,430 @@ import (
 	"sync"
 
 	"github.com/IBM/satcon-client-go/client/actions/channels"
+	"github.com/IBM/satcon-client-go/client/types"
 )
 
 type FakeChannelService struct {
+	AddChannelStub        func(string, string, string) (*channels.AddChannelResponseDataDetails, error)
+	addChannelMutex       sync.RWMutex
+	addChannelArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}
+	addChannelReturns struct {
+		result1 *channels.AddChannelResponseDataDetails
+		result2 error
+	}
+	addChannelReturnsOnCall map[int]struct {
+		result1 *channels.AddChannelResponseDataDetails
+		result2 error
+	}
+	ChannelStub        func(string, string, string) (*types.Channel, error)
+	channelMutex       sync.RWMutex
+	channelArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}
+	channelReturns struct {
+		result1 *types.Channel
+		result2 error
+	}
+	channelReturnsOnCall map[int]struct {
+		result1 *types.Channel
+		result2 error
+	}
+	ChannelByNameStub        func(string, string, string) (*types.Channel, error)
+	channelByNameMutex       sync.RWMutex
+	channelByNameArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}
+	channelByNameReturns struct {
+		result1 *types.Channel
+		result2 error
+	}
+	channelByNameReturnsOnCall map[int]struct {
+		result1 *types.Channel
+		result2 error
+	}
+	ChannelsStub        func(string, string) (types.ChannelList, error)
+	channelsMutex       sync.RWMutex
+	channelsArgsForCall []struct {
+		arg1 string
+		arg2 string
+	}
+	channelsReturns struct {
+		result1 types.ChannelList
+		result2 error
+	}
+	channelsReturnsOnCall map[int]struct {
+		result1 types.ChannelList
+		result2 error
+	}
+	RemoveChannelStub        func(string, string, string) (*channels.RemoveChannelResponseDataDetails, error)
+	removeChannelMutex       sync.RWMutex
+	removeChannelArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}
+	removeChannelReturns struct {
+		result1 *channels.RemoveChannelResponseDataDetails
+		result2 error
+	}
+	removeChannelReturnsOnCall map[int]struct {
+		result1 *channels.RemoveChannelResponseDataDetails
+		result2 error
+	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *FakeChannelService) AddChannel(arg1 string, arg2 string, arg3 string) (*channels.AddChannelResponseDataDetails, error) {
+	fake.addChannelMutex.Lock()
+	ret, specificReturn := fake.addChannelReturnsOnCall[len(fake.addChannelArgsForCall)]
+	fake.addChannelArgsForCall = append(fake.addChannelArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}{arg1, arg2, arg3})
+	stub := fake.AddChannelStub
+	fakeReturns := fake.addChannelReturns
+	fake.recordInvocation("AddChannel", []interface{}{arg1, arg2, arg3})
+	fake.addChannelMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeChannelService) AddChannelCallCount() int {
+	fake.addChannelMutex.RLock()
+	defer fake.addChannelMutex.RUnlock()
+	return len(fake.addChannelArgsForCall)
+}
+
+func (fake *FakeChannelService) AddChannelCalls(stub func(string, string, string) (*channels.AddChannelResponseDataDetails, error)) {
+	fake.addChannelMutex.Lock()
+	defer fake.addChannelMutex.Unlock()
+	fake.AddChannelStub = stub
+}
+
+func (fake *FakeChannelService) AddChannelArgsForCall(i int) (string, string, string) {
+	fake.addChannelMutex.RLock()
+	defer fake.addChannelMutex.RUnlock()
+	argsForCall := fake.addChannelArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeChannelService) AddChannelReturns(result1 *channels.AddChannelResponseDataDetails, result2 error) {
+	fake.addChannelMutex.Lock()
+	defer fake.addChannelMutex.Unlock()
+	fake.AddChannelStub = nil
+	fake.addChannelReturns = struct {
+		result1 *channels.AddChannelResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeChannelService) AddChannelReturnsOnCall(i int, result1 *channels.AddChannelResponseDataDetails, result2 error) {
+	fake.addChannelMutex.Lock()
+	defer fake.addChannelMutex.Unlock()
+	fake.AddChannelStub = nil
+	if fake.addChannelReturnsOnCall == nil {
+		fake.addChannelReturnsOnCall = make(map[int]struct {
+			result1 *channels.AddChannelResponseDataDetails
+			result2 error
+		})
+	}
+	fake.addChannelReturnsOnCall[i] = struct {
+		result1 *channels.AddChannelResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeChannelService) Channel(arg1 string, arg2 string, arg3 string) (*types.Channel, error) {
+	fake.channelMutex.Lock()
+	ret, specificReturn := fake.channelReturnsOnCall[len(fake.channelArgsForCall)]
+	fake.channelArgsForCall = append(fake.channelArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}{arg1, arg2, arg3})
+	stub := fake.ChannelStub
+	fakeReturns := fake.channelReturns
+	fake.recordInvocation("Channel", []interface{}{arg1, arg2, arg3})
+	fake.channelMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeChannelService) ChannelCallCount() int {
+	fake.channelMutex.RLock()
+	defer fake.channelMutex.RUnlock()
+	return len(fake.channelArgsForCall)
+}
+
+func (fake *FakeChannelService) ChannelCalls(stub func(string, string, string) (*types.Channel, error)) {
+	fake.channelMutex.Lock()
+	defer fake.channelMutex.Unlock()
+	fake.ChannelStub = stub
+}
+
+func (fake *FakeChannelService) ChannelArgsForCall(i int) (string, string, string) {
+	fake.channelMutex.RLock()
+	defer fake.channelMutex.RUnlock()
+	argsForCall := fake.channelArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeChannelService) ChannelReturns(result1 *types.Channel, result2 error) {
+	fake.channelMutex.Lock()
+	defer fake.channelMutex.Unlock()
+	fake.ChannelStub = nil
+	fake.channelReturns = struct {
+		result1 *types.Channel
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeChannelService) ChannelReturnsOnCall(i int, result1 *types.Channel, result2 error) {
+	fake.channelMutex.Lock()
+	defer fake.channelMutex.Unlock()
+	fake.ChannelStub = nil
+	if fake.channelReturnsOnCall == nil {
+		fake.channelReturnsOnCall = make(map[int]struct {
+			result1 *types.Channel
+			result2 error
+		})
+	}
+	fake.channelReturnsOnCall[i] = struct {
+		result1 *types.Channel
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeChannelService) ChannelByName(arg1 string, arg2 string, arg3 string) (*types.Channel, error) {
+	fake.channelByNameMutex.Lock()
+	ret, specificReturn := fake.channelByNameReturnsOnCall[len(fake.channelByNameArgsForCall)]
+	fake.channelByNameArgsForCall = append(fake.channelByNameArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}{arg1, arg2, arg3})
+	stub := fake.ChannelByNameStub
+	fakeReturns := fake.channelByNameReturns
+	fake.recordInvocation("ChannelByName", []interface{}{arg1, arg2, arg3})
+	fake.channelByNameMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeChannelService) ChannelByNameCallCount() int {
+	fake.channelByNameMutex.RLock()
+	defer fake.channelByNameMutex.RUnlock()
+	return len(fake.channelByNameArgsForCall)
+}
+
+func (fake *FakeChannelService) ChannelByNameCalls(stub func(string, string, string) (*types.Channel, error)) {
+	fake.channelByNameMutex.Lock()
+	defer fake.channelByNameMutex.Unlock()
+	fake.ChannelByNameStub = stub
+}
+
+func (fake *FakeChannelService) ChannelByNameArgsForCall(i int) (string, string, string) {
+	fake.channelByNameMutex.RLock()
+	defer fake.channelByNameMutex.RUnlock()
+	argsForCall := fake.channelByNameArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeChannelService) ChannelByNameReturns(result1 *types.Channel, result2 error) {
+	fake.channelByNameMutex.Lock()
+	defer fake.channelByNameMutex.Unlock()
+	fake.ChannelByNameStub = nil
+	fake.channelByNameReturns = struct {
+		result1 *types.Channel
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeChannelService) ChannelByNameReturnsOnCall(i int, result1 *types.Channel, result2 error) {
+	fake.channelByNameMutex.Lock()
+	defer fake.channelByNameMutex.Unlock()
+	fake.ChannelByNameStub = nil
+	if fake.channelByNameReturnsOnCall == nil {
+		fake.channelByNameReturnsOnCall = make(map[int]struct {
+			result1 *types.Channel
+			result2 error
+		})
+	}
+	fake.channelByNameReturnsOnCall[i] = struct {
+		result1 *types.Channel
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeChannelService) Channels(arg1 string, arg2 string) (types.ChannelList, error) {
+	fake.channelsMutex.Lock()
+	ret, specificReturn := fake.channelsReturnsOnCall[len(fake.channelsArgsForCall)]
+	fake.channelsArgsForCall = append(fake.channelsArgsForCall, struct {
+		arg1 string
+		arg2 string
+	}{arg1, arg2})
+	stub := fake.ChannelsStub
+	fakeReturns := fake.channelsReturns
+	fake.recordInvocation("Channels", []interface{}{arg1, arg2})
+	fake.channelsMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeChannelService) ChannelsCallCount() int {
+	fake.channelsMutex.RLock()
+	defer fake.channelsMutex.RUnlock()
+	return len(fake.channelsArgsForCall)
+}
+
+func (fake *FakeChannelService) ChannelsCalls(stub func(string, string) (types.ChannelList, error)) {
+	fake.channelsMutex.Lock()
+	defer fake.channelsMutex.Unlock()
+	fake.ChannelsStub = stub
+}
+
+func (fake *FakeChannelService) ChannelsArgsForCall(i int) (string, string) {
+	fake.channelsMutex.RLock()
+	defer fake.channelsMutex.RUnlock()
+	argsForCall := fake.channelsArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeChannelService) ChannelsReturns(result1 types.ChannelList, result2 error) {
+	fake.channelsMutex.Lock()
+	defer fake.channelsMutex.Unlock()
+	fake.ChannelsStub = nil
+	fake.channelsReturns = struct {
+		result1 types.ChannelList
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeChannelService) ChannelsReturnsOnCall(i int, result1 types.ChannelList, result2 error) {
+	fake.channelsMutex.Lock()
+	defer fake.channelsMutex.Unlock()
+	fake.ChannelsStub = nil
+	if fake.channelsReturnsOnCall == nil {
+		fake.channelsReturnsOnCall = make(map[int]struct {
+			result1 types.ChannelList
+			result2 error
+		})
+	}
+	fake.channelsReturnsOnCall[i] = struct {
+		result1 types.ChannelList
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeChannelService) RemoveChannel(arg1 string, arg2 string, arg3 string) (*channels.RemoveChannelResponseDataDetails, error) {
+	fake.removeChannelMutex.Lock()
+	ret, specificReturn := fake.removeChannelReturnsOnCall[len(fake.removeChannelArgsForCall)]
+	fake.removeChannelArgsForCall = append(fake.removeChannelArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}{arg1, arg2, arg3})
+	stub := fake.RemoveChannelStub
+	fakeReturns := fake.removeChannelReturns
+	fake.recordInvocation("RemoveChannel", []interface{}{arg1, arg2, arg3})
+	fake.removeChannelMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeChannelService) RemoveChannelCallCount() int {
+	fake.removeChannelMutex.RLock()
+	defer fake.removeChannelMutex.RUnlock()
+	return len(fake.removeChannelArgsForCall)
+}
+
+func (fake *FakeChannelService) RemoveChannelCalls(stub func(string, string, string) (*channels.RemoveChannelResponseDataDetails, error)) {
+	fake.removeChannelMutex.Lock()
+	defer fake.removeChannelMutex.Unlock()
+	fake.RemoveChannelStub = stub
+}
+
+func (fake *FakeChannelService) RemoveChannelArgsForCall(i int) (string, string, string) {
+	fake.removeChannelMutex.RLock()
+	defer fake.removeChannelMutex.RUnlock()
+	argsForCall := fake.removeChannelArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeChannelService) RemoveChannelReturns(result1 *channels.RemoveChannelResponseDataDetails, result2 error) {
+	fake.removeChannelMutex.Lock()
+	defer fake.removeChannelMutex.Unlock()
+	fake.RemoveChannelStub = nil
+	fake.removeChannelReturns = struct {
+		result1 *channels.RemoveChannelResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeChannelService) RemoveChannelReturnsOnCall(i int, result1 *channels.RemoveChannelResponseDataDetails, result2 error) {
+	fake.removeChannelMutex.Lock()
+	defer fake.removeChannelMutex.Unlock()
+	fake.RemoveChannelStub = nil
+	if fake.removeChannelReturnsOnCall == nil {
+		fake.removeChannelReturnsOnCall = make(map[int]struct {
+			result1 *channels.RemoveChannelResponseDataDetails
+			result2 error
+		})
+	}
+	fake.removeChannelReturnsOnCall[i] = struct {
+		result1 *channels.RemoveChannelResponseDataDetails
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *FakeChannelService) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.addChannelMutex.RLock()
+	defer fake.addChannelMutex.RUnlock()
+	fake.channelMutex.RLock()
+	defer fake.channelMutex.RUnlock()
+	fake.channelByNameMutex.RLock()
+	defer fake.channelByNameMutex.RUnlock()
+	fake.channelsMutex.RLock()
+	defer fake.channelsMutex.RUnlock()
+	fake.removeChannelMutex.RLock()
+	defer fake.removeChannelMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value
