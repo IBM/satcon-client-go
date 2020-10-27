@@ -5,43 +5,218 @@ import (
 	"sync"
 
 	"github.com/IBM/satcon-client-go/client/actions/subscriptions"
+	"github.com/IBM/satcon-client-go/client/types"
 )
 
 type FakeSubscriptionService struct {
-	SubscriptionsStub        func(string, string) (subscriptions.SubscriptionList, error)
+	AddSubscriptionStub        func(string, string, string, string, []string, string) (*subscriptions.AddSubscriptionResponseDataDetails, error)
+	addSubscriptionMutex       sync.RWMutex
+	addSubscriptionArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+		arg4 string
+		arg5 []string
+		arg6 string
+	}
+	addSubscriptionReturns struct {
+		result1 *subscriptions.AddSubscriptionResponseDataDetails
+		result2 error
+	}
+	addSubscriptionReturnsOnCall map[int]struct {
+		result1 *subscriptions.AddSubscriptionResponseDataDetails
+		result2 error
+	}
+	RemoveSubscriptionStub        func(string, string, string) (*subscriptions.RemoveSubscriptionResponseDataDetails, error)
+	removeSubscriptionMutex       sync.RWMutex
+	removeSubscriptionArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}
+	removeSubscriptionReturns struct {
+		result1 *subscriptions.RemoveSubscriptionResponseDataDetails
+		result2 error
+	}
+	removeSubscriptionReturnsOnCall map[int]struct {
+		result1 *subscriptions.RemoveSubscriptionResponseDataDetails
+		result2 error
+	}
+	SubscriptionsStub        func(string, string) (types.SubscriptionList, error)
 	subscriptionsMutex       sync.RWMutex
 	subscriptionsArgsForCall []struct {
 		arg1 string
 		arg2 string
 	}
 	subscriptionsReturns struct {
-		result1 subscriptions.SubscriptionList
+		result1 types.SubscriptionList
 		result2 error
 	}
 	subscriptionsReturnsOnCall map[int]struct {
-		result1 subscriptions.SubscriptionList
+		result1 types.SubscriptionList
 		result2 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeSubscriptionService) Subscriptions(arg1 string, arg2 string) (subscriptions.SubscriptionList, error) {
+func (fake *FakeSubscriptionService) AddSubscription(arg1 string, arg2 string, arg3 string, arg4 string, arg5 []string, arg6 string) (*subscriptions.AddSubscriptionResponseDataDetails, error) {
+	var arg5Copy []string
+	if arg5 != nil {
+		arg5Copy = make([]string, len(arg5))
+		copy(arg5Copy, arg5)
+	}
+	fake.addSubscriptionMutex.Lock()
+	ret, specificReturn := fake.addSubscriptionReturnsOnCall[len(fake.addSubscriptionArgsForCall)]
+	fake.addSubscriptionArgsForCall = append(fake.addSubscriptionArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+		arg4 string
+		arg5 []string
+		arg6 string
+	}{arg1, arg2, arg3, arg4, arg5Copy, arg6})
+	stub := fake.AddSubscriptionStub
+	fakeReturns := fake.addSubscriptionReturns
+	fake.recordInvocation("AddSubscription", []interface{}{arg1, arg2, arg3, arg4, arg5Copy, arg6})
+	fake.addSubscriptionMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4, arg5, arg6)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeSubscriptionService) AddSubscriptionCallCount() int {
+	fake.addSubscriptionMutex.RLock()
+	defer fake.addSubscriptionMutex.RUnlock()
+	return len(fake.addSubscriptionArgsForCall)
+}
+
+func (fake *FakeSubscriptionService) AddSubscriptionCalls(stub func(string, string, string, string, []string, string) (*subscriptions.AddSubscriptionResponseDataDetails, error)) {
+	fake.addSubscriptionMutex.Lock()
+	defer fake.addSubscriptionMutex.Unlock()
+	fake.AddSubscriptionStub = stub
+}
+
+func (fake *FakeSubscriptionService) AddSubscriptionArgsForCall(i int) (string, string, string, string, []string, string) {
+	fake.addSubscriptionMutex.RLock()
+	defer fake.addSubscriptionMutex.RUnlock()
+	argsForCall := fake.addSubscriptionArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4, argsForCall.arg5, argsForCall.arg6
+}
+
+func (fake *FakeSubscriptionService) AddSubscriptionReturns(result1 *subscriptions.AddSubscriptionResponseDataDetails, result2 error) {
+	fake.addSubscriptionMutex.Lock()
+	defer fake.addSubscriptionMutex.Unlock()
+	fake.AddSubscriptionStub = nil
+	fake.addSubscriptionReturns = struct {
+		result1 *subscriptions.AddSubscriptionResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeSubscriptionService) AddSubscriptionReturnsOnCall(i int, result1 *subscriptions.AddSubscriptionResponseDataDetails, result2 error) {
+	fake.addSubscriptionMutex.Lock()
+	defer fake.addSubscriptionMutex.Unlock()
+	fake.AddSubscriptionStub = nil
+	if fake.addSubscriptionReturnsOnCall == nil {
+		fake.addSubscriptionReturnsOnCall = make(map[int]struct {
+			result1 *subscriptions.AddSubscriptionResponseDataDetails
+			result2 error
+		})
+	}
+	fake.addSubscriptionReturnsOnCall[i] = struct {
+		result1 *subscriptions.AddSubscriptionResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeSubscriptionService) RemoveSubscription(arg1 string, arg2 string, arg3 string) (*subscriptions.RemoveSubscriptionResponseDataDetails, error) {
+	fake.removeSubscriptionMutex.Lock()
+	ret, specificReturn := fake.removeSubscriptionReturnsOnCall[len(fake.removeSubscriptionArgsForCall)]
+	fake.removeSubscriptionArgsForCall = append(fake.removeSubscriptionArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}{arg1, arg2, arg3})
+	stub := fake.RemoveSubscriptionStub
+	fakeReturns := fake.removeSubscriptionReturns
+	fake.recordInvocation("RemoveSubscription", []interface{}{arg1, arg2, arg3})
+	fake.removeSubscriptionMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeSubscriptionService) RemoveSubscriptionCallCount() int {
+	fake.removeSubscriptionMutex.RLock()
+	defer fake.removeSubscriptionMutex.RUnlock()
+	return len(fake.removeSubscriptionArgsForCall)
+}
+
+func (fake *FakeSubscriptionService) RemoveSubscriptionCalls(stub func(string, string, string) (*subscriptions.RemoveSubscriptionResponseDataDetails, error)) {
+	fake.removeSubscriptionMutex.Lock()
+	defer fake.removeSubscriptionMutex.Unlock()
+	fake.RemoveSubscriptionStub = stub
+}
+
+func (fake *FakeSubscriptionService) RemoveSubscriptionArgsForCall(i int) (string, string, string) {
+	fake.removeSubscriptionMutex.RLock()
+	defer fake.removeSubscriptionMutex.RUnlock()
+	argsForCall := fake.removeSubscriptionArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeSubscriptionService) RemoveSubscriptionReturns(result1 *subscriptions.RemoveSubscriptionResponseDataDetails, result2 error) {
+	fake.removeSubscriptionMutex.Lock()
+	defer fake.removeSubscriptionMutex.Unlock()
+	fake.RemoveSubscriptionStub = nil
+	fake.removeSubscriptionReturns = struct {
+		result1 *subscriptions.RemoveSubscriptionResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeSubscriptionService) RemoveSubscriptionReturnsOnCall(i int, result1 *subscriptions.RemoveSubscriptionResponseDataDetails, result2 error) {
+	fake.removeSubscriptionMutex.Lock()
+	defer fake.removeSubscriptionMutex.Unlock()
+	fake.RemoveSubscriptionStub = nil
+	if fake.removeSubscriptionReturnsOnCall == nil {
+		fake.removeSubscriptionReturnsOnCall = make(map[int]struct {
+			result1 *subscriptions.RemoveSubscriptionResponseDataDetails
+			result2 error
+		})
+	}
+	fake.removeSubscriptionReturnsOnCall[i] = struct {
+		result1 *subscriptions.RemoveSubscriptionResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeSubscriptionService) Subscriptions(arg1 string, arg2 string) (types.SubscriptionList, error) {
 	fake.subscriptionsMutex.Lock()
 	ret, specificReturn := fake.subscriptionsReturnsOnCall[len(fake.subscriptionsArgsForCall)]
 	fake.subscriptionsArgsForCall = append(fake.subscriptionsArgsForCall, struct {
 		arg1 string
 		arg2 string
 	}{arg1, arg2})
+	stub := fake.SubscriptionsStub
+	fakeReturns := fake.subscriptionsReturns
 	fake.recordInvocation("Subscriptions", []interface{}{arg1, arg2})
 	fake.subscriptionsMutex.Unlock()
-	if fake.SubscriptionsStub != nil {
-		return fake.SubscriptionsStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.subscriptionsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -51,7 +226,7 @@ func (fake *FakeSubscriptionService) SubscriptionsCallCount() int {
 	return len(fake.subscriptionsArgsForCall)
 }
 
-func (fake *FakeSubscriptionService) SubscriptionsCalls(stub func(string, string) (subscriptions.SubscriptionList, error)) {
+func (fake *FakeSubscriptionService) SubscriptionsCalls(stub func(string, string) (types.SubscriptionList, error)) {
 	fake.subscriptionsMutex.Lock()
 	defer fake.subscriptionsMutex.Unlock()
 	fake.SubscriptionsStub = stub
@@ -64,28 +239,28 @@ func (fake *FakeSubscriptionService) SubscriptionsArgsForCall(i int) (string, st
 	return argsForCall.arg1, argsForCall.arg2
 }
 
-func (fake *FakeSubscriptionService) SubscriptionsReturns(result1 subscriptions.SubscriptionList, result2 error) {
+func (fake *FakeSubscriptionService) SubscriptionsReturns(result1 types.SubscriptionList, result2 error) {
 	fake.subscriptionsMutex.Lock()
 	defer fake.subscriptionsMutex.Unlock()
 	fake.SubscriptionsStub = nil
 	fake.subscriptionsReturns = struct {
-		result1 subscriptions.SubscriptionList
+		result1 types.SubscriptionList
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeSubscriptionService) SubscriptionsReturnsOnCall(i int, result1 subscriptions.SubscriptionList, result2 error) {
+func (fake *FakeSubscriptionService) SubscriptionsReturnsOnCall(i int, result1 types.SubscriptionList, result2 error) {
 	fake.subscriptionsMutex.Lock()
 	defer fake.subscriptionsMutex.Unlock()
 	fake.SubscriptionsStub = nil
 	if fake.subscriptionsReturnsOnCall == nil {
 		fake.subscriptionsReturnsOnCall = make(map[int]struct {
-			result1 subscriptions.SubscriptionList
+			result1 types.SubscriptionList
 			result2 error
 		})
 	}
 	fake.subscriptionsReturnsOnCall[i] = struct {
-		result1 subscriptions.SubscriptionList
+		result1 types.SubscriptionList
 		result2 error
 	}{result1, result2}
 }
@@ -93,6 +268,10 @@ func (fake *FakeSubscriptionService) SubscriptionsReturnsOnCall(i int, result1 s
 func (fake *FakeSubscriptionService) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.addSubscriptionMutex.RLock()
+	defer fake.addSubscriptionMutex.RUnlock()
+	fake.removeSubscriptionMutex.RLock()
+	defer fake.removeSubscriptionMutex.RUnlock()
 	fake.subscriptionsMutex.RLock()
 	defer fake.subscriptionsMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}

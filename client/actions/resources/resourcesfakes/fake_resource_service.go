@@ -5,16 +5,209 @@ import (
 	"sync"
 
 	"github.com/IBM/satcon-client-go/client/actions/resources"
+	"github.com/IBM/satcon-client-go/client/types"
 )
 
 type FakeResourceService struct {
+	ResourcesStub        func(string, string, string, string, int, []string, []resources.SortObj, int, string) (*types.ResourceList, error)
+	resourcesMutex       sync.RWMutex
+	resourcesArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+		arg4 string
+		arg5 int
+		arg6 []string
+		arg7 []resources.SortObj
+		arg8 int
+		arg9 string
+	}
+	resourcesReturns struct {
+		result1 *types.ResourceList
+		result2 error
+	}
+	resourcesReturnsOnCall map[int]struct {
+		result1 *types.ResourceList
+		result2 error
+	}
+	ResourcesByClusterStub        func(string, string, string, int, string) (*types.ResourceList, error)
+	resourcesByClusterMutex       sync.RWMutex
+	resourcesByClusterArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+		arg4 int
+		arg5 string
+	}
+	resourcesByClusterReturns struct {
+		result1 *types.ResourceList
+		result2 error
+	}
+	resourcesByClusterReturnsOnCall map[int]struct {
+		result1 *types.ResourceList
+		result2 error
+	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *FakeResourceService) Resources(arg1 string, arg2 string, arg3 string, arg4 string, arg5 int, arg6 []string, arg7 []resources.SortObj, arg8 int, arg9 string) (*types.ResourceList, error) {
+	var arg6Copy []string
+	if arg6 != nil {
+		arg6Copy = make([]string, len(arg6))
+		copy(arg6Copy, arg6)
+	}
+	var arg7Copy []resources.SortObj
+	if arg7 != nil {
+		arg7Copy = make([]resources.SortObj, len(arg7))
+		copy(arg7Copy, arg7)
+	}
+	fake.resourcesMutex.Lock()
+	ret, specificReturn := fake.resourcesReturnsOnCall[len(fake.resourcesArgsForCall)]
+	fake.resourcesArgsForCall = append(fake.resourcesArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+		arg4 string
+		arg5 int
+		arg6 []string
+		arg7 []resources.SortObj
+		arg8 int
+		arg9 string
+	}{arg1, arg2, arg3, arg4, arg5, arg6Copy, arg7Copy, arg8, arg9})
+	stub := fake.ResourcesStub
+	fakeReturns := fake.resourcesReturns
+	fake.recordInvocation("Resources", []interface{}{arg1, arg2, arg3, arg4, arg5, arg6Copy, arg7Copy, arg8, arg9})
+	fake.resourcesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeResourceService) ResourcesCallCount() int {
+	fake.resourcesMutex.RLock()
+	defer fake.resourcesMutex.RUnlock()
+	return len(fake.resourcesArgsForCall)
+}
+
+func (fake *FakeResourceService) ResourcesCalls(stub func(string, string, string, string, int, []string, []resources.SortObj, int, string) (*types.ResourceList, error)) {
+	fake.resourcesMutex.Lock()
+	defer fake.resourcesMutex.Unlock()
+	fake.ResourcesStub = stub
+}
+
+func (fake *FakeResourceService) ResourcesArgsForCall(i int) (string, string, string, string, int, []string, []resources.SortObj, int, string) {
+	fake.resourcesMutex.RLock()
+	defer fake.resourcesMutex.RUnlock()
+	argsForCall := fake.resourcesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4, argsForCall.arg5, argsForCall.arg6, argsForCall.arg7, argsForCall.arg8, argsForCall.arg9
+}
+
+func (fake *FakeResourceService) ResourcesReturns(result1 *types.ResourceList, result2 error) {
+	fake.resourcesMutex.Lock()
+	defer fake.resourcesMutex.Unlock()
+	fake.ResourcesStub = nil
+	fake.resourcesReturns = struct {
+		result1 *types.ResourceList
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeResourceService) ResourcesReturnsOnCall(i int, result1 *types.ResourceList, result2 error) {
+	fake.resourcesMutex.Lock()
+	defer fake.resourcesMutex.Unlock()
+	fake.ResourcesStub = nil
+	if fake.resourcesReturnsOnCall == nil {
+		fake.resourcesReturnsOnCall = make(map[int]struct {
+			result1 *types.ResourceList
+			result2 error
+		})
+	}
+	fake.resourcesReturnsOnCall[i] = struct {
+		result1 *types.ResourceList
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeResourceService) ResourcesByCluster(arg1 string, arg2 string, arg3 string, arg4 int, arg5 string) (*types.ResourceList, error) {
+	fake.resourcesByClusterMutex.Lock()
+	ret, specificReturn := fake.resourcesByClusterReturnsOnCall[len(fake.resourcesByClusterArgsForCall)]
+	fake.resourcesByClusterArgsForCall = append(fake.resourcesByClusterArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+		arg4 int
+		arg5 string
+	}{arg1, arg2, arg3, arg4, arg5})
+	stub := fake.ResourcesByClusterStub
+	fakeReturns := fake.resourcesByClusterReturns
+	fake.recordInvocation("ResourcesByCluster", []interface{}{arg1, arg2, arg3, arg4, arg5})
+	fake.resourcesByClusterMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4, arg5)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeResourceService) ResourcesByClusterCallCount() int {
+	fake.resourcesByClusterMutex.RLock()
+	defer fake.resourcesByClusterMutex.RUnlock()
+	return len(fake.resourcesByClusterArgsForCall)
+}
+
+func (fake *FakeResourceService) ResourcesByClusterCalls(stub func(string, string, string, int, string) (*types.ResourceList, error)) {
+	fake.resourcesByClusterMutex.Lock()
+	defer fake.resourcesByClusterMutex.Unlock()
+	fake.ResourcesByClusterStub = stub
+}
+
+func (fake *FakeResourceService) ResourcesByClusterArgsForCall(i int) (string, string, string, int, string) {
+	fake.resourcesByClusterMutex.RLock()
+	defer fake.resourcesByClusterMutex.RUnlock()
+	argsForCall := fake.resourcesByClusterArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4, argsForCall.arg5
+}
+
+func (fake *FakeResourceService) ResourcesByClusterReturns(result1 *types.ResourceList, result2 error) {
+	fake.resourcesByClusterMutex.Lock()
+	defer fake.resourcesByClusterMutex.Unlock()
+	fake.ResourcesByClusterStub = nil
+	fake.resourcesByClusterReturns = struct {
+		result1 *types.ResourceList
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeResourceService) ResourcesByClusterReturnsOnCall(i int, result1 *types.ResourceList, result2 error) {
+	fake.resourcesByClusterMutex.Lock()
+	defer fake.resourcesByClusterMutex.Unlock()
+	fake.ResourcesByClusterStub = nil
+	if fake.resourcesByClusterReturnsOnCall == nil {
+		fake.resourcesByClusterReturnsOnCall = make(map[int]struct {
+			result1 *types.ResourceList
+			result2 error
+		})
+	}
+	fake.resourcesByClusterReturnsOnCall[i] = struct {
+		result1 *types.ResourceList
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *FakeResourceService) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.resourcesMutex.RLock()
+	defer fake.resourcesMutex.RUnlock()
+	fake.resourcesByClusterMutex.RLock()
+	defer fake.resourcesByClusterMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value

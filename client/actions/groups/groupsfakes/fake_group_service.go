@@ -5,6 +5,7 @@ import (
 	"sync"
 
 	"github.com/IBM/satcon-client-go/client/actions/groups"
+	"github.com/IBM/satcon-client-go/client/types"
 )
 
 type FakeGroupService struct {
@@ -39,18 +40,48 @@ type FakeGroupService struct {
 		result1 *groups.GroupClustersResponseDataDetails
 		result2 error
 	}
-	GroupsStub        func(string, string) (groups.GroupList, error)
+	GroupsStub        func(string, string) (types.GroupList, error)
 	groupsMutex       sync.RWMutex
 	groupsArgsForCall []struct {
 		arg1 string
 		arg2 string
 	}
 	groupsReturns struct {
-		result1 groups.GroupList
+		result1 types.GroupList
 		result2 error
 	}
 	groupsReturnsOnCall map[int]struct {
-		result1 groups.GroupList
+		result1 types.GroupList
+		result2 error
+	}
+	RemoveGroupStub        func(string, string, string) (*groups.RemoveGroupResponseDataDetails, error)
+	removeGroupMutex       sync.RWMutex
+	removeGroupArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}
+	removeGroupReturns struct {
+		result1 *groups.RemoveGroupResponseDataDetails
+		result2 error
+	}
+	removeGroupReturnsOnCall map[int]struct {
+		result1 *groups.RemoveGroupResponseDataDetails
+		result2 error
+	}
+	RemoveGroupByNameStub        func(string, string, string) (*groups.RemoveGroupByNameResponseDataDetails, error)
+	removeGroupByNameMutex       sync.RWMutex
+	removeGroupByNameArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}
+	removeGroupByNameReturns struct {
+		result1 *groups.RemoveGroupByNameResponseDataDetails
+		result2 error
+	}
+	removeGroupByNameReturnsOnCall map[int]struct {
+		result1 *groups.RemoveGroupByNameResponseDataDetails
 		result2 error
 	}
 	invocations      map[string][][]interface{}
@@ -65,15 +96,16 @@ func (fake *FakeGroupService) AddGroup(arg1 string, arg2 string, arg3 string) (*
 		arg2 string
 		arg3 string
 	}{arg1, arg2, arg3})
+	stub := fake.AddGroupStub
+	fakeReturns := fake.addGroupReturns
 	fake.recordInvocation("AddGroup", []interface{}{arg1, arg2, arg3})
 	fake.addGroupMutex.Unlock()
-	if fake.AddGroupStub != nil {
-		return fake.AddGroupStub(arg1, arg2, arg3)
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -136,15 +168,16 @@ func (fake *FakeGroupService) GroupClusters(arg1 string, arg2 string, arg3 []str
 		arg3 []string
 		arg4 string
 	}{arg1, arg2, arg3Copy, arg4})
+	stub := fake.GroupClustersStub
+	fakeReturns := fake.groupClustersReturns
 	fake.recordInvocation("GroupClusters", []interface{}{arg1, arg2, arg3Copy, arg4})
 	fake.groupClustersMutex.Unlock()
-	if fake.GroupClustersStub != nil {
-		return fake.GroupClustersStub(arg1, arg2, arg3, arg4)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.groupClustersReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -193,22 +226,23 @@ func (fake *FakeGroupService) GroupClustersReturnsOnCall(i int, result1 *groups.
 	}{result1, result2}
 }
 
-func (fake *FakeGroupService) Groups(arg1 string, arg2 string) (groups.GroupList, error) {
+func (fake *FakeGroupService) Groups(arg1 string, arg2 string) (types.GroupList, error) {
 	fake.groupsMutex.Lock()
 	ret, specificReturn := fake.groupsReturnsOnCall[len(fake.groupsArgsForCall)]
 	fake.groupsArgsForCall = append(fake.groupsArgsForCall, struct {
 		arg1 string
 		arg2 string
 	}{arg1, arg2})
+	stub := fake.GroupsStub
+	fakeReturns := fake.groupsReturns
 	fake.recordInvocation("Groups", []interface{}{arg1, arg2})
 	fake.groupsMutex.Unlock()
-	if fake.GroupsStub != nil {
-		return fake.GroupsStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.groupsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -218,7 +252,7 @@ func (fake *FakeGroupService) GroupsCallCount() int {
 	return len(fake.groupsArgsForCall)
 }
 
-func (fake *FakeGroupService) GroupsCalls(stub func(string, string) (groups.GroupList, error)) {
+func (fake *FakeGroupService) GroupsCalls(stub func(string, string) (types.GroupList, error)) {
 	fake.groupsMutex.Lock()
 	defer fake.groupsMutex.Unlock()
 	fake.GroupsStub = stub
@@ -231,28 +265,160 @@ func (fake *FakeGroupService) GroupsArgsForCall(i int) (string, string) {
 	return argsForCall.arg1, argsForCall.arg2
 }
 
-func (fake *FakeGroupService) GroupsReturns(result1 groups.GroupList, result2 error) {
+func (fake *FakeGroupService) GroupsReturns(result1 types.GroupList, result2 error) {
 	fake.groupsMutex.Lock()
 	defer fake.groupsMutex.Unlock()
 	fake.GroupsStub = nil
 	fake.groupsReturns = struct {
-		result1 groups.GroupList
+		result1 types.GroupList
 		result2 error
 	}{result1, result2}
 }
 
-func (fake *FakeGroupService) GroupsReturnsOnCall(i int, result1 groups.GroupList, result2 error) {
+func (fake *FakeGroupService) GroupsReturnsOnCall(i int, result1 types.GroupList, result2 error) {
 	fake.groupsMutex.Lock()
 	defer fake.groupsMutex.Unlock()
 	fake.GroupsStub = nil
 	if fake.groupsReturnsOnCall == nil {
 		fake.groupsReturnsOnCall = make(map[int]struct {
-			result1 groups.GroupList
+			result1 types.GroupList
 			result2 error
 		})
 	}
 	fake.groupsReturnsOnCall[i] = struct {
-		result1 groups.GroupList
+		result1 types.GroupList
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGroupService) RemoveGroup(arg1 string, arg2 string, arg3 string) (*groups.RemoveGroupResponseDataDetails, error) {
+	fake.removeGroupMutex.Lock()
+	ret, specificReturn := fake.removeGroupReturnsOnCall[len(fake.removeGroupArgsForCall)]
+	fake.removeGroupArgsForCall = append(fake.removeGroupArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}{arg1, arg2, arg3})
+	stub := fake.RemoveGroupStub
+	fakeReturns := fake.removeGroupReturns
+	fake.recordInvocation("RemoveGroup", []interface{}{arg1, arg2, arg3})
+	fake.removeGroupMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeGroupService) RemoveGroupCallCount() int {
+	fake.removeGroupMutex.RLock()
+	defer fake.removeGroupMutex.RUnlock()
+	return len(fake.removeGroupArgsForCall)
+}
+
+func (fake *FakeGroupService) RemoveGroupCalls(stub func(string, string, string) (*groups.RemoveGroupResponseDataDetails, error)) {
+	fake.removeGroupMutex.Lock()
+	defer fake.removeGroupMutex.Unlock()
+	fake.RemoveGroupStub = stub
+}
+
+func (fake *FakeGroupService) RemoveGroupArgsForCall(i int) (string, string, string) {
+	fake.removeGroupMutex.RLock()
+	defer fake.removeGroupMutex.RUnlock()
+	argsForCall := fake.removeGroupArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeGroupService) RemoveGroupReturns(result1 *groups.RemoveGroupResponseDataDetails, result2 error) {
+	fake.removeGroupMutex.Lock()
+	defer fake.removeGroupMutex.Unlock()
+	fake.RemoveGroupStub = nil
+	fake.removeGroupReturns = struct {
+		result1 *groups.RemoveGroupResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGroupService) RemoveGroupReturnsOnCall(i int, result1 *groups.RemoveGroupResponseDataDetails, result2 error) {
+	fake.removeGroupMutex.Lock()
+	defer fake.removeGroupMutex.Unlock()
+	fake.RemoveGroupStub = nil
+	if fake.removeGroupReturnsOnCall == nil {
+		fake.removeGroupReturnsOnCall = make(map[int]struct {
+			result1 *groups.RemoveGroupResponseDataDetails
+			result2 error
+		})
+	}
+	fake.removeGroupReturnsOnCall[i] = struct {
+		result1 *groups.RemoveGroupResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGroupService) RemoveGroupByName(arg1 string, arg2 string, arg3 string) (*groups.RemoveGroupByNameResponseDataDetails, error) {
+	fake.removeGroupByNameMutex.Lock()
+	ret, specificReturn := fake.removeGroupByNameReturnsOnCall[len(fake.removeGroupByNameArgsForCall)]
+	fake.removeGroupByNameArgsForCall = append(fake.removeGroupByNameArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}{arg1, arg2, arg3})
+	stub := fake.RemoveGroupByNameStub
+	fakeReturns := fake.removeGroupByNameReturns
+	fake.recordInvocation("RemoveGroupByName", []interface{}{arg1, arg2, arg3})
+	fake.removeGroupByNameMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeGroupService) RemoveGroupByNameCallCount() int {
+	fake.removeGroupByNameMutex.RLock()
+	defer fake.removeGroupByNameMutex.RUnlock()
+	return len(fake.removeGroupByNameArgsForCall)
+}
+
+func (fake *FakeGroupService) RemoveGroupByNameCalls(stub func(string, string, string) (*groups.RemoveGroupByNameResponseDataDetails, error)) {
+	fake.removeGroupByNameMutex.Lock()
+	defer fake.removeGroupByNameMutex.Unlock()
+	fake.RemoveGroupByNameStub = stub
+}
+
+func (fake *FakeGroupService) RemoveGroupByNameArgsForCall(i int) (string, string, string) {
+	fake.removeGroupByNameMutex.RLock()
+	defer fake.removeGroupByNameMutex.RUnlock()
+	argsForCall := fake.removeGroupByNameArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeGroupService) RemoveGroupByNameReturns(result1 *groups.RemoveGroupByNameResponseDataDetails, result2 error) {
+	fake.removeGroupByNameMutex.Lock()
+	defer fake.removeGroupByNameMutex.Unlock()
+	fake.RemoveGroupByNameStub = nil
+	fake.removeGroupByNameReturns = struct {
+		result1 *groups.RemoveGroupByNameResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGroupService) RemoveGroupByNameReturnsOnCall(i int, result1 *groups.RemoveGroupByNameResponseDataDetails, result2 error) {
+	fake.removeGroupByNameMutex.Lock()
+	defer fake.removeGroupByNameMutex.Unlock()
+	fake.RemoveGroupByNameStub = nil
+	if fake.removeGroupByNameReturnsOnCall == nil {
+		fake.removeGroupByNameReturnsOnCall = make(map[int]struct {
+			result1 *groups.RemoveGroupByNameResponseDataDetails
+			result2 error
+		})
+	}
+	fake.removeGroupByNameReturnsOnCall[i] = struct {
+		result1 *groups.RemoveGroupByNameResponseDataDetails
 		result2 error
 	}{result1, result2}
 }
@@ -266,6 +432,10 @@ func (fake *FakeGroupService) Invocations() map[string][][]interface{} {
 	defer fake.groupClustersMutex.RUnlock()
 	fake.groupsMutex.RLock()
 	defer fake.groupsMutex.RUnlock()
+	fake.removeGroupMutex.RLock()
+	defer fake.removeGroupMutex.RUnlock()
+	fake.removeGroupByNameMutex.RLock()
+	defer fake.removeGroupByNameMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value
