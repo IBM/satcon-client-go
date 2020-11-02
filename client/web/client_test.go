@@ -12,6 +12,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client/actions"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/types"
 	. "github.com/IBM/satcon-client-go/client/web"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
@@ -34,9 +35,10 @@ var _ = Describe("Client", func() {
 		}
 
 		var (
-			s        *SatConClient
-			h        *webfakes.FakeHTTPClient
-			endpoint string
+			s              *SatConClient
+			h              *webfakes.FakeHTTPClient
+			endpoint       string
+			fakeAuthClient authfakes.FakeAuthClient
 		)
 
 		BeforeEach(func() {
@@ -45,6 +47,7 @@ var _ = Describe("Client", func() {
 			s = &SatConClient{
 				Endpoint:   endpoint,
 				HTTPClient: h,
+				AuthClient: &fakeAuthClient,
 			}
 		})
 
@@ -59,7 +62,6 @@ var _ = Describe("Client", func() {
 				requestTemplate string
 				vars            QueryVars
 				response        *http.Response
-				token           string
 				result          QueryResponse
 			)
 
@@ -71,7 +73,6 @@ var _ = Describe("Client", func() {
 				})
 				response = &http.Response{Body: ioutil.NopCloser(bytes.NewReader(respBodyBytes))}
 				h.DoReturns(response, nil)
-				token = "this is a token"
 
 				// Setup the template
 				requestTemplate = `{{define "vars"}}"name":"{{js .Name}}"{{end}}`
@@ -86,12 +87,12 @@ var _ = Describe("Client", func() {
 			})
 
 			It("Does not error", func() {
-				err := s.DoQuery(requestTemplate, vars, nil, &result, token)
+				err := s.DoQuery(requestTemplate, vars, nil, &result)
 				Expect(err).NotTo(HaveOccurred())
 			})
 
 			It("Deserializes the response body into the result", func() {
-				s.DoQuery(requestTemplate, vars, nil, &result, token)
+				s.DoQuery(requestTemplate, vars, nil, &result)
 				Expect(result.Name).To(Equal(name))
 			})
 
@@ -103,7 +104,7 @@ var _ = Describe("Client", func() {
 				})
 
 				It("Bubbles up the RequestBodyError", func() {
-					err := s.DoQuery(requestTemplate, vars, nil, &result, token)
+					err := s.DoQuery(requestTemplate, vars, nil, &result)
 					_, ok := err.(actions.RequestBodyError)
 					Expect(ok).To(BeTrue())
 				})
@@ -115,7 +116,7 @@ var _ = Describe("Client", func() {
 				})
 
 				It("Bubbles up the error returned by the http client's .Do()", func() {
-					err := s.DoQuery(requestTemplate, vars, nil, &result, token)
+					err := s.DoQuery(requestTemplate, vars, nil, &result)
 					_, ok := err.(*url.Error)
 					Expect(ok).To(BeTrue())
 				})
@@ -129,14 +130,14 @@ var _ = Describe("Client", func() {
 				// This would work the same for an error on Close(),
 				// they both flow through ioutil.ReadAll()
 				It("Bubbles up the read error", func() {
-					err := s.DoQuery(requestTemplate, vars, nil, &result, token)
+					err := s.DoQuery(requestTemplate, vars, nil, &result)
 					Expect(err).To(MatchError("BAD BODY"))
 				})
 			})
 
 			Context("When unmarshalling errors", func() {
 				It("Bubbles up the unmarshal error", func() {
-					err := s.DoQuery(requestTemplate, vars, nil, nil, token)
+					err := s.DoQuery(requestTemplate, vars, nil, nil)
 					_, ok := err.(*json.InvalidUnmarshalError)
 					Expect(ok).To(BeTrue())
 				})

@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Pod
-metadata:
-  name: cli_test
-spec:
-  containers:
-  - name: cli_test
-    image: httpd:alpine

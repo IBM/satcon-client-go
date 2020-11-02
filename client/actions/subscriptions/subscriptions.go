@@ -52,12 +52,12 @@ type SubscriptionsResponseData struct {
 	Subscriptions types.SubscriptionList `json:"subscriptions,omitempty"`
 }
 
-func (c *Client) Subscriptions(orgID, token string) (types.SubscriptionList, error) {
+func (c *Client) Subscriptions(orgID string) (types.SubscriptionList, error) {
 	var response SubscriptionsResponse
 
 	vars := NewSubscriptionsVariables(orgID)
 
-	err := c.DoQuery(SubscriptionsVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(SubscriptionsVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

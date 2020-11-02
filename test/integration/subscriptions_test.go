@@ -8,24 +8,23 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client"
+	"github.com/IBM/satcon-client-go/client/auth"
 	. "github.com/IBM/satcon-client-go/test/integration"
 )
 
 var _ = Describe("Subscriptions", func() {
 	var (
-		token   string
-		c       client.SatCon
-		content []byte
+		c         client.SatCon
+		content   []byte
+		iamClient *auth.IAMClient
 	)
 
 	BeforeEach(func() {
 		var err error
-		c, _ = client.New(testConfig.SatConEndpoint, nil)
+		iamClient, err = auth.NewIAMClient(testConfig.APIKey)
+		Expect(err).ToNot(HaveOccurred())
+		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
 		Expect(c.Subscriptions).NotTo(BeNil())
-
-		token, err = GetToken(testConfig.APIKey, testConfig.IAMEndpoint)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(token).NotTo(BeZero())
 
 		encodedContent := "YXBpVmVyc2lvbjogdjEKa2luZDogUG9kCm1ldGFkYXRhOgogIG5hbWU6IGludGVncmF0aW9uX3Rlc3QKc3BlYzoKICBjb250YWluZXJzOgogIC0gbmFtZTogaW50ZWdyYXRpb25fdGVzdAogICAgaW1hZ2U6IGh0dHBkOmFscGluZQo="
 		content, err = base64.StdEncoding.DecodeString(encodedContent)
@@ -58,7 +57,7 @@ var _ = Describe("Subscriptions", func() {
 
 		It("Lists the subscriptions, creates our new subscription, lists again and finds it, deletes it, and finally lists to see that it's gone", func() {
 			// Verify that our subscription does not already exist
-			subscriptionList, err := c.Subscriptions.Subscriptions(testConfig.OrgID, token)
+			subscriptionList, err := c.Subscriptions.Subscriptions(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			for _, e := range subscriptionList {
 				Expect(e.Name).NotTo(Equal(subscriptionName))
@@ -66,17 +65,17 @@ var _ = Describe("Subscriptions", func() {
 
 			// TODO before we can add a subscription, we need to be able to add a new channel and version so that we can pass channelUuid and versionUuid as arguments
 			// Demonstrate channel version does not exist for the arguments of the current channelName and versionName
-			version, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
+			version, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName)
 			Expect(err).To(HaveOccurred())
 			Expect(version).NotTo(Equal(versionName))
 
 			// Create a channel
-			channelDetails, err := c.Channels.AddChannel(testConfig.OrgID, channelName, token)
+			channelDetails, err := c.Channels.AddChannel(testConfig.OrgID, channelName)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(channelDetails).NotTo(BeNil())
 
 			// Prove that channel exists
-			channelList, err := c.Channels.Channels(testConfig.OrgID, token)
+			channelList, err := c.Channels.Channels(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found := false
 			for _, channel := range channelList {
@@ -87,22 +86,22 @@ var _ = Describe("Subscriptions", func() {
 			Expect(found).To(BeTrue())
 
 			// Create a channel version using the previously created channel
-			versionDetails, err := c.Versions.AddChannelVersion(testConfig.OrgID, channelDetails.UUID, versionName, content, description, token)
+			versionDetails, err := c.Versions.AddChannelVersion(testConfig.OrgID, channelDetails.UUID, versionName, content, description)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(versionDetails).NotTo(BeNil())
 
 			// Verify that channel version exists
-			getVersionDetails, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
+			getVersionDetails, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(getVersionDetails).NotTo(BeNil())
 
 			// Create a new subscription using this channel and version
-			subscriptionDetails, err := c.Subscriptions.AddSubscription(testConfig.OrgID, subscriptionName, channelDetails.UUID, versionDetails.VersionUUID, groups, token)
+			subscriptionDetails, err := c.Subscriptions.AddSubscription(testConfig.OrgID, subscriptionName, channelDetails.UUID, versionDetails.VersionUUID, groups)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(subscriptionDetails).NotTo(BeNil())
 
 			// Verify that our newly created subscription exists
-			subscriptionList, err = c.Subscriptions.Subscriptions(testConfig.OrgID, token)
+			subscriptionList, err = c.Subscriptions.Subscriptions(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found = false
 			for _, subscription := range subscriptionList {
@@ -113,12 +112,12 @@ var _ = Describe("Subscriptions", func() {
 			Expect(found).To(BeTrue())
 
 			// Remove Subscription
-			removeSubscriptionDetails, err := c.Subscriptions.RemoveSubscription(testConfig.OrgID, subscriptionDetails.UUID, token)
+			removeSubscriptionDetails, err := c.Subscriptions.RemoveSubscription(testConfig.OrgID, subscriptionDetails.UUID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(removeSubscriptionDetails).NotTo(BeNil())
 
 			//Verify Subscription have been removed
-			subscriptionList, err = c.Subscriptions.Subscriptions(testConfig.OrgID, token)
+			subscriptionList, err = c.Subscriptions.Subscriptions(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found = false
 			for _, subscription := range subscriptionList {
@@ -129,22 +128,22 @@ var _ = Describe("Subscriptions", func() {
 			Expect(found).To(BeFalse())
 
 			// Remove channel version
-			removeVersionDetails, err := c.Versions.RemoveChannelVersion(testConfig.OrgID, versionDetails.VersionUUID, token)
+			removeVersionDetails, err := c.Versions.RemoveChannelVersion(testConfig.OrgID, versionDetails.VersionUUID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(removeVersionDetails).NotTo(BeNil())
 
 			// Verify that channel version has been removed
-			getVersionDetails, err = c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName, token)
+			getVersionDetails, err = c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName)
 			Expect(err).To(HaveOccurred())
 			Expect(getVersionDetails).To(BeNil())
 
 			// Delete channel
-			removeChannelDetails, err := c.Channels.RemoveChannel(testConfig.OrgID, channelDetails.UUID, token)
+			removeChannelDetails, err := c.Channels.RemoveChannel(testConfig.OrgID, channelDetails.UUID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(removeChannelDetails).NotTo(BeNil())
 
 			// Verify that channel has been removed
-			channelList, err = c.Channels.Channels(testConfig.OrgID, token)
+			channelList, err = c.Channels.Channels(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found = false
 			for _, channel := range channelList {
@@ -156,7 +155,7 @@ var _ = Describe("Subscriptions", func() {
 
 			// Remove the groups
 			for _, g := range groups {
-				rg, err := c.Groups.RemoveGroupByName(testConfig.OrgID, g, token)
+				rg, err := c.Groups.RemoveGroupByName(testConfig.OrgID, g)
 				Expect(rg.UUID).NotTo(BeEmpty())
 				Expect(err).NotTo(HaveOccurred())
 			}

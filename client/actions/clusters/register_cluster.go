@@ -75,12 +75,12 @@ func (d RegisterClusterResponseDataDetails) String() string {
 		d.URL, d.OrgID, d.OrgKey, d.ClusterID, d.RegState, d.Registration)
 }
 
-func (c *Client) RegisterCluster(orgID string, registration types.Registration, token string) (*RegisterClusterResponseDataDetails, error) {
+func (c *Client) RegisterCluster(orgID string, registration types.Registration) (*RegisterClusterResponseDataDetails, error) {
 	var response RegisterClusterResponse
 
 	vars := NewRegisterClusterVariables(orgID, registration)
 
-	err := c.DoQuery(RegisterClusterVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(RegisterClusterVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

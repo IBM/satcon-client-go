@@ -11,6 +11,7 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/versions"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
@@ -18,11 +19,12 @@ var _ = Describe("AddChannelVersion", func() {
 
 	var (
 		orgID, channelUuid, name string
-		description, token       string
+		description              string
 		content                  []byte
 		c                        VersionService
 		h                        *webfakes.FakeHTTPClient
 		response                 *http.Response
+		fakeAuthClient           authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -31,7 +33,6 @@ var _ = Describe("AddChannelVersion", func() {
 		name = "somechannel"
 		content = []byte("YXBpVmVyc2lvbjogdjEKa2luZDogUG9kCm1ldGFkYXRhOgogIG5hbWU6IHZlcnNpb250ZXN0CnNwZWM6CiAgY29udGFpbmVyczoKICAtIG5hbWU6IHZlcnNpb250ZXN0CiAgICBpbWFnZTogaHR0cGQ6YWxwaW5lCg==")
 		description = "somedescription"
-		token = "thisissupposedtobeatoken"
 
 		h = &webfakes.FakeHTTPClient{}
 		response = &http.Response{}
@@ -39,7 +40,7 @@ var _ = Describe("AddChannelVersion", func() {
 	})
 
 	JustBeforeEach(func() {
-		c, _ = NewClient("https://foo.bar", h)
+		c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		Expect(c).NotTo(BeNil())
 
 		Expect(h.DoCallCount()).To(Equal(0))
@@ -91,13 +92,13 @@ var _ = Describe("AddChannelVersion", func() {
 		})
 
 		It("Sends the http request", func() {
-			_, err := c.AddChannelVersion(orgID, channelUuid, name, content, description, token)
+			_, err := c.AddChannelVersion(orgID, channelUuid, name, content, description)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the add channel version details", func() {
-			details, _ := c.AddChannelVersion(orgID, channelUuid, name, content, description, token)
+			details, _ := c.AddChannelVersion(orgID, channelUuid, name, content, description)
 			Expect(details).NotTo(BeNil())
 
 			expected := addChannelVersionResponse.Data.Details

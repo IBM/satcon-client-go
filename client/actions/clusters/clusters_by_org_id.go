@@ -43,12 +43,12 @@ type ClustersByOrgIDResponseData struct {
 	Clusters types.ClusterList `json:"clustersByOrgId,omitempty"`
 }
 
-func (c *Client) ClustersByOrgID(orgID, token string) (types.ClusterList, error) {
+func (c *Client) ClustersByOrgID(orgID string) (types.ClusterList, error) {
 	var response ClustersByOrgIDResponse
 
 	vars := NewClustersByOrgIDVariables(orgID)
 
-	err := c.DoQuery(ClustersByOrgIDVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(ClustersByOrgIDVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

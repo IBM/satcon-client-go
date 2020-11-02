@@ -8,13 +8,15 @@ import (
 	. "github.com/onsi/gomega"
 
 	. "github.com/IBM/satcon-client-go/client/actions/resources"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 )
 
 var _ = Describe("ResourceClient", func() {
 	Describe("NewClient", func() {
 		var (
-			h        *http.Client
-			endpoint string
+			h              *http.Client
+			endpoint       string
+			fakeAuthClient authfakes.FakeAuthClient
 		)
 
 		BeforeEach(func() {
@@ -22,7 +24,7 @@ var _ = Describe("ResourceClient", func() {
 		})
 
 		It("Creates a client using the default http client", func() {
-			c, err := NewClient(endpoint, nil)
+			c, err := NewClient(endpoint, nil, &fakeAuthClient)
 			Expect(c).NotTo(BeNil())
 			Expect(c.(*Client).HTTPClient).To(Equal(http.DefaultClient))
 			Expect(err).NotTo(HaveOccurred())
@@ -36,7 +38,7 @@ var _ = Describe("ResourceClient", func() {
 			})
 
 			It("Uses the supplied client", func() {
-				c, err := NewClient(endpoint, h)
+				c, err := NewClient(endpoint, h, &fakeAuthClient)
 				Expect(c).NotTo(BeNil())
 				Expect(c.(*Client).HTTPClient).To(Equal(h))
 				Expect(err).NotTo(HaveOccurred())
@@ -49,7 +51,7 @@ var _ = Describe("ResourceClient", func() {
 			})
 
 			It("Returns nil and an error", func() {
-				c, err := NewClient(endpoint, nil)
+				c, err := NewClient(endpoint, nil, &fakeAuthClient)
 				Expect(c).To(BeNil())
 				Expect(err).To(HaveOccurred())
 			})

@@ -12,21 +12,22 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/subscriptions"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("Removing a Subscription", func() {
 	var (
-		orgID, uuid, token string
-		c                  SubscriptionService
-		h                  *webfakes.FakeHTTPClient
-		response           *http.Response
+		orgID, uuid    string
+		c              SubscriptionService
+		h              *webfakes.FakeHTTPClient
+		response       *http.Response
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
 		orgID = "someorg"
 		uuid = "somesubscription"
-		token = "thisissupposedtobeatoken"
 
 		h = &webfakes.FakeHTTPClient{}
 		response = &http.Response{}
@@ -34,7 +35,8 @@ var _ = Describe("Removing a Subscription", func() {
 	})
 
 	JustBeforeEach(func() {
-		c, _ = NewClient("https://foo.bar", h)
+
+		c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		Expect(c).NotTo(BeNil())
 
 		Expect(h.DoCallCount()).To(Equal(0))
@@ -80,13 +82,13 @@ var _ = Describe("Removing a Subscription", func() {
 		})
 
 		It("Sends the http request", func() {
-			_, err := c.RemoveSubscription(orgID, uuid, token)
+			_, err := c.RemoveSubscription(orgID, uuid)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the details of subscription removal", func() {
-			details, _ := c.RemoveSubscription(orgID, uuid, token)
+			details, _ := c.RemoveSubscription(orgID, uuid)
 			Expect(details).NotTo(BeNil())
 
 			expected := rcResponse.Data.Details
@@ -99,7 +101,7 @@ var _ = Describe("Removing a Subscription", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.RemoveSubscription(orgID, uuid, token)
+				_, err := c.RemoveSubscription(orgID, uuid)
 				Expect(err).To(MatchError("robots will win!"))
 			})
 		})
@@ -111,7 +113,7 @@ var _ = Describe("Removing a Subscription", func() {
 			})
 
 			It("Returns nil", func() {
-				details, err := c.RemoveSubscription(orgID, uuid, token)
+				details, err := c.RemoveSubscription(orgID, uuid)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(details).To(BeNil())
 			})

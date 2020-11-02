@@ -12,14 +12,16 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/channels"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("Channels", func() {
 	var (
-		orgID string
-		uuid  string
+		orgID          string
+		uuid           string
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -51,7 +53,6 @@ var _ = Describe("Channels", func() {
 
 	Describe("Channel", func() {
 		var (
-			token           string
 			c               ChannelService
 			h               *webfakes.FakeHTTPClient
 			response        *http.Response
@@ -59,7 +60,6 @@ var _ = Describe("Channels", func() {
 		)
 
 		BeforeEach(func() {
-			token = "notreallyatoken"
 			channelResponse = ChannelResponse{
 				Data: &ChannelResponseData{
 					Channel: &types.Channel{
@@ -97,17 +97,17 @@ var _ = Describe("Channels", func() {
 			Expect(h.DoCallCount()).To(Equal(0))
 			h.DoReturns(response, nil)
 
-			c, _ = NewClient("https://foo.bar", h)
+			c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := c.Channel(orgID, uuid, token)
+			_, err := c.Channel(orgID, uuid)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the specified channel", func() {
-			groups, _ := c.Channel(orgID, uuid, token)
+			groups, _ := c.Channel(orgID, uuid)
 			expected := channelResponse.Data.Channel
 			Expect(groups).To(Equal(expected))
 		})
@@ -118,7 +118,7 @@ var _ = Describe("Channels", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.Channel(orgID, uuid, token)
+				_, err := c.Channel(orgID, uuid)
 				Expect(err).To(MatchError("Kablooie!"))
 			})
 		})
@@ -130,7 +130,7 @@ var _ = Describe("Channels", func() {
 			})
 
 			It("Returns nil", func() {
-				groups, err := c.Channel(orgID, uuid, token)
+				groups, err := c.Channel(orgID, uuid)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(groups).To(BeNil())
 			})

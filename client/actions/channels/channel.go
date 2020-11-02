@@ -53,12 +53,12 @@ type ChannelResponseData struct {
 }
 
 // Channel returns channel specified by channeUuid
-func (c *Client) Channel(orgID, uuid, token string) (*types.Channel, error) {
+func (c *Client) Channel(orgID, uuid string) (*types.Channel, error) {
 	var response ChannelResponse
 
 	vars := NewChannelVariables(orgID, uuid)
 
-	err := c.DoQuery(ChannelVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(ChannelVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

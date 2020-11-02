@@ -8,24 +8,23 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client"
+	"github.com/IBM/satcon-client-go/client/auth"
 	. "github.com/IBM/satcon-client-go/test/integration"
 )
 
 var _ = Describe("Groups", func() {
 
 	var (
-		token string
-		c     client.SatCon
+		c         client.SatCon
+		iamClient *auth.IAMClient
 	)
 
 	BeforeEach(func() {
 		var err error
-		c, _ = client.New(testConfig.SatConEndpoint, nil)
-		Expect(c.Channels).NotTo(BeNil())
-
-		token, err = GetToken(testConfig.APIKey, testConfig.IAMEndpoint)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(token).NotTo(BeZero())
+		iamClient, err = auth.NewIAMClient(testConfig.APIKey)
+		Expect(err).ToNot(HaveOccurred())
+		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
+		Expect(c.Groups).NotTo(BeNil())
 	})
 
 	Describe("Group Lifecycle", func() {
@@ -43,7 +42,7 @@ var _ = Describe("Groups", func() {
 
 		It("Lists the groups, creates our new group, lists again and finds it, deletes it, and finally lists to see that it's gone", func() {
 			// List the groups
-			groups, err := c.Groups.Groups(testConfig.OrgID, token)
+			groups, err := c.Groups.Groups(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found := false
 			for _, group := range groups {
@@ -54,12 +53,12 @@ var _ = Describe("Groups", func() {
 			Expect(found).To(BeFalse())
 
 			// create a new group
-			newGroupDetails, err := c.Groups.AddGroup(testConfig.OrgID, groupName1, token)
+			newGroupDetails, err := c.Groups.AddGroup(testConfig.OrgID, groupName1)
 			Expect(newGroupDetails.UUID).NotTo(BeEmpty())
 			Expect(err).NotTo(HaveOccurred())
 
 			// list groups again and find our new group
-			groups, err = c.Groups.Groups(testConfig.OrgID, token)
+			groups, err = c.Groups.Groups(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found = false
 			for _, group := range groups {
@@ -70,12 +69,12 @@ var _ = Describe("Groups", func() {
 			Expect(found).To(BeTrue())
 
 			// delete the group using RemoveGroupByName
-			removeGroup1, err := c.Groups.RemoveGroupByName(testConfig.OrgID, groupName1, token)
+			removeGroup1, err := c.Groups.RemoveGroupByName(testConfig.OrgID, groupName1)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(removeGroup1.UUID).To(MatchRegexp(newGroupDetails.UUID))
 
 			// list groups again and prove group is gone
-			groups, err = c.Groups.Groups(testConfig.OrgID, token)
+			groups, err = c.Groups.Groups(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found = false
 			for _, group := range groups {
@@ -86,7 +85,7 @@ var _ = Describe("Groups", func() {
 			Expect(found).To(BeFalse())
 
 			// List groups again to show group does not exist
-			groups, err = c.Groups.Groups(testConfig.OrgID, token)
+			groups, err = c.Groups.Groups(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found = false
 			for _, group := range groups {
@@ -97,12 +96,12 @@ var _ = Describe("Groups", func() {
 			Expect(found).To(BeFalse())
 
 			// create a new group
-			newGroupDetails, err = c.Groups.AddGroup(testConfig.OrgID, groupName2, token)
+			newGroupDetails, err = c.Groups.AddGroup(testConfig.OrgID, groupName2)
 			Expect(newGroupDetails.UUID).NotTo(BeEmpty())
 			Expect(err).NotTo(HaveOccurred())
 
 			// list groups again and find our new group
-			groups, err = c.Groups.Groups(testConfig.OrgID, token)
+			groups, err = c.Groups.Groups(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found = false
 			for _, group := range groups {
@@ -113,12 +112,12 @@ var _ = Describe("Groups", func() {
 			Expect(found).To(BeTrue())
 
 			// delete the group using RemoveGroup
-			removeGroup2, err := c.Groups.RemoveGroup(testConfig.OrgID, newGroupDetails.UUID, token)
+			removeGroup2, err := c.Groups.RemoveGroup(testConfig.OrgID, newGroupDetails.UUID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(removeGroup2.UUID).To(MatchRegexp(newGroupDetails.UUID))
 
 			// list groups again and prove group is gone
-			groups, err = c.Groups.Groups(testConfig.OrgID, token)
+			groups, err = c.Groups.Groups(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found = false
 			for _, group := range groups {

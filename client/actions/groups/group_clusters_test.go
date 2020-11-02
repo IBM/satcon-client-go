@@ -13,19 +13,20 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/groups"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("GroupClusters", func() {
 	var (
-		orgID, uuid, token string
-		clusters           []string
+		orgID, uuid    string
+		clusters       []string
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
 		orgID = "thisistheidofanorg"
 		uuid = "thisist-heuu-idof-agro-upabcdabcdab"
-		token = "reallylookslikeatoken"
 
 		clusters = []string{
 			"cluster1",
@@ -100,16 +101,16 @@ var _ = Describe("GroupClusters", func() {
 			h = &webfakes.FakeHTTPClient{}
 			h.DoReturns(response, nil)
 
-			c, _ = NewClient("https://foo.bar", h)
+			c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		})
 
 		It("Does not error", func() {
-			_, err := c.GroupClusters(orgID, uuid, clusters, token)
+			_, err := c.GroupClusters(orgID, uuid, clusters)
 			Expect(err).NotTo(HaveOccurred())
 		})
 
 		It("Returns the response details", func() {
-			details, _ := c.GroupClusters(orgID, uuid, clusters, token)
+			details, _ := c.GroupClusters(orgID, uuid, clusters)
 			Expect(details).NotTo(BeNil())
 			expected := groupClustersResponse.Data.Details
 			Expect(*details).To(Equal(*expected))
@@ -121,7 +122,7 @@ var _ = Describe("GroupClusters", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.GroupClusters(orgID, uuid, clusters, token)
+				_, err := c.GroupClusters(orgID, uuid, clusters)
 				Expect(err).To(MatchError("Fart Monkeys!"))
 			})
 		})
@@ -133,7 +134,7 @@ var _ = Describe("GroupClusters", func() {
 			})
 
 			It("Returns nil", func() {
-				details, err := c.GroupClusters(orgID, uuid, clusters, token)
+				details, err := c.GroupClusters(orgID, uuid, clusters)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(details).To(BeNil())
 			})

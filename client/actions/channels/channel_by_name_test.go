@@ -12,6 +12,7 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/channels"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
@@ -19,8 +20,9 @@ import (
 var _ = Describe("ChannelByName", func() {
 
 	var (
-		orgID       string
-		channelName string
+		orgID          string
+		channelName    string
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -48,7 +50,6 @@ var _ = Describe("ChannelByName", func() {
 
 	Describe("ChannelByName", func() {
 		var (
-			token           string
 			c               ChannelService
 			h               *webfakes.FakeHTTPClient
 			response        *http.Response
@@ -56,7 +57,6 @@ var _ = Describe("ChannelByName", func() {
 		)
 
 		BeforeEach(func() {
-			token = "notreallyatoken"
 			channelResponse = ChannelByNameResponse{
 				Data: &ChannelByNameResponseData{
 					Details: &types.Channel{
@@ -107,17 +107,17 @@ var _ = Describe("ChannelByName", func() {
 			Expect(h.DoCallCount()).To(Equal(0))
 			h.DoReturns(response, nil)
 
-			c, _ = NewClient("https://foo.bar", h)
+			c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := c.ChannelByName(orgID, channelName, token)
+			_, err := c.ChannelByName(orgID, channelName)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the specified channel", func() {
-			channel, _ := c.ChannelByName(orgID, channelName, token)
+			channel, _ := c.ChannelByName(orgID, channelName)
 			expected := channelResponse.Data.Details
 			Expect(channel).To(Equal(expected))
 		})
@@ -128,7 +128,7 @@ var _ = Describe("ChannelByName", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.ChannelByName(orgID, channelName, token)
+				_, err := c.ChannelByName(orgID, channelName)
 				Expect(err).To(MatchError("Kablooie!"))
 			})
 		})
@@ -140,7 +140,7 @@ var _ = Describe("ChannelByName", func() {
 			})
 
 			It("Returns nil", func() {
-				channel, err := c.ChannelByName(orgID, channelName, token)
+				channel, err := c.ChannelByName(orgID, channelName)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(channel).To(BeNil())
 			})

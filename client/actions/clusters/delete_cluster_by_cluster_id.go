@@ -48,12 +48,12 @@ type DeleteClustersResponseDataDetails struct {
 	DeletedResourceCount int `json:"deletedResourceCount,omitempty"`
 }
 
-func (c *Client) DeleteClusterByClusterID(orgID, clusterID, token string) (*DeleteClustersResponseDataDetails, error) {
+func (c *Client) DeleteClusterByClusterID(orgID, clusterID string) (*DeleteClustersResponseDataDetails, error) {
 	var response DeleteClustersResponse
 
 	vars := NewDeleteClusterByClusterIDVariables(orgID, clusterID)
 
-	err := c.DoQuery(DeleteClusterByClusterIDVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(DeleteClusterByClusterIDVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

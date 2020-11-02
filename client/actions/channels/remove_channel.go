@@ -54,12 +54,12 @@ type RemoveChannelResponseDataDetails struct {
 	Success bool   `json:"success,omitempty"`
 }
 
-func (c *Client) RemoveChannel(orgID, uuid, token string) (*RemoveChannelResponseDataDetails, error) {
+func (c *Client) RemoveChannel(orgID, uuid string) (*RemoveChannelResponseDataDetails, error) {
 	var response RemoveChannelResponse
 
 	vars := NewRemoveChannelVariables(orgID, uuid)
 
-	err := c.DoQuery(RemoveChannelVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(RemoveChannelVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

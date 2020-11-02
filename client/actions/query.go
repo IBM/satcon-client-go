@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"strings"
 	"text/template"
+
+	"github.com/IBM/satcon-client-go/client/auth"
 )
 
 type QueryType string
@@ -49,11 +51,15 @@ func BuildArgVarsList(args map[string]string) string {
 	return strings.Join(argVarStrings, ", ")
 }
 
-func BuildRequest(payload io.Reader, endpoint, token string) *http.Request {
+//BuildRequest builds the request and it sets the headers
+func BuildRequest(payload io.Reader, endpoint string, authClient auth.AuthClient) (*http.Request, error) {
 	req, _ := http.NewRequest(http.MethodPost, endpoint, payload)
 	req.Header.Add("content-type", "application/json")
-	req.Header.Add("authorization", fmt.Sprintf("Bearer %s", token))
-	return req
+	err := authClient.Authenticate(req)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
 }
 
 // BuildRequestBody takes the request(query)-specific variables template in and uses it to overlay

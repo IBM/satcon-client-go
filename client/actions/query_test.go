@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"reflect"
 	"strings"
 	"text/template"
@@ -12,11 +13,13 @@ import (
 	. "github.com/onsi/gomega"
 
 	. "github.com/IBM/satcon-client-go/client/actions"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 )
 
 var _ = Describe("Query", func() {
 	var (
-		argMap map[string]string
+		argMap         map[string]string
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -62,31 +65,52 @@ var _ = Describe("Query", func() {
 
 	Describe("BuildRequest", func() {
 		var (
-			endpoint, token string
-			payload         *bytes.Buffer
+			endpoint string
+			payload  *bytes.Buffer
 		)
 
 		BeforeEach(func() {
 			endpoint = "http://foo.bar"
-			token = "atoken"
 			payload = bytes.NewBuffer([]byte("stringifiedbody"))
+
+			fakeAuthClient.AuthenticateStub = func(req *http.Request) error {
+				req.Header.Set("Authorization", fmt.Sprintf(`Bearer %s`, "some_token"))
+				return nil
+			}
+
 		})
 
 		It("Returns a valid request instance", func() {
-			req := BuildRequest(payload, endpoint, token)
+			req, err := BuildRequest(payload, endpoint, &fakeAuthClient)
+			Expect(err).NotTo(HaveOccurred())
 			Expect(req).NotTo(BeNil())
 		})
 
 		It("Populates the request with the required headers", func() {
-			req := BuildRequest(payload, endpoint, token)
+			req, err := BuildRequest(payload, endpoint, &fakeAuthClient)
+			Expect(err).NotTo(HaveOccurred())
 			Expect(req.Header).To(HaveKeyWithValue(
 				MatchRegexp(`[cC]ontent-[tT]ype`),
 				ContainElement("application/json"),
 			))
 			Expect(req.Header).To(HaveKeyWithValue(
 				MatchRegexp("[aA]uthorization"),
-				ContainElement(fmt.Sprintf("Bearer %s", token)),
+				ContainElement(fmt.Sprintf("Bearer %s", "some_token")),
 			))
+		})
+
+		Context("Returns error", func() {
+
+			BeforeEach(func() {
+				fakeAuthClient.AuthenticateStub = func(req *http.Request) error {
+					return fmt.Errorf("some_error")
+				}
+			})
+
+			It("Authenticate returns an error when trying to get the token", func() {
+				_, err := BuildRequest(payload, endpoint, &fakeAuthClient)
+				Expect(err).To(HaveOccurred())
+			})
 		})
 	})
 

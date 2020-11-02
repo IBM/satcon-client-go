@@ -48,12 +48,12 @@ type RemoveGroupResponseDataDetails struct {
 	UUID string `json:"uuid,omitempty"`
 }
 
-func (c *Client) RemoveGroup(orgID, uuid, token string) (*RemoveGroupResponseDataDetails, error) {
+func (c *Client) RemoveGroup(orgID, uuid string) (*RemoveGroupResponseDataDetails, error) {
 	var response RemoveGroupResponse
 
 	vars := NewRemoveGroupVariables(orgID, uuid)
 
-	err := c.DoQuery(RemoveGroupVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(RemoveGroupVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

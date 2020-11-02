@@ -52,12 +52,12 @@ type AddGroupResponseDataDetails struct {
 	UUID string `json:"uuid,omitempty"`
 }
 
-func (c *Client) AddGroup(orgID, name, token string) (*AddGroupResponseDataDetails, error) {
+func (c *Client) AddGroup(orgID, name string) (*AddGroupResponseDataDetails, error) {
 	var response AddGroupResponse
 
 	vars := NewAddGroupVariables(orgID, name)
 
-	err := c.DoQuery(AddGroupVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(AddGroupVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

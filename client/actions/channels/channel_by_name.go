@@ -53,12 +53,12 @@ type ChannelByNameResponseData struct {
 }
 
 // ChannelVersionByName queries a channel version given orgID, channelName, and versionName
-func (c *Client) ChannelByName(orgID, channelName, token string) (*types.Channel, error) {
+func (c *Client) ChannelByName(orgID, channelName string) (*types.Channel, error) {
 	var response ChannelByNameResponse
 
 	vars := NewChannelByNameVariables(orgID, channelName)
 
-	err := c.DoQuery(ChannelByNameVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(ChannelByNameVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

@@ -12,16 +12,18 @@ import (
 
 	// "github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/clusters"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("DeleteClusterByClusterId", func() {
 	var (
 		// vars                              DeleteClusterByClusterIDVariables
-		endpoint, orgID, clusterID, token string
-		c                                 ClusterService
-		h                                 *webfakes.FakeHTTPClient
-		response                          *http.Response
+		endpoint, orgID, clusterID string
+		c                          ClusterService
+		h                          *webfakes.FakeHTTPClient
+		response                   *http.Response
+		fakeAuthClient             authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -32,11 +34,11 @@ var _ = Describe("DeleteClusterByClusterId", func() {
 		endpoint = "http://foo.bar"
 		orgID = "someorg"
 		clusterID = "somecluster"
-		token = "sometoken"
+
 	})
 
 	JustBeforeEach(func() {
-		c, _ = NewClient(endpoint, h)
+		c, _ = NewClient(endpoint, h, &fakeAuthClient)
 		Expect(c).NotTo(BeNil())
 
 		// vars = NewDeleteClusterByClusterIDVariables(orgID, clusterID)
@@ -72,13 +74,13 @@ var _ = Describe("DeleteClusterByClusterId", func() {
 		})
 
 		It("Sends a correct request", func() {
-			_, err := c.DeleteClusterByClusterID(orgID, clusterID, token)
+			_, err := c.DeleteClusterByClusterID(orgID, clusterID)
 			Expect(h.DoCallCount()).To(Equal(1))
 			Expect(err).NotTo(HaveOccurred())
 		})
 
 		It("Returns the response details", func() {
-			details, _ := c.DeleteClusterByClusterID(orgID, clusterID, token)
+			details, _ := c.DeleteClusterByClusterID(orgID, clusterID)
 
 			expected := delResponse.Data.Details
 			Expect(*details).To(Equal(*expected))
@@ -90,7 +92,7 @@ var _ = Describe("DeleteClusterByClusterId", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.DeleteClusterByClusterID(orgID, clusterID, token)
+				_, err := c.DeleteClusterByClusterID(orgID, clusterID)
 				Expect(err).To(MatchError("Holy smokes!"))
 			})
 		})
@@ -102,7 +104,7 @@ var _ = Describe("DeleteClusterByClusterId", func() {
 			})
 
 			It("Returns nil", func() {
-				details, err := c.DeleteClusterByClusterID(orgID, clusterID, token)
+				details, err := c.DeleteClusterByClusterID(orgID, clusterID)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(details).To(BeNil())
 			})

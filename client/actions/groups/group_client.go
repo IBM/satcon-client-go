@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/IBM/satcon-client-go/client/auth"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web"
 )
@@ -12,11 +13,11 @@ import (
 // in Satellite Config.
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . GroupService
 type GroupService interface {
-	Groups(orgID, token string) (types.GroupList, error)
-	AddGroup(orgID, name, token string) (*AddGroupResponseDataDetails, error)
-	RemoveGroup(orgID, uuid, token string) (*RemoveGroupResponseDataDetails, error)
-	RemoveGroupByName(orgID, name, token string) (*RemoveGroupByNameResponseDataDetails, error)
-	GroupClusters(orgID, uuid string, clusters []string, token string) (*GroupClustersResponseDataDetails, error)
+	Groups(orgID string) (types.GroupList, error)
+	AddGroup(orgID, name string) (*AddGroupResponseDataDetails, error)
+	RemoveGroup(orgID, uuid string) (*RemoveGroupResponseDataDetails, error)
+	RemoveGroupByName(orgID, name string) (*RemoveGroupByNameResponseDataDetails, error)
+	GroupClusters(orgID, uuid string, clusters []string) (*GroupClustersResponseDataDetails, error)
 }
 
 // Client is an implementation of a satcon client.
@@ -26,7 +27,7 @@ type Client struct {
 
 // NewClient returns a configured instance of GroupService which can then be used
 // to perform group queries against Satellite Config.
-func NewClient(endpointURL string, httpClient web.HTTPClient) (GroupService, error) {
+func NewClient(endpointURL string, httpClient web.HTTPClient, authClient auth.AuthClient) (GroupService, error) {
 	if endpointURL == "" {
 		return nil, errors.New("Must supply a valid endpoint URL")
 	}
@@ -34,6 +35,7 @@ func NewClient(endpointURL string, httpClient web.HTTPClient) (GroupService, err
 	s := web.SatConClient{
 		Endpoint:   endpointURL,
 		HTTPClient: http.DefaultClient,
+		AuthClient: authClient,
 	}
 
 	if httpClient != nil {

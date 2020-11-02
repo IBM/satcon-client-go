@@ -55,12 +55,12 @@ type GroupClustersResponseDataDetails struct {
 	Modified int `json:"modified,omitempty"`
 }
 
-func (c *Client) GroupClusters(orgID, uuid string, clusters []string, token string) (*GroupClustersResponseDataDetails, error) {
+func (c *Client) GroupClusters(orgID, uuid string, clusters []string) (*GroupClustersResponseDataDetails, error) {
 	var response GroupClustersResponse
 
 	vars := NewGroupClustersVariables(orgID, uuid, clusters)
 
-	err := c.DoQuery(GroupClustersVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(GroupClustersVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

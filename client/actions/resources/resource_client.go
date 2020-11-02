@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/IBM/satcon-client-go/client/auth"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web"
 )
@@ -12,9 +13,9 @@ import (
 // in Satellite Config.
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ResourceService
 type ResourceService interface {
-	ResourcesByCluster(orgID, clusterID, filter string, limit int, token string) (*types.ResourceList, error)
+	ResourcesByCluster(orgID, clusterID, filter string, limit int) (*types.ResourceList, error)
 	Resources(orgID, filter, fromDate, toDate string, limit int, kinds []string,
-		sort []SortObj, subscriptionsLimit int, token string) (*types.ResourceList, error)
+		sort []SortObj, subscriptionsLimit int) (*types.ResourceList, error)
 }
 
 // Client is an implementation of a satcon client.
@@ -24,7 +25,7 @@ type Client struct {
 
 // NewClient returns a configured instance of ClusterService which can then be used
 // to perform cluster queries against Satellite Config.
-func NewClient(endpointURL string, httpClient web.HTTPClient) (ResourceService, error) {
+func NewClient(endpointURL string, httpClient web.HTTPClient, authClient auth.AuthClient) (ResourceService, error) {
 	if endpointURL == "" {
 		return nil, errors.New("Must supply a valid endpoint URL")
 	}
@@ -32,6 +33,7 @@ func NewClient(endpointURL string, httpClient web.HTTPClient) (ResourceService, 
 	s := web.SatConClient{
 		Endpoint:   endpointURL,
 		HTTPClient: http.DefaultClient,
+		AuthClient: authClient,
 	}
 
 	if httpClient != nil {

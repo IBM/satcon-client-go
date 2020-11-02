@@ -8,23 +8,22 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client"
+	"github.com/IBM/satcon-client-go/client/auth"
 	. "github.com/IBM/satcon-client-go/test/integration"
 )
 
 var _ = Describe("Channels", func() {
 	var (
-		token string
-		c     client.SatCon
+		c client.SatCon
 	)
 
 	BeforeEach(func() {
 		var err error
-		c, _ = client.New(testConfig.SatConEndpoint, nil)
+		var iamClient *auth.IAMClient
+		iamClient, err = auth.NewIAMClient(testConfig.APIKey)
+		Expect(err).ToNot(HaveOccurred())
+		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
 		Expect(c.Channels).NotTo(BeNil())
-
-		token, err = GetToken(testConfig.APIKey, testConfig.IAMEndpoint)
-		Expect(err).NotTo(HaveOccurred())
-		Expect(token).NotTo(BeZero())
 	})
 
 	Describe("Channel Lifecycle", func() {
@@ -38,7 +37,7 @@ var _ = Describe("Channels", func() {
 		})
 
 		It("Lists the channels, creates our new channel, lists again and finds it, deletes it, and finally lists to see that it's gone", func() {
-			channelList, err := c.Channels.Channels(testConfig.OrgID, token)
+			channelList, err := c.Channels.Channels(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found := false
 			for _, channel := range channelList {
@@ -48,14 +47,14 @@ var _ = Describe("Channels", func() {
 			}
 			Expect(found).To(BeFalse())
 
-			details, err := c.Channels.AddChannel(testConfig.OrgID, channelName, token)
+			details, err := c.Channels.AddChannel(testConfig.OrgID, channelName)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(details).NotTo(BeNil())
 			for _, channel := range channelList {
 				Expect(channel.UUID).NotTo(Equal(details.UUID))
 			}
 
-			channelList, err = c.Channels.Channels(testConfig.OrgID, token)
+			channelList, err = c.Channels.Channels(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			found = false
 			for _, channel := range channelList {
@@ -65,29 +64,29 @@ var _ = Describe("Channels", func() {
 			}
 			Expect(found).To(BeTrue())
 
-			channel, err := c.Channels.Channel(testConfig.OrgID, details.UUID, token)
+			channel, err := c.Channels.Channel(testConfig.OrgID, details.UUID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(channel).NotTo(BeNil())
 
-			channelByName, err := c.Channels.ChannelByName(testConfig.OrgID, channelName, token)
+			channelByName, err := c.Channels.ChannelByName(testConfig.OrgID, channelName)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(channelByName).NotTo(BeNil())
 
-			rmDetails, err := c.Channels.RemoveChannel(testConfig.OrgID, details.UUID, token)
+			rmDetails, err := c.Channels.RemoveChannel(testConfig.OrgID, details.UUID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(rmDetails.Success).To(BeTrue())
 
 			// Confirm channel has been removed using the channelName
-			channelByName, err = c.Channels.ChannelByName(testConfig.OrgID, channelName, token)
+			channelByName, err = c.Channels.ChannelByName(testConfig.OrgID, channelName)
 			Expect(err).To(HaveOccurred())
 			Expect(channelByName).To(BeNil())
 
 			// Confirm channel has been removed using the channelUuid
-			channel, err = c.Channels.Channel(testConfig.OrgID, details.UUID, token)
+			channel, err = c.Channels.Channel(testConfig.OrgID, details.UUID)
 			Expect(err).To(HaveOccurred())
 			Expect(channel).To(BeNil())
 
-			channelList, err = c.Channels.Channels(testConfig.OrgID, token)
+			channelList, err = c.Channels.Channels(testConfig.OrgID)
 			Expect(err).NotTo(HaveOccurred())
 			for _, channel := range channelList {
 				Expect(channel.UUID).NotTo(Equal(details.UUID))

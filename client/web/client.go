@@ -10,27 +10,35 @@ import (
 	"text/template"
 
 	"github.com/IBM/satcon-client-go/client/actions"
+	"github.com/IBM/satcon-client-go/client/auth"
 	"github.com/IBM/satcon-client-go/client/types"
 )
 
+//HTTPClient manages HTTP requests
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . HTTPClient
 type HTTPClient interface {
 	Do(*http.Request) (*http.Response, error)
 }
 
+//SatConClient struct to create HTTPClient and IAMClient interfaces
 type SatConClient struct {
 	Endpoint   string
 	HTTPClient HTTPClient
+	AuthClient auth.AuthClient
 }
 
 // DoQuery makes the graphql query request and returns the result
-func (s *SatConClient) DoQuery(requestTemplate string, vars interface{}, funcs template.FuncMap, result interface{}, token string) error {
+func (s *SatConClient) DoQuery(requestTemplate string, vars interface{}, funcs template.FuncMap, result interface{}) error {
 	payload, err := actions.BuildRequestBody(requestTemplate, vars, funcs)
 	if err != nil {
 		return err
 	}
 
-	req := actions.BuildRequest(payload, s.Endpoint, token)
+	req, err := actions.BuildRequest(payload, s.Endpoint, s.AuthClient)
+
+	if err != nil {
+		return err
+	}
 
 	response, err := s.HTTPClient.Do(req)
 	if err != nil {
