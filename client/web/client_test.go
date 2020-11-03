@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -143,10 +144,48 @@ var _ = Describe("Client", func() {
 				})
 			})
 
+			Context("When BuildRequest returns an error", func() {
+				BeforeEach(func() {
+					fakeAuthClient.AuthenticateStub = func(r *http.Request) error {
+						return errors.New("Failed to Authenticate!")
+					}
+				})
+
+				It("Bubbles up the Authenticate error", func() {
+					err := s.DoQuery(requestTemplate, vars, nil, nil)
+					Expect(err).To(HaveOccurred())
+					Expect(err).To(MatchError(fmt.Errorf("Failed to Authenticate!")))
+				})
+			})
+
+			Context("When a request fails", func() {
+				var response *http.Response
+
+				BeforeEach(func() {
+					fakeAuthClient.AuthenticateStub = func(r *http.Request) error {
+						return nil
+					}
+
+					response = &http.Response{
+						Body: ioutil.NopCloser(bytes.NewBufferString(fmt.Sprint(`{"errors": [{"message": "Context creation failed: Your session expired. Sign in again","extensions": {"code": "UNAUTHENTICATED"}}]}`))),
+					}
+
+					h.DoReturns(response, nil)
+				})
+
+				It("Returns an error when the response body is parsed", func() {
+					err := s.DoQuery(requestTemplate, vars, nil, nil)
+					Expect(err).To(HaveOccurred())
+					Expect(err).To(MatchError(fmt.Errorf("Context creation failed: Your session expired. Sign in again")))
+				})
+
+			})
+
 		})
 
 		Describe("CheckResponseForErrors", func() {
 			var errorResponse *types.RequestError
+			var badBytes []byte
 
 			BeforeEach(func() {
 				errorResponse = &types.RequestError{
@@ -156,6 +195,10 @@ var _ = Describe("Client", func() {
 						},
 					},
 				}
+
+				// JSON syntax error
+				badBytes = []byte(`{"errors": [{"message": "Context creation failed: Your session expired. Sign in again","extensions": {"code": "UNAUTHENTICATED"}}`)
+				// Expect(err).NotTo(HaveOccurred())
 			})
 
 			It("Returns an error when error messages are detected", func() {
@@ -171,6 +214,25 @@ var _ = Describe("Client", func() {
 
 				err := CheckResponseForErrors(respBodyBytes)
 				Expect(err).NotTo(HaveOccurred())
+			})
+
+			It("Errors during Unmarshal", func() {
+				err := CheckResponseForErrors(badBytes)
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(MatchRegexp("unexpected end of JSON input"))
+			})
+
+			Context("When there are multiple error messages from request", func() {
+				var bytes []byte
+				BeforeEach(func() {
+					bytes = []byte(`{"errors": [{"message": "First Error: Your session expired. Sign in again","extensions": {"code": "UNAUTHENTICATED"}}, {"message": "Second Error: Your session expired. Sign in again","extensions": {"code": "UNAUTHENTICATED"}}]}`)
+				})
+
+				It("Returns all of the error messages", func() {
+					err := CheckResponseForErrors(bytes)
+					Expect(err).To(HaveOccurred())
+					Expect(err).To(MatchError(fmt.Errorf("First Error: Your session expired. Sign in again, Second Error: Your session expired. Sign in again")))
+				})
 			})
 
 		})
