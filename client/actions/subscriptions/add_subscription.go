@@ -59,12 +59,12 @@ type AddSubscriptionResponseDataDetails struct {
 }
 
 // AddSubscription creates a new subscription for valid channel, version, and group(s)
-func (c *Client) AddSubscription(orgID, name, channelUuid, versionUuid string, groups []string, token string) (*AddSubscriptionResponseDataDetails, error) {
+func (c *Client) AddSubscription(orgID, name, channelUuid, versionUuid string, groups []string) (*AddSubscriptionResponseDataDetails, error) {
 	var response AddSubscriptionResponse
 
 	vars := NewAddSubscriptionVariables(orgID, name, channelUuid, versionUuid, groups)
 
-	err := c.DoQuery(AddSubscriptionVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(AddSubscriptionVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

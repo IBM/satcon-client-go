@@ -71,12 +71,12 @@ type AddChannelVersionResponseDataDetails struct {
 
 // AddChannelVersion creates a new channelVersion for valid channel.
 // contentFile is path to yaml file
-func (c *Client) AddChannelVersion(orgID, channelUuid, name string, content []byte, description, token string) (*AddChannelVersionResponseDataDetails, error) {
+func (c *Client) AddChannelVersion(orgID, channelUuid, name string, content []byte, description string) (*AddChannelVersionResponseDataDetails, error) {
 	var response AddChannelVersionResponse
 
 	vars := NewAddChannelVersionVariables(orgID, channelUuid, name, ContentType, string(content), "", description)
 
-	err := c.DoQuery(AddChannelVersionVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(AddChannelVersionVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

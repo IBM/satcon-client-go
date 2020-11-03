@@ -12,22 +12,23 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/groups"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("RemoveGroup", func() {
 
 	var (
-		orgID, uuid, token string
-		c                  GroupService
-		h                  *webfakes.FakeHTTPClient
-		response           *http.Response
+		orgID, uuid    string
+		c              GroupService
+		h              *webfakes.FakeHTTPClient
+		response       *http.Response
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
 		orgID = "someorg"
 		uuid = "somelongstringofcharactersgoeshere"
-		token = "thisissupposedtobeatoken"
 
 		h = &webfakes.FakeHTTPClient{}
 		response = &http.Response{}
@@ -35,7 +36,7 @@ var _ = Describe("RemoveGroup", func() {
 	})
 
 	JustBeforeEach(func() {
-		c, _ = NewClient("https://foo.bar", h)
+		c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		Expect(c).NotTo(BeNil())
 
 		Expect(h.DoCallCount()).To(Equal(0))
@@ -79,13 +80,13 @@ var _ = Describe("RemoveGroup", func() {
 		})
 
 		It("Sends the http request", func() {
-			_, err := c.RemoveGroup(orgID, uuid, token)
+			_, err := c.RemoveGroup(orgID, uuid)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the removeGroup details", func() {
-			details, _ := c.RemoveGroup(orgID, uuid, token)
+			details, _ := c.RemoveGroup(orgID, uuid)
 			Expect(details).NotTo(BeNil())
 
 			expected := rgResponse.Data.Details
@@ -101,7 +102,7 @@ var _ = Describe("RemoveGroup", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.RemoveGroup(orgID, uuid, token)
+				_, err := c.RemoveGroup(orgID, uuid)
 				Expect(err).To(MatchError("KABOOM!"))
 			})
 		})
@@ -113,7 +114,7 @@ var _ = Describe("RemoveGroup", func() {
 			})
 
 			It("Returns nil", func() {
-				details, err := c.RemoveGroup(orgID, uuid, token)
+				details, err := c.RemoveGroup(orgID, uuid)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(details).To(BeNil())
 			})

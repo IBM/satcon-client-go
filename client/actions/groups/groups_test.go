@@ -12,13 +12,15 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/groups"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("Groups", func() {
 	var (
-		orgID string
+		orgID          string
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -45,7 +47,6 @@ var _ = Describe("Groups", func() {
 
 	Describe("Groups", func() {
 		var (
-			token          string
 			c              GroupService
 			h              *webfakes.FakeHTTPClient
 			response       *http.Response
@@ -53,7 +54,6 @@ var _ = Describe("Groups", func() {
 		)
 
 		BeforeEach(func() {
-			token = "notreallyatoken"
 			groupsResponse = GroupsResponse{
 				Data: &GroupsResponseData{
 					Groups: types.GroupList{
@@ -86,17 +86,17 @@ var _ = Describe("Groups", func() {
 			Expect(h.DoCallCount()).To(Equal(0))
 			h.DoReturns(response, nil)
 
-			c, _ = NewClient("https://foo.bar", h)
+			c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := c.Groups(orgID, token)
+			_, err := c.Groups(orgID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the list of clusters", func() {
-			groups, _ := c.Groups(orgID, token)
+			groups, _ := c.Groups(orgID)
 			expected := groupsResponse.Data.Groups
 			Expect(groups).To(Equal(expected))
 		})
@@ -107,7 +107,7 @@ var _ = Describe("Groups", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.Groups(orgID, token)
+				_, err := c.Groups(orgID)
 				Expect(err).To(MatchError("Kablooie!"))
 			})
 		})
@@ -119,7 +119,7 @@ var _ = Describe("Groups", func() {
 			})
 
 			It("Returns nil", func() {
-				groups, err := c.Groups(orgID, token)
+				groups, err := c.Groups(orgID)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(groups).To(BeNil())
 			})

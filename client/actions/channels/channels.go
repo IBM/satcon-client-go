@@ -43,12 +43,12 @@ type ChannelsResponseData struct {
 	Channels types.ChannelList `json:"channels,omitempty"`
 }
 
-func (c *Client) Channels(orgID, token string) (types.ChannelList, error) {
+func (c *Client) Channels(orgID string) (types.ChannelList, error) {
 	var response ChannelsResponse
 
 	vars := NewChannelsVariables(orgID)
 
-	err := c.DoQuery(ChannelsVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(ChannelsVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

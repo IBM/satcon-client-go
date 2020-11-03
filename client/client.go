@@ -13,9 +13,11 @@ import (
 	"github.com/IBM/satcon-client-go/client/actions/subscriptions/subscriptionsfakes"
 	"github.com/IBM/satcon-client-go/client/actions/versions"
 	"github.com/IBM/satcon-client-go/client/actions/versions/versionsfakes"
+	"github.com/IBM/satcon-client-go/client/auth"
 	"github.com/IBM/satcon-client-go/client/web"
 )
 
+//SatCon struct for satellite configuration entities
 type SatCon struct {
 	Channels      channels.ChannelService
 	Clusters      clusters.ClusterService
@@ -25,32 +27,34 @@ type SatCon struct {
 	Versions      versions.VersionService
 }
 
-func New(endpointURL string, httpClient web.HTTPClient) (SatCon, error) {
+//New creates new SatCon clients
+func New(endpointURL string, httpClient web.HTTPClient, authClient auth.AuthClient) (SatCon, error) {
 	var (
 		err error
 		s   SatCon
 	)
-	s.Channels, err = channels.NewClient(endpointURL, httpClient)
+
+	s.Channels, err = channels.NewClient(endpointURL, httpClient, authClient)
 	if err != nil {
 		return SatCon{}, err
 	}
-	s.Clusters, err = clusters.NewClient(endpointURL, httpClient)
+	s.Clusters, err = clusters.NewClient(endpointURL, httpClient, authClient)
 	if err != nil {
 		return SatCon{}, err
 	}
-	s.Groups, err = groups.NewClient(endpointURL, httpClient)
+	s.Groups, err = groups.NewClient(endpointURL, httpClient, authClient)
 	if err != nil {
 		return SatCon{}, err
 	}
-	s.Resources, err = resources.NewClient(endpointURL, httpClient)
+	s.Resources, err = resources.NewClient(endpointURL, httpClient, authClient)
 	if err != nil {
 		return SatCon{}, err
 	}
-	s.Subscriptions, err = subscriptions.NewClient(endpointURL, httpClient)
+	s.Subscriptions, err = subscriptions.NewClient(endpointURL, httpClient, authClient)
 	if err != nil {
 		return SatCon{}, err
 	}
-	s.Versions, err = versions.NewClient(endpointURL, httpClient)
+	s.Versions, err = versions.NewClient(endpointURL, httpClient, authClient)
 	if err != nil {
 		return SatCon{}, err
 	}

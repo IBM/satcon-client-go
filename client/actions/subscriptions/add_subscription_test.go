@@ -12,17 +12,19 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/subscriptions"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("AddSubscription", func() {
 
 	var (
-		orgID       string
-		name        string
-		groups      []string
-		channelUuid string
-		versionUuid string
+		orgID          string
+		name           string
+		groups         []string
+		channelUuid    string
+		versionUuid    string
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -59,7 +61,6 @@ var _ = Describe("AddSubscription", func() {
 	Describe("AddSubcription", func() {
 
 		var (
-			token                   string
 			addSubscriptionResponse AddSubscriptionResponse
 			c                       SubscriptionService
 			httpClient              *webfakes.FakeHTTPClient
@@ -67,8 +68,6 @@ var _ = Describe("AddSubscription", func() {
 		)
 
 		BeforeEach(func() {
-			token = "monolith"
-
 			addSubscriptionResponse = AddSubscriptionResponse{
 				Data: &AddSubscriptionResponseData{
 					Details: &AddSubscriptionResponseDataDetails{
@@ -87,18 +86,18 @@ var _ = Describe("AddSubscription", func() {
 			Expect(httpClient.DoCallCount()).To(Equal(0))
 			httpClient.DoReturns(response, nil)
 
-			c, _ = NewClient("https://foo.bar", httpClient)
+			c, _ = NewClient("https://foo.bar", httpClient, &fakeAuthClient)
 
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := c.AddSubscription(orgID, name, channelUuid, versionUuid, groups, token)
+			_, err := c.AddSubscription(orgID, name, channelUuid, versionUuid, groups)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(httpClient.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the uuid from the AddChannelReply", func() {
-			uuid, _ := c.AddSubscription(orgID, name, channelUuid, versionUuid, groups, token)
+			uuid, _ := c.AddSubscription(orgID, name, channelUuid, versionUuid, groups)
 			expectedUuid := addSubscriptionResponse.Data.Details
 			Expect(uuid).To(Equal(expectedUuid))
 			Expect(uuid.UUID).To(MatchRegexp(expectedUuid.UUID))
@@ -110,7 +109,7 @@ var _ = Describe("AddSubscription", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.AddSubscription(orgID, name, channelUuid, versionUuid, groups, token)
+				_, err := c.AddSubscription(orgID, name, channelUuid, versionUuid, groups)
 				Expect(err).To(MatchError(MatchRegexp("Mutation Failure")))
 			})
 		})
@@ -122,7 +121,7 @@ var _ = Describe("AddSubscription", func() {
 			})
 
 			It("Returns nil", func() {
-				uuid, err := c.AddSubscription(orgID, name, channelUuid, versionUuid, groups, token)
+				uuid, err := c.AddSubscription(orgID, name, channelUuid, versionUuid, groups)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(uuid).To(BeNil())
 			})

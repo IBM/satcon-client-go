@@ -9,11 +9,10 @@ import (
 )
 
 type FakeClusterService struct {
-	ClustersByOrgIDStub        func(string, string) (types.ClusterList, error)
+	ClustersByOrgIDStub        func(string) (types.ClusterList, error)
 	clustersByOrgIDMutex       sync.RWMutex
 	clustersByOrgIDArgsForCall []struct {
 		arg1 string
-		arg2 string
 	}
 	clustersByOrgIDReturns struct {
 		result1 types.ClusterList
@@ -23,12 +22,11 @@ type FakeClusterService struct {
 		result1 types.ClusterList
 		result2 error
 	}
-	DeleteClusterByClusterIDStub        func(string, string, string) (*clusters.DeleteClustersResponseDataDetails, error)
+	DeleteClusterByClusterIDStub        func(string, string) (*clusters.DeleteClustersResponseDataDetails, error)
 	deleteClusterByClusterIDMutex       sync.RWMutex
 	deleteClusterByClusterIDArgsForCall []struct {
 		arg1 string
 		arg2 string
-		arg3 string
 	}
 	deleteClusterByClusterIDReturns struct {
 		result1 *clusters.DeleteClustersResponseDataDetails
@@ -38,12 +36,11 @@ type FakeClusterService struct {
 		result1 *clusters.DeleteClustersResponseDataDetails
 		result2 error
 	}
-	RegisterClusterStub        func(string, types.Registration, string) (*clusters.RegisterClusterResponseDataDetails, error)
+	RegisterClusterStub        func(string, types.Registration) (*clusters.RegisterClusterResponseDataDetails, error)
 	registerClusterMutex       sync.RWMutex
 	registerClusterArgsForCall []struct {
 		arg1 string
 		arg2 types.Registration
-		arg3 string
 	}
 	registerClusterReturns struct {
 		result1 *clusters.RegisterClusterResponseDataDetails
@@ -57,19 +54,18 @@ type FakeClusterService struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeClusterService) ClustersByOrgID(arg1 string, arg2 string) (types.ClusterList, error) {
+func (fake *FakeClusterService) ClustersByOrgID(arg1 string) (types.ClusterList, error) {
 	fake.clustersByOrgIDMutex.Lock()
 	ret, specificReturn := fake.clustersByOrgIDReturnsOnCall[len(fake.clustersByOrgIDArgsForCall)]
 	fake.clustersByOrgIDArgsForCall = append(fake.clustersByOrgIDArgsForCall, struct {
 		arg1 string
-		arg2 string
-	}{arg1, arg2})
+	}{arg1})
 	stub := fake.ClustersByOrgIDStub
 	fakeReturns := fake.clustersByOrgIDReturns
-	fake.recordInvocation("ClustersByOrgID", []interface{}{arg1, arg2})
+	fake.recordInvocation("ClustersByOrgID", []interface{}{arg1})
 	fake.clustersByOrgIDMutex.Unlock()
 	if stub != nil {
-		return stub(arg1, arg2)
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
@@ -83,17 +79,17 @@ func (fake *FakeClusterService) ClustersByOrgIDCallCount() int {
 	return len(fake.clustersByOrgIDArgsForCall)
 }
 
-func (fake *FakeClusterService) ClustersByOrgIDCalls(stub func(string, string) (types.ClusterList, error)) {
+func (fake *FakeClusterService) ClustersByOrgIDCalls(stub func(string) (types.ClusterList, error)) {
 	fake.clustersByOrgIDMutex.Lock()
 	defer fake.clustersByOrgIDMutex.Unlock()
 	fake.ClustersByOrgIDStub = stub
 }
 
-func (fake *FakeClusterService) ClustersByOrgIDArgsForCall(i int) (string, string) {
+func (fake *FakeClusterService) ClustersByOrgIDArgsForCall(i int) string {
 	fake.clustersByOrgIDMutex.RLock()
 	defer fake.clustersByOrgIDMutex.RUnlock()
 	argsForCall := fake.clustersByOrgIDArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2
+	return argsForCall.arg1
 }
 
 func (fake *FakeClusterService) ClustersByOrgIDReturns(result1 types.ClusterList, result2 error) {
@@ -122,20 +118,19 @@ func (fake *FakeClusterService) ClustersByOrgIDReturnsOnCall(i int, result1 type
 	}{result1, result2}
 }
 
-func (fake *FakeClusterService) DeleteClusterByClusterID(arg1 string, arg2 string, arg3 string) (*clusters.DeleteClustersResponseDataDetails, error) {
+func (fake *FakeClusterService) DeleteClusterByClusterID(arg1 string, arg2 string) (*clusters.DeleteClustersResponseDataDetails, error) {
 	fake.deleteClusterByClusterIDMutex.Lock()
 	ret, specificReturn := fake.deleteClusterByClusterIDReturnsOnCall[len(fake.deleteClusterByClusterIDArgsForCall)]
 	fake.deleteClusterByClusterIDArgsForCall = append(fake.deleteClusterByClusterIDArgsForCall, struct {
 		arg1 string
 		arg2 string
-		arg3 string
-	}{arg1, arg2, arg3})
+	}{arg1, arg2})
 	stub := fake.DeleteClusterByClusterIDStub
 	fakeReturns := fake.deleteClusterByClusterIDReturns
-	fake.recordInvocation("DeleteClusterByClusterID", []interface{}{arg1, arg2, arg3})
+	fake.recordInvocation("DeleteClusterByClusterID", []interface{}{arg1, arg2})
 	fake.deleteClusterByClusterIDMutex.Unlock()
 	if stub != nil {
-		return stub(arg1, arg2, arg3)
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
@@ -149,17 +144,17 @@ func (fake *FakeClusterService) DeleteClusterByClusterIDCallCount() int {
 	return len(fake.deleteClusterByClusterIDArgsForCall)
 }
 
-func (fake *FakeClusterService) DeleteClusterByClusterIDCalls(stub func(string, string, string) (*clusters.DeleteClustersResponseDataDetails, error)) {
+func (fake *FakeClusterService) DeleteClusterByClusterIDCalls(stub func(string, string) (*clusters.DeleteClustersResponseDataDetails, error)) {
 	fake.deleteClusterByClusterIDMutex.Lock()
 	defer fake.deleteClusterByClusterIDMutex.Unlock()
 	fake.DeleteClusterByClusterIDStub = stub
 }
 
-func (fake *FakeClusterService) DeleteClusterByClusterIDArgsForCall(i int) (string, string, string) {
+func (fake *FakeClusterService) DeleteClusterByClusterIDArgsForCall(i int) (string, string) {
 	fake.deleteClusterByClusterIDMutex.RLock()
 	defer fake.deleteClusterByClusterIDMutex.RUnlock()
 	argsForCall := fake.deleteClusterByClusterIDArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+	return argsForCall.arg1, argsForCall.arg2
 }
 
 func (fake *FakeClusterService) DeleteClusterByClusterIDReturns(result1 *clusters.DeleteClustersResponseDataDetails, result2 error) {
@@ -188,20 +183,19 @@ func (fake *FakeClusterService) DeleteClusterByClusterIDReturnsOnCall(i int, res
 	}{result1, result2}
 }
 
-func (fake *FakeClusterService) RegisterCluster(arg1 string, arg2 types.Registration, arg3 string) (*clusters.RegisterClusterResponseDataDetails, error) {
+func (fake *FakeClusterService) RegisterCluster(arg1 string, arg2 types.Registration) (*clusters.RegisterClusterResponseDataDetails, error) {
 	fake.registerClusterMutex.Lock()
 	ret, specificReturn := fake.registerClusterReturnsOnCall[len(fake.registerClusterArgsForCall)]
 	fake.registerClusterArgsForCall = append(fake.registerClusterArgsForCall, struct {
 		arg1 string
 		arg2 types.Registration
-		arg3 string
-	}{arg1, arg2, arg3})
+	}{arg1, arg2})
 	stub := fake.RegisterClusterStub
 	fakeReturns := fake.registerClusterReturns
-	fake.recordInvocation("RegisterCluster", []interface{}{arg1, arg2, arg3})
+	fake.recordInvocation("RegisterCluster", []interface{}{arg1, arg2})
 	fake.registerClusterMutex.Unlock()
 	if stub != nil {
-		return stub(arg1, arg2, arg3)
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
@@ -215,17 +209,17 @@ func (fake *FakeClusterService) RegisterClusterCallCount() int {
 	return len(fake.registerClusterArgsForCall)
 }
 
-func (fake *FakeClusterService) RegisterClusterCalls(stub func(string, types.Registration, string) (*clusters.RegisterClusterResponseDataDetails, error)) {
+func (fake *FakeClusterService) RegisterClusterCalls(stub func(string, types.Registration) (*clusters.RegisterClusterResponseDataDetails, error)) {
 	fake.registerClusterMutex.Lock()
 	defer fake.registerClusterMutex.Unlock()
 	fake.RegisterClusterStub = stub
 }
 
-func (fake *FakeClusterService) RegisterClusterArgsForCall(i int) (string, types.Registration, string) {
+func (fake *FakeClusterService) RegisterClusterArgsForCall(i int) (string, types.Registration) {
 	fake.registerClusterMutex.RLock()
 	defer fake.registerClusterMutex.RUnlock()
 	argsForCall := fake.registerClusterArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+	return argsForCall.arg1, argsForCall.arg2
 }
 
 func (fake *FakeClusterService) RegisterClusterReturns(result1 *clusters.RegisterClusterResponseDataDetails, result2 error) {

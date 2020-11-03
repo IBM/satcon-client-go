@@ -12,17 +12,20 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/clusters"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("ClustersByOrgId", func() {
 	var (
-		orgID string
+		orgID          string
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
 		orgID = "someorg"
+
 	})
 
 	Describe("NewClustersByOrgIDVariables", func() {
@@ -45,7 +48,6 @@ var _ = Describe("ClustersByOrgId", func() {
 
 	Describe("ClustersByOrgID", func() {
 		var (
-			token           string
 			c               ClusterService
 			httpClient      *webfakes.FakeHTTPClient
 			response        *http.Response
@@ -53,7 +55,6 @@ var _ = Describe("ClustersByOrgId", func() {
 		)
 
 		BeforeEach(func() {
-			token = "notreallyatoken"
 			clusterResponse = ClustersByOrgIDResponse{
 				Data: &ClustersByOrgIDResponseData{
 					Clusters: types.ClusterList{
@@ -86,17 +87,17 @@ var _ = Describe("ClustersByOrgId", func() {
 			Expect(httpClient.DoCallCount()).To(Equal(0))
 			httpClient.DoReturns(response, nil)
 
-			c, _ = NewClient("https://foo.bar", httpClient)
+			c, _ = NewClient("https://foo.bar", httpClient, &fakeAuthClient)
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := c.ClustersByOrgID(orgID, token)
+			_, err := c.ClustersByOrgID(orgID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(httpClient.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the list of clusters", func() {
-			clusters, _ := c.ClustersByOrgID(orgID, token)
+			clusters, _ := c.ClustersByOrgID(orgID)
 			expected := clusterResponse.Data.Clusters
 			Expect(clusters).To(Equal(expected))
 		})
@@ -107,7 +108,7 @@ var _ = Describe("ClustersByOrgId", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.ClustersByOrgID(orgID, token)
+				_, err := c.ClustersByOrgID(orgID)
 				Expect(err).To(MatchError(MatchRegexp("Fart Monkeys!")))
 			})
 		})
@@ -119,7 +120,7 @@ var _ = Describe("ClustersByOrgId", func() {
 			})
 
 			It("Returns nil", func() {
-				clusters, err := c.ClustersByOrgID(orgID, token)
+				clusters, err := c.ClustersByOrgID(orgID)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(clusters).To(BeNil())
 			})

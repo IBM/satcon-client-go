@@ -12,21 +12,22 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/groups"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("Adding a Group", func() {
 	var (
-		orgID, name, token string
-		c                  GroupService
-		h                  *webfakes.FakeHTTPClient
-		response           *http.Response
+		orgID, name    string
+		c              GroupService
+		h              *webfakes.FakeHTTPClient
+		response       *http.Response
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
 		orgID = "someorg"
 		name = "somegroup"
-		token = "thisissupposedtobeatoken"
 
 		h = &webfakes.FakeHTTPClient{}
 		response = &http.Response{}
@@ -34,7 +35,7 @@ var _ = Describe("Adding a Group", func() {
 	})
 
 	JustBeforeEach(func() {
-		c, _ = NewClient("https://foo.bar", h)
+		c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		Expect(c).NotTo(BeNil())
 
 		Expect(h.DoCallCount()).To(Equal(0))
@@ -78,13 +79,13 @@ var _ = Describe("Adding a Group", func() {
 		})
 
 		It("Sends the http request", func() {
-			_, err := c.AddGroup(orgID, name, token)
+			_, err := c.AddGroup(orgID, name)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the add group details", func() {
-			details, _ := c.AddGroup(orgID, name, token)
+			details, _ := c.AddGroup(orgID, name)
 			Expect(details).NotTo(BeNil())
 
 			expected := agResponse.Data.Details
@@ -97,7 +98,7 @@ var _ = Describe("Adding a Group", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.AddGroup(orgID, name, token)
+				_, err := c.AddGroup(orgID, name)
 				Expect(err).To(MatchError("Fart Monkeys!"))
 			})
 		})
@@ -109,7 +110,7 @@ var _ = Describe("Adding a Group", func() {
 			})
 
 			It("Returns nil", func() {
-				details, err := c.AddGroup(orgID, name, token)
+				details, err := c.AddGroup(orgID, name)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(details).To(BeNil())
 			})

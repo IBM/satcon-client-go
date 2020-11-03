@@ -12,22 +12,23 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/versions"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("RemoveChannelVersion", func() {
 
 	var (
-		orgID, uuid, token string
-		c                  VersionService
-		h                  *webfakes.FakeHTTPClient
-		response           *http.Response
+		orgID, uuid    string
+		c              VersionService
+		h              *webfakes.FakeHTTPClient
+		response       *http.Response
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
 		orgID = "someorg"
 		uuid = "somechannel"
-		token = "thisissupposedtobeatoken"
 
 		h = &webfakes.FakeHTTPClient{}
 		response = &http.Response{}
@@ -35,7 +36,7 @@ var _ = Describe("RemoveChannelVersion", func() {
 	})
 
 	JustBeforeEach(func() {
-		c, _ = NewClient("https://foo.bar", h)
+		c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		Expect(c).NotTo(BeNil())
 
 		Expect(h.DoCallCount()).To(Equal(0))
@@ -81,13 +82,13 @@ var _ = Describe("RemoveChannelVersion", func() {
 		})
 
 		It("Sends the http request", func() {
-			_, err := c.RemoveChannelVersion(orgID, uuid, token)
+			_, err := c.RemoveChannelVersion(orgID, uuid)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the add group details", func() {
-			details, _ := c.RemoveChannelVersion(orgID, uuid, token)
+			details, _ := c.RemoveChannelVersion(orgID, uuid)
 			Expect(details).NotTo(BeNil())
 
 			expected := rcResponse.Data.Details
@@ -100,7 +101,7 @@ var _ = Describe("RemoveChannelVersion", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.RemoveChannelVersion(orgID, uuid, token)
+				_, err := c.RemoveChannelVersion(orgID, uuid)
 				Expect(err).To(MatchError("YIKES!"))
 			})
 		})
@@ -112,7 +113,7 @@ var _ = Describe("RemoveChannelVersion", func() {
 			})
 
 			It("Returns nil", func() {
-				details, err := c.RemoveChannelVersion(orgID, uuid, token)
+				details, err := c.RemoveChannelVersion(orgID, uuid)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(details).To(BeNil())
 			})

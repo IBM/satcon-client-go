@@ -12,17 +12,19 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/clusters"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("Registering a Cluster", func() {
 	var (
-		orgID, token string
-		reg          types.Registration
-		c            ClusterService
-		HTTPClient   *webfakes.FakeHTTPClient
-		response     *http.Response
+		orgID          string
+		reg            types.Registration
+		c              ClusterService
+		HTTPClient     *webfakes.FakeHTTPClient
+		response       *http.Response
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -30,7 +32,6 @@ var _ = Describe("Registering a Cluster", func() {
 		reg = types.Registration{
 			Name: "my_cluster",
 		}
-		token = "thisissupposedtobeatoken"
 
 		HTTPClient = &webfakes.FakeHTTPClient{}
 		response = &http.Response{}
@@ -39,7 +40,7 @@ var _ = Describe("Registering a Cluster", func() {
 
 	JustBeforeEach(func() {
 
-		c, _ = NewClient("https://foo.bar", HTTPClient)
+		c, _ = NewClient("https://foo.bar", HTTPClient, &fakeAuthClient)
 		Expect(c).NotTo(BeNil())
 
 		Expect(HTTPClient.DoCallCount()).To(Equal(0))
@@ -94,13 +95,13 @@ var _ = Describe("Registering a Cluster", func() {
 		})
 
 		It("Sends the http request", func() {
-			_, err := c.RegisterCluster(orgID, reg, token)
+			_, err := c.RegisterCluster(orgID, reg)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(HTTPClient.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the cluster registration details", func() {
-			details, _ := c.RegisterCluster(orgID, reg, token)
+			details, _ := c.RegisterCluster(orgID, reg)
 			Expect(details).NotTo(BeNil())
 
 			expected := regResponse.Data.Details
@@ -113,7 +114,7 @@ var _ = Describe("Registering a Cluster", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.RegisterCluster(orgID, reg, token)
+				_, err := c.RegisterCluster(orgID, reg)
 				Expect(err).To(MatchError(MatchRegexp("Fart Monkeys!")))
 			})
 		})
@@ -125,7 +126,7 @@ var _ = Describe("Registering a Cluster", func() {
 			})
 
 			It("Returns nil", func() {
-				details, err := c.RegisterCluster(orgID, reg, token)
+				details, err := c.RegisterCluster(orgID, reg)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(details).To(BeNil())
 			})

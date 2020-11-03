@@ -9,6 +9,7 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/resources"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 	. "github.com/onsi/ginkgo"
@@ -54,15 +55,14 @@ var _ = Describe("ResourcesByCluster", func() {
 	Describe("ResourcesByCluster", func() {
 
 		var (
-			token             string
 			r                 ResourceService
 			h                 *webfakes.FakeHTTPClient
 			response          *http.Response
 			resourcesResponse ResourcesByClusterResponse
+			fakeAuthClient    authfakes.FakeAuthClient
 		)
 
 		BeforeEach(func() {
-			token = "apollo-token"
 			resourcesResponse = ResourcesByClusterResponse{
 				Data: &ResourcesByClusterResponseData{
 					ResourceList: &types.ResourceList{
@@ -137,17 +137,17 @@ var _ = Describe("ResourcesByCluster", func() {
 			Expect(h.DoCallCount()).To(Equal(0))
 			h.DoReturns(response, nil)
 
-			r, _ = NewClient("https://foo.bar", h)
+			r, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := r.ResourcesByCluster(orgID, clusterID, filter, limit, token)
+			_, err := r.ResourcesByCluster(orgID, clusterID, filter, limit)
 			Expect(err).To(Not(HaveOccurred()))
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns resources for the specified cluster", func() {
-			resources, _ := r.ResourcesByCluster(orgID, clusterID, filter, limit, token)
+			resources, _ := r.ResourcesByCluster(orgID, clusterID, filter, limit)
 			expected := resourcesResponse.Data.ResourceList
 			Expect(resources).To(Equal(expected))
 		})
@@ -158,7 +158,7 @@ var _ = Describe("ResourcesByCluster", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := r.ResourcesByCluster(orgID, clusterID, filter, limit, token)
+				_, err := r.ResourcesByCluster(orgID, clusterID, filter, limit)
 				Expect(err).To(MatchError("Oh no, Something went wrong!"))
 			})
 		})
@@ -170,7 +170,7 @@ var _ = Describe("ResourcesByCluster", func() {
 			})
 
 			It("Returns nil", func() {
-				groups, err := r.ResourcesByCluster(orgID, clusterID, filter, limit, token)
+				groups, err := r.ResourcesByCluster(orgID, clusterID, filter, limit)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(groups).To(BeNil())
 			})

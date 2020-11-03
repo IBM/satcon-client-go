@@ -12,20 +12,25 @@ import (
 	"github.com/IBM/satcon-client-go/client/actions/resources/resourcesfakes"
 	"github.com/IBM/satcon-client-go/client/actions/subscriptions/subscriptionsfakes"
 	"github.com/IBM/satcon-client-go/client/actions/versions/versionsfakes"
+	"github.com/IBM/satcon-client-go/client/auth"
 )
 
 var _ = Describe("Client", func() {
 	Describe("New", func() {
 		var (
 			endpointURL string
+			iamClient   *auth.IAMClient
+			err         error
 		)
 
 		BeforeEach(func() {
 			endpointURL = "https://foo.bar"
+			iamClient, err = auth.NewIAMClient("some_key")
+			Expect(err).NotTo(HaveOccurred())
 		})
 
 		It("Creates a new SatCon client", func() {
-			s, err := New(endpointURL, nil)
+			s, err := New(endpointURL, nil, iamClient.Client)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(s.Channels).NotTo(BeNil())
 			Expect(s.Clusters).NotTo(BeNil())
@@ -36,7 +41,7 @@ var _ = Describe("Client", func() {
 		})
 
 		It("Errors when endpointURL is empty", func() {
-			s, err := New("", nil)
+			s, err := New("", nil, iamClient.Client)
 			Expect(err).To(HaveOccurred())
 			Expect(s.Channels).To(BeNil())
 			Expect(s.Clusters).To(BeNil())

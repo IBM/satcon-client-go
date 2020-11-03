@@ -12,6 +12,7 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/resources"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
@@ -23,6 +24,7 @@ var _ = Describe("Resources", func() {
 		limit, subscriptionsLimit       int
 		sort                            []SortObj
 		kinds                           []string
+		fakeAuthClient                  authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -76,7 +78,6 @@ var _ = Describe("Resources", func() {
 	Describe("Resources", func() {
 
 		var (
-			token             string
 			r                 ResourceService
 			h                 *webfakes.FakeHTTPClient
 			response          *http.Response
@@ -84,7 +85,6 @@ var _ = Describe("Resources", func() {
 		)
 
 		BeforeEach(func() {
-			token = "apollo-token"
 			resourcesResponse = ResourcesResponse{
 				Data: &ResourcesResponseData{
 					ResourceList: &types.ResourceList{
@@ -159,17 +159,17 @@ var _ = Describe("Resources", func() {
 			Expect(h.DoCallCount()).To(Equal(0))
 			h.DoReturns(response, nil)
 
-			r, _ = NewClient("https://foo.bar", h)
+			r, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := r.Resources(orgID, filter, fromDate, toDate, limit, kinds, sort, subscriptionsLimit, token)
+			_, err := r.Resources(orgID, filter, fromDate, toDate, limit, kinds, sort, subscriptionsLimit)
 			Expect(err).To(Not(HaveOccurred()))
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns resources for the specified orgID", func() {
-			resources, _ := r.Resources(orgID, filter, fromDate, toDate, limit, kinds, sort, subscriptionsLimit, token)
+			resources, _ := r.Resources(orgID, filter, fromDate, toDate, limit, kinds, sort, subscriptionsLimit)
 			expected := resourcesResponse.Data.ResourceList
 			Expect(resources).To(Equal(expected))
 		})
@@ -180,7 +180,7 @@ var _ = Describe("Resources", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := r.Resources(orgID, filter, fromDate, toDate, limit, kinds, sort, subscriptionsLimit, token)
+				_, err := r.Resources(orgID, filter, fromDate, toDate, limit, kinds, sort, subscriptionsLimit)
 				Expect(err).To(MatchError("Oh no, Something went wrong!"))
 			})
 		})
@@ -192,7 +192,7 @@ var _ = Describe("Resources", func() {
 			})
 
 			It("Returns nil", func() {
-				groups, err := r.Resources(orgID, filter, fromDate, toDate, limit, kinds, sort, subscriptionsLimit, token)
+				groups, err := r.Resources(orgID, filter, fromDate, toDate, limit, kinds, sort, subscriptionsLimit)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(groups).To(BeNil())
 			})

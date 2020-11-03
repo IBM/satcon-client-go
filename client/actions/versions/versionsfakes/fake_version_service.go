@@ -9,7 +9,7 @@ import (
 )
 
 type FakeVersionService struct {
-	AddChannelVersionStub        func(string, string, string, []byte, string, string) (*versions.AddChannelVersionResponseDataDetails, error)
+	AddChannelVersionStub        func(string, string, string, []byte, string) (*versions.AddChannelVersionResponseDataDetails, error)
 	addChannelVersionMutex       sync.RWMutex
 	addChannelVersionArgsForCall []struct {
 		arg1 string
@@ -17,7 +17,6 @@ type FakeVersionService struct {
 		arg3 string
 		arg4 []byte
 		arg5 string
-		arg6 string
 	}
 	addChannelVersionReturns struct {
 		result1 *versions.AddChannelVersionResponseDataDetails
@@ -27,13 +26,12 @@ type FakeVersionService struct {
 		result1 *versions.AddChannelVersionResponseDataDetails
 		result2 error
 	}
-	ChannelVersionStub        func(string, string, string, string) (*types.DeployableVersion, error)
+	ChannelVersionStub        func(string, string, string) (*types.DeployableVersion, error)
 	channelVersionMutex       sync.RWMutex
 	channelVersionArgsForCall []struct {
 		arg1 string
 		arg2 string
 		arg3 string
-		arg4 string
 	}
 	channelVersionReturns struct {
 		result1 *types.DeployableVersion
@@ -43,13 +41,12 @@ type FakeVersionService struct {
 		result1 *types.DeployableVersion
 		result2 error
 	}
-	ChannelVersionByNameStub        func(string, string, string, string) (*types.DeployableVersion, error)
+	ChannelVersionByNameStub        func(string, string, string) (*types.DeployableVersion, error)
 	channelVersionByNameMutex       sync.RWMutex
 	channelVersionByNameArgsForCall []struct {
 		arg1 string
 		arg2 string
 		arg3 string
-		arg4 string
 	}
 	channelVersionByNameReturns struct {
 		result1 *types.DeployableVersion
@@ -59,12 +56,11 @@ type FakeVersionService struct {
 		result1 *types.DeployableVersion
 		result2 error
 	}
-	RemoveChannelVersionStub        func(string, string, string) (*versions.RemoveChannelVersionResponseDataDetails, error)
+	RemoveChannelVersionStub        func(string, string) (*versions.RemoveChannelVersionResponseDataDetails, error)
 	removeChannelVersionMutex       sync.RWMutex
 	removeChannelVersionArgsForCall []struct {
 		arg1 string
 		arg2 string
-		arg3 string
 	}
 	removeChannelVersionReturns struct {
 		result1 *versions.RemoveChannelVersionResponseDataDetails
@@ -78,7 +74,7 @@ type FakeVersionService struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeVersionService) AddChannelVersion(arg1 string, arg2 string, arg3 string, arg4 []byte, arg5 string, arg6 string) (*versions.AddChannelVersionResponseDataDetails, error) {
+func (fake *FakeVersionService) AddChannelVersion(arg1 string, arg2 string, arg3 string, arg4 []byte, arg5 string) (*versions.AddChannelVersionResponseDataDetails, error) {
 	var arg4Copy []byte
 	if arg4 != nil {
 		arg4Copy = make([]byte, len(arg4))
@@ -92,14 +88,13 @@ func (fake *FakeVersionService) AddChannelVersion(arg1 string, arg2 string, arg3
 		arg3 string
 		arg4 []byte
 		arg5 string
-		arg6 string
-	}{arg1, arg2, arg3, arg4Copy, arg5, arg6})
+	}{arg1, arg2, arg3, arg4Copy, arg5})
 	stub := fake.AddChannelVersionStub
 	fakeReturns := fake.addChannelVersionReturns
-	fake.recordInvocation("AddChannelVersion", []interface{}{arg1, arg2, arg3, arg4Copy, arg5, arg6})
+	fake.recordInvocation("AddChannelVersion", []interface{}{arg1, arg2, arg3, arg4Copy, arg5})
 	fake.addChannelVersionMutex.Unlock()
 	if stub != nil {
-		return stub(arg1, arg2, arg3, arg4, arg5, arg6)
+		return stub(arg1, arg2, arg3, arg4, arg5)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
@@ -113,17 +108,17 @@ func (fake *FakeVersionService) AddChannelVersionCallCount() int {
 	return len(fake.addChannelVersionArgsForCall)
 }
 
-func (fake *FakeVersionService) AddChannelVersionCalls(stub func(string, string, string, []byte, string, string) (*versions.AddChannelVersionResponseDataDetails, error)) {
+func (fake *FakeVersionService) AddChannelVersionCalls(stub func(string, string, string, []byte, string) (*versions.AddChannelVersionResponseDataDetails, error)) {
 	fake.addChannelVersionMutex.Lock()
 	defer fake.addChannelVersionMutex.Unlock()
 	fake.AddChannelVersionStub = stub
 }
 
-func (fake *FakeVersionService) AddChannelVersionArgsForCall(i int) (string, string, string, []byte, string, string) {
+func (fake *FakeVersionService) AddChannelVersionArgsForCall(i int) (string, string, string, []byte, string) {
 	fake.addChannelVersionMutex.RLock()
 	defer fake.addChannelVersionMutex.RUnlock()
 	argsForCall := fake.addChannelVersionArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4, argsForCall.arg5, argsForCall.arg6
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4, argsForCall.arg5
 }
 
 func (fake *FakeVersionService) AddChannelVersionReturns(result1 *versions.AddChannelVersionResponseDataDetails, result2 error) {
@@ -152,21 +147,20 @@ func (fake *FakeVersionService) AddChannelVersionReturnsOnCall(i int, result1 *v
 	}{result1, result2}
 }
 
-func (fake *FakeVersionService) ChannelVersion(arg1 string, arg2 string, arg3 string, arg4 string) (*types.DeployableVersion, error) {
+func (fake *FakeVersionService) ChannelVersion(arg1 string, arg2 string, arg3 string) (*types.DeployableVersion, error) {
 	fake.channelVersionMutex.Lock()
 	ret, specificReturn := fake.channelVersionReturnsOnCall[len(fake.channelVersionArgsForCall)]
 	fake.channelVersionArgsForCall = append(fake.channelVersionArgsForCall, struct {
 		arg1 string
 		arg2 string
 		arg3 string
-		arg4 string
-	}{arg1, arg2, arg3, arg4})
+	}{arg1, arg2, arg3})
 	stub := fake.ChannelVersionStub
 	fakeReturns := fake.channelVersionReturns
-	fake.recordInvocation("ChannelVersion", []interface{}{arg1, arg2, arg3, arg4})
+	fake.recordInvocation("ChannelVersion", []interface{}{arg1, arg2, arg3})
 	fake.channelVersionMutex.Unlock()
 	if stub != nil {
-		return stub(arg1, arg2, arg3, arg4)
+		return stub(arg1, arg2, arg3)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
@@ -180,17 +174,17 @@ func (fake *FakeVersionService) ChannelVersionCallCount() int {
 	return len(fake.channelVersionArgsForCall)
 }
 
-func (fake *FakeVersionService) ChannelVersionCalls(stub func(string, string, string, string) (*types.DeployableVersion, error)) {
+func (fake *FakeVersionService) ChannelVersionCalls(stub func(string, string, string) (*types.DeployableVersion, error)) {
 	fake.channelVersionMutex.Lock()
 	defer fake.channelVersionMutex.Unlock()
 	fake.ChannelVersionStub = stub
 }
 
-func (fake *FakeVersionService) ChannelVersionArgsForCall(i int) (string, string, string, string) {
+func (fake *FakeVersionService) ChannelVersionArgsForCall(i int) (string, string, string) {
 	fake.channelVersionMutex.RLock()
 	defer fake.channelVersionMutex.RUnlock()
 	argsForCall := fake.channelVersionArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
 }
 
 func (fake *FakeVersionService) ChannelVersionReturns(result1 *types.DeployableVersion, result2 error) {
@@ -219,21 +213,20 @@ func (fake *FakeVersionService) ChannelVersionReturnsOnCall(i int, result1 *type
 	}{result1, result2}
 }
 
-func (fake *FakeVersionService) ChannelVersionByName(arg1 string, arg2 string, arg3 string, arg4 string) (*types.DeployableVersion, error) {
+func (fake *FakeVersionService) ChannelVersionByName(arg1 string, arg2 string, arg3 string) (*types.DeployableVersion, error) {
 	fake.channelVersionByNameMutex.Lock()
 	ret, specificReturn := fake.channelVersionByNameReturnsOnCall[len(fake.channelVersionByNameArgsForCall)]
 	fake.channelVersionByNameArgsForCall = append(fake.channelVersionByNameArgsForCall, struct {
 		arg1 string
 		arg2 string
 		arg3 string
-		arg4 string
-	}{arg1, arg2, arg3, arg4})
+	}{arg1, arg2, arg3})
 	stub := fake.ChannelVersionByNameStub
 	fakeReturns := fake.channelVersionByNameReturns
-	fake.recordInvocation("ChannelVersionByName", []interface{}{arg1, arg2, arg3, arg4})
+	fake.recordInvocation("ChannelVersionByName", []interface{}{arg1, arg2, arg3})
 	fake.channelVersionByNameMutex.Unlock()
 	if stub != nil {
-		return stub(arg1, arg2, arg3, arg4)
+		return stub(arg1, arg2, arg3)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
@@ -247,17 +240,17 @@ func (fake *FakeVersionService) ChannelVersionByNameCallCount() int {
 	return len(fake.channelVersionByNameArgsForCall)
 }
 
-func (fake *FakeVersionService) ChannelVersionByNameCalls(stub func(string, string, string, string) (*types.DeployableVersion, error)) {
+func (fake *FakeVersionService) ChannelVersionByNameCalls(stub func(string, string, string) (*types.DeployableVersion, error)) {
 	fake.channelVersionByNameMutex.Lock()
 	defer fake.channelVersionByNameMutex.Unlock()
 	fake.ChannelVersionByNameStub = stub
 }
 
-func (fake *FakeVersionService) ChannelVersionByNameArgsForCall(i int) (string, string, string, string) {
+func (fake *FakeVersionService) ChannelVersionByNameArgsForCall(i int) (string, string, string) {
 	fake.channelVersionByNameMutex.RLock()
 	defer fake.channelVersionByNameMutex.RUnlock()
 	argsForCall := fake.channelVersionByNameArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
 }
 
 func (fake *FakeVersionService) ChannelVersionByNameReturns(result1 *types.DeployableVersion, result2 error) {
@@ -286,20 +279,19 @@ func (fake *FakeVersionService) ChannelVersionByNameReturnsOnCall(i int, result1
 	}{result1, result2}
 }
 
-func (fake *FakeVersionService) RemoveChannelVersion(arg1 string, arg2 string, arg3 string) (*versions.RemoveChannelVersionResponseDataDetails, error) {
+func (fake *FakeVersionService) RemoveChannelVersion(arg1 string, arg2 string) (*versions.RemoveChannelVersionResponseDataDetails, error) {
 	fake.removeChannelVersionMutex.Lock()
 	ret, specificReturn := fake.removeChannelVersionReturnsOnCall[len(fake.removeChannelVersionArgsForCall)]
 	fake.removeChannelVersionArgsForCall = append(fake.removeChannelVersionArgsForCall, struct {
 		arg1 string
 		arg2 string
-		arg3 string
-	}{arg1, arg2, arg3})
+	}{arg1, arg2})
 	stub := fake.RemoveChannelVersionStub
 	fakeReturns := fake.removeChannelVersionReturns
-	fake.recordInvocation("RemoveChannelVersion", []interface{}{arg1, arg2, arg3})
+	fake.recordInvocation("RemoveChannelVersion", []interface{}{arg1, arg2})
 	fake.removeChannelVersionMutex.Unlock()
 	if stub != nil {
-		return stub(arg1, arg2, arg3)
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
@@ -313,17 +305,17 @@ func (fake *FakeVersionService) RemoveChannelVersionCallCount() int {
 	return len(fake.removeChannelVersionArgsForCall)
 }
 
-func (fake *FakeVersionService) RemoveChannelVersionCalls(stub func(string, string, string) (*versions.RemoveChannelVersionResponseDataDetails, error)) {
+func (fake *FakeVersionService) RemoveChannelVersionCalls(stub func(string, string) (*versions.RemoveChannelVersionResponseDataDetails, error)) {
 	fake.removeChannelVersionMutex.Lock()
 	defer fake.removeChannelVersionMutex.Unlock()
 	fake.RemoveChannelVersionStub = stub
 }
 
-func (fake *FakeVersionService) RemoveChannelVersionArgsForCall(i int) (string, string, string) {
+func (fake *FakeVersionService) RemoveChannelVersionArgsForCall(i int) (string, string) {
 	fake.removeChannelVersionMutex.RLock()
 	defer fake.removeChannelVersionMutex.RUnlock()
 	argsForCall := fake.removeChannelVersionArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+	return argsForCall.arg1, argsForCall.arg2
 }
 
 func (fake *FakeVersionService) RemoveChannelVersionReturns(result1 *versions.RemoveChannelVersionResponseDataDetails, result2 error) {

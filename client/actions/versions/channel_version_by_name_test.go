@@ -12,6 +12,7 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/versions"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
@@ -19,9 +20,10 @@ import (
 var _ = Describe("ChannelVersion", func() {
 
 	var (
-		orgID       string
-		channelName string
-		versionName string
+		orgID          string
+		channelName    string
+		versionName    string
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -56,7 +58,6 @@ var _ = Describe("ChannelVersion", func() {
 	Describe("ChannelVersionByName", func() {
 
 		var (
-			token                        string
 			channelVersionByNameResponse ChannelVersionByNameResponse
 			c                            VersionService
 			httpClient                   *webfakes.FakeHTTPClient
@@ -64,7 +65,6 @@ var _ = Describe("ChannelVersion", func() {
 		)
 
 		BeforeEach(func() {
-			token = "somefaketoken"
 			channelVersionByNameResponse = ChannelVersionByNameResponse{
 				&ChannelVersionByNameResponseData{
 					Details: &types.DeployableVersion{
@@ -91,17 +91,17 @@ var _ = Describe("ChannelVersion", func() {
 			Expect(httpClient.DoCallCount()).To(Equal(0))
 			httpClient.DoReturns(response, nil)
 
-			c, _ = NewClient("https://foo.bar", httpClient)
+			c, _ = NewClient("https://foo.bar", httpClient, &fakeAuthClient)
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := c.ChannelVersionByName(orgID, channelName, versionName, token)
+			_, err := c.ChannelVersionByName(orgID, channelName, versionName)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(httpClient.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the specified channel version", func() {
-			channelVersion, _ := c.ChannelVersionByName(orgID, channelName, versionName, token)
+			channelVersion, _ := c.ChannelVersionByName(orgID, channelName, versionName)
 			expected := channelVersionByNameResponse.Data.Details
 			Expect(channelVersion).To(Equal(expected))
 		})
@@ -112,7 +112,7 @@ var _ = Describe("ChannelVersion", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.ChannelVersionByName(orgID, channelName, versionName, token)
+				_, err := c.ChannelVersionByName(orgID, channelName, versionName)
 				Expect(err).To(MatchError(MatchRegexp("None whatsoever, Frank.")))
 			})
 		})
@@ -124,7 +124,7 @@ var _ = Describe("ChannelVersion", func() {
 			})
 
 			It("Returns nil", func() {
-				channelVersion, err := c.ChannelVersionByName(orgID, channelName, versionName, token)
+				channelVersion, err := c.ChannelVersionByName(orgID, channelName, versionName)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(channelVersion).To(BeNil())
 			})

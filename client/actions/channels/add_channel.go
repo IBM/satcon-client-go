@@ -52,12 +52,12 @@ type AddChannelResponseDataDetails struct {
 	UUID string `json:"uuid,omitempty"`
 }
 
-func (c *Client) AddChannel(orgID, name, token string) (*AddChannelResponseDataDetails, error) {
+func (c *Client) AddChannel(orgID, name string) (*AddChannelResponseDataDetails, error) {
 	var response AddChannelResponse
 
 	vars := NewAddChannelVariables(orgID, name)
 
-	err := c.DoQuery(AddChannelVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(AddChannelVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

@@ -43,12 +43,12 @@ type GroupsResponseData struct {
 	Groups types.GroupList `json:"groups,omitempty"`
 }
 
-func (c *Client) Groups(orgID, token string) (types.GroupList, error) {
+func (c *Client) Groups(orgID string) (types.GroupList, error) {
 	var response GroupsResponse
 
 	vars := NewGroupsVariables(orgID)
 
-	err := c.DoQuery(GroupsVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(GroupsVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

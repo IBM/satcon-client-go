@@ -8,21 +8,26 @@ import (
 	. "github.com/onsi/gomega"
 
 	. "github.com/IBM/satcon-client-go/client/actions/channels"
+	"github.com/IBM/satcon-client-go/client/auth"
 )
 
 var _ = Describe("ClusterClient", func() {
 	Describe("NewClient", func() {
 		var (
-			h        *http.Client
-			endpoint string
+			h         *http.Client
+			endpoint  string
+			iamClient *auth.IAMClient
+			err       error
 		)
 
 		BeforeEach(func() {
 			endpoint = "https://satcon.foo"
+			iamClient, err = auth.NewIAMClient("some_key")
+			Expect(err).ToNot(HaveOccurred())
 		})
 
 		It("Creates a client using the default http client", func() {
-			c, err := NewClient(endpoint, nil)
+			c, err := NewClient(endpoint, nil, iamClient.Client)
 			Expect(c).NotTo(BeNil())
 			Expect(c.(*Client).HTTPClient).To(Equal(http.DefaultClient))
 			Expect(err).NotTo(HaveOccurred())
@@ -36,7 +41,7 @@ var _ = Describe("ClusterClient", func() {
 			})
 
 			It("Uses the supplied client", func() {
-				c, err := NewClient(endpoint, h)
+				c, err := NewClient(endpoint, h, iamClient.Client)
 				Expect(c).NotTo(BeNil())
 				Expect(c.(*Client).HTTPClient).To(Equal(h))
 				Expect(err).NotTo(HaveOccurred())
@@ -49,7 +54,7 @@ var _ = Describe("ClusterClient", func() {
 			})
 
 			It("Returns nil and an error", func() {
-				c, err := NewClient(endpoint, nil)
+				c, err := NewClient(endpoint, nil, iamClient.Client)
 				Expect(c).To(BeNil())
 				Expect(err).To(HaveOccurred())
 			})

@@ -75,12 +75,12 @@ type ResourcesResponseData struct {
 
 // Resources queries specified cluster for list of resources, i.e. Pod, Deployment, Service, etc.
 func (c *Client) Resources(orgID, filter, fromDate, toDate string, limit int, kinds []string,
-	sort []SortObj, subscriptionsLimit int, token string) (*types.ResourceList, error) {
+	sort []SortObj, subscriptionsLimit int) (*types.ResourceList, error) {
 	var response ResourcesResponse
 
 	vars := NewResourcesVariables(orgID, filter, fromDate, toDate, limit, kinds, sort, subscriptionsLimit)
 
-	err := c.DoQuery(ResourcesVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(ResourcesVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

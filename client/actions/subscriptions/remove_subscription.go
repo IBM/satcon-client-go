@@ -55,12 +55,12 @@ type RemoveSubscriptionResponseDataDetails struct {
 }
 
 // RemoveSubscription deletes specified subscription
-func (c *Client) RemoveSubscription(orgID, uuid, token string) (*RemoveSubscriptionResponseDataDetails, error) {
+func (c *Client) RemoveSubscription(orgID, uuid string) (*RemoveSubscriptionResponseDataDetails, error) {
 	var response RemoveSubscriptionResponse
 
 	vars := NewRemoveSubscriptionVariables(orgID, uuid)
 
-	err := c.DoQuery(RemoveSubscriptionVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(RemoveSubscriptionVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

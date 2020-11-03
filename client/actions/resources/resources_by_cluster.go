@@ -55,12 +55,12 @@ type ResourcesByClusterResponseData struct {
 }
 
 // ResourcesByCluster queries specified cluster for list of resources, i.e. Pod, Deployment, Service, etc.
-func (c *Client) ResourcesByCluster(orgID, clusterID, filter string, limit int, token string) (*types.ResourceList, error) {
+func (c *Client) ResourcesByCluster(orgID, clusterID, filter string, limit int) (*types.ResourceList, error) {
 	var response ResourcesByClusterResponse
 
 	vars := NewResourcesByClusterVariables(orgID, clusterID, filter, limit)
 
-	err := c.DoQuery(ResourcesByClusterVarTemplate, vars, nil, &response, token)
+	err := c.DoQuery(ResourcesByClusterVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

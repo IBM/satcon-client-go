@@ -12,6 +12,7 @@ import (
 
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/subscriptions"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
@@ -19,7 +20,8 @@ import (
 var _ = Describe("SubscriptionsByOrgId", func() {
 
 	var (
-		orgID string
+		orgID          string
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -50,7 +52,6 @@ var _ = Describe("SubscriptionsByOrgId", func() {
 	Describe("Subcriptions", func() {
 
 		var (
-			token                 string
 			subscriptionsResponse SubscriptionsResponse
 			c                     SubscriptionService
 			httpClient            *webfakes.FakeHTTPClient
@@ -58,7 +59,6 @@ var _ = Describe("SubscriptionsByOrgId", func() {
 		)
 
 		BeforeEach(func() {
-			token = "monolith"
 
 			subscriptionsResponse = SubscriptionsResponse{
 				Data: &SubscriptionsResponseData{
@@ -92,18 +92,18 @@ var _ = Describe("SubscriptionsByOrgId", func() {
 			Expect(httpClient.DoCallCount()).To(Equal(0))
 			httpClient.DoReturns(response, nil)
 
-			c, _ = NewClient("https://foo.bar", httpClient)
+			c, _ = NewClient("https://foo.bar", httpClient, &fakeAuthClient)
 
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := c.Subscriptions(orgID, token)
+			_, err := c.Subscriptions(orgID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(httpClient.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the list of subscriptions", func() {
-			subscriptions, _ := c.Subscriptions(orgID, token)
+			subscriptions, _ := c.Subscriptions(orgID)
 			expected := subscriptionsResponse.Data.Subscriptions
 			Expect(subscriptions).To(Equal(expected))
 		})
@@ -114,7 +114,7 @@ var _ = Describe("SubscriptionsByOrgId", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.Subscriptions(orgID, token)
+				_, err := c.Subscriptions(orgID)
 				Expect(err).To(MatchError(MatchRegexp("None whatsoever, Frank.")))
 			})
 		})
@@ -126,7 +126,7 @@ var _ = Describe("SubscriptionsByOrgId", func() {
 			})
 
 			It("Returns nil", func() {
-				subscriptions, err := c.Subscriptions(orgID, token)
+				subscriptions, err := c.Subscriptions(orgID)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(subscriptions).To(BeNil())
 			})
