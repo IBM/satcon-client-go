@@ -35,7 +35,6 @@ func (s *SatConClient) DoQuery(requestTemplate string, vars interface{}, funcs t
 	}
 
 	req, err := actions.BuildRequest(payload, s.Endpoint, s.AuthClient)
-
 	if err != nil {
 		return err
 	}
@@ -84,8 +83,12 @@ func CheckResponseForErrors(body []byte) error {
 
 		if errorDetails.Errors != nil {
 			var errorMessage string
+			errLength := len(errorDetails.Errors)
 			for i := range errorDetails.Errors {
-				errorMessage += fmt.Sprintf("%s ", errorDetails.Errors[i].Message)
+				errorMessage += fmt.Sprintf("%s", errorDetails.Errors[i].Message)
+				if i < (errLength - 1) {
+					errorMessage += fmt.Sprint(", ")
+				}
 			}
 			return errors.New(errorMessage)
 		}
