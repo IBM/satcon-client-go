@@ -14,8 +14,7 @@ import (
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ResourceService
 type ResourceService interface {
 	ResourcesByCluster(orgID, clusterID, filter string, limit int) (*types.ResourceList, error)
-	Resources(orgID, filter, fromDate, toDate string, limit int, kinds []string,
-		sort []SortObj, subscriptionsLimit int) (*types.ResourceList, error)
+	Resources(orgID string) (*types.ResourceList, error)
 }
 
 // Client is an implementation of a satcon client.
