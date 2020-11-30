@@ -38,6 +38,7 @@ type Cluster struct {
 	ID        string `json:"id,omitempty"`
 	OrgID     string `json:"orgId,omitempty"`
 	ClusterID string `json:"clusterId,omitempty"`
+	Name      string `json:"name,omitempty"`
 	// Metadata          []byte         `json:"metadata,omitempty"`
 	Metadata          interface{}    `json:"metadata,omitempty"`
 	Comments          []Comment      `json:"comments,omitempty"`

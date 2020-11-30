@@ -29,6 +29,7 @@ func NewClustersByOrgIDVariables(orgID string) ClustersByOrgIDVariables {
 		"id",
 		"orgId",
 		"clusterId",
+		"name",
 		"metadata",
 	}
 
