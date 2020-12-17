@@ -151,6 +151,13 @@ type ResourceList struct {
 	Resources []Resource `json:"resources,omitempty"`
 }
 
+type ResourceContentObj struct {
+	ID      string `json:"id,omitempty"`
+	HistID  string `json:"histId,omitempty"`
+	Content string `json:"content,omitempty"`
+	Updated string `json:"updated,omitempty"`
+}
+
 // SearchableData encapsulates cluster resource data
 type SearchableData struct {
 	Kind                 string                 `json:"kind,omitempty"`
