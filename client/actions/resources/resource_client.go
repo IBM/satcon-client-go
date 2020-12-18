@@ -15,6 +15,7 @@ import (
 type ResourceService interface {
 	ResourcesByCluster(orgID, clusterID, filter string, limit int) (*types.ResourceList, error)
 	Resources(orgID string) (*types.ResourceList, error)
+	ResourceContent(orgID, clusterID, resourceSelfLink string) (*types.ResourceContentObj, error)
 }
 
 // Client is an implementation of a satcon client.
