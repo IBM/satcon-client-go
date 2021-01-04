@@ -14,6 +14,7 @@ import (
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . GroupService
 type GroupService interface {
 	Groups(orgID string) (types.GroupList, error)
+	GroupByName(orgID string, name string) (*types.Group, error)
 	AddGroup(orgID, name string) (*AddGroupResponseDataDetails, error)
 	RemoveGroup(orgID, uuid string) (*RemoveGroupResponseDataDetails, error)
 	RemoveGroupByName(orgID, name string) (*RemoveGroupByNameResponseDataDetails, error)
