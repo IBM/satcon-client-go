@@ -51,7 +51,7 @@ var _ = Describe("Clusters", func() {
 			Expect(err).NotTo(HaveOccurred())
 			found := false
 			for _, cluster := range clusterList {
-				if cluster.ClusterID == details.ClusterID {
+				if cluster.ClusterID == details.ClusterID && cluster.Name == clusterName {
 					found = true
 				}
 			}

@@ -41,6 +41,7 @@ var _ = Describe("ClustersByOrgId", func() {
 				"id",
 				"orgId",
 				"clusterId",
+				"name",
 				"metadata",
 			))
 		})
@@ -62,16 +63,19 @@ var _ = Describe("ClustersByOrgId", func() {
 							ID:        "asdf",
 							OrgID:     orgID,
 							ClusterID: "cluster1",
+							Name:      "cluster1",
 						},
 						{
 							ID:        "qwer",
 							OrgID:     orgID,
 							ClusterID: "cluster2",
+							Name:      "cluster2",
 						},
 						{
 							ID:        "xzcv",
 							OrgID:     orgID,
 							ClusterID: "cluster3",
+							Name:      "cluster3",
 						},
 					},
 				},
