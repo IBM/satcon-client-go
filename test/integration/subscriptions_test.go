@@ -3,7 +3,6 @@ package integration_test
 import (
 	"encoding/base64"
 	"fmt"
-
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -36,7 +35,8 @@ var _ = Describe("Subscriptions", func() {
 	Describe("Subscription Lifecycle", func() {
 		var (
 			channelName      string
-			versionName      string
+			version1Name     string
+			version2Name     string
 			subscriptionName string
 			description      string
 			groups           []string
@@ -44,14 +44,16 @@ var _ = Describe("Subscriptions", func() {
 
 		BeforeEach(func() {
 			channelName = RandStringBytes(8)
-			versionName = RandStringBytes(8)
+			version1Name = RandStringBytes(8)
+			version2Name = RandStringBytes(8)
 			group1 := RandStringBytes(8)
 			group2 := RandStringBytes(8)
 			subscriptionName = RandStringBytes(8)
 			fmt.Println("Using channel name: ", channelName)
-			fmt.Println("Using version name: ", versionName)
+			fmt.Println("Using version1 name: ", version1Name)
+			fmt.Println("Using version2 name: ", version2Name)
 			fmt.Println("Using subscription name: ", subscriptionName)
-			description = fmt.Sprintf("Integration test version: %s for channel: %s", versionName, channelName)
+			description = fmt.Sprintf("Integration test version: %s for channel: %s", version1Name, channelName)
 			groups = []string{group1, group2}
 		})
 
@@ -65,9 +67,13 @@ var _ = Describe("Subscriptions", func() {
 
 			// TODO before we can add a subscription, we need to be able to add a new channel and version so that we can pass channelUuid and versionUuid as arguments
 			// Demonstrate channel version does not exist for the arguments of the current channelName and versionName
-			version, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName)
+			version, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, version1Name)
 			Expect(err).To(HaveOccurred())
-			Expect(version).NotTo(Equal(versionName))
+			Expect(version).NotTo(Equal(version1Name))
+
+			version, err = c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, version2Name)
+			Expect(err).To(HaveOccurred())
+			Expect(version).NotTo(Equal(version2Name))
 
 			// Create a channel
 			channelDetails, err := c.Channels.AddChannel(testConfig.OrgID, channelName)
@@ -86,17 +92,17 @@ var _ = Describe("Subscriptions", func() {
 			Expect(found).To(BeTrue())
 
 			// Create a channel version using the previously created channel
-			versionDetails, err := c.Versions.AddChannelVersion(testConfig.OrgID, channelDetails.UUID, versionName, content, description)
+			version1Details, err := c.Versions.AddChannelVersion(testConfig.OrgID, channelDetails.UUID, version1Name, content, description)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(versionDetails).NotTo(BeNil())
+			Expect(version1Details).NotTo(BeNil())
 
 			// Verify that channel version exists
-			getVersionDetails, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName)
+			getVersionDetails, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, version1Name)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(getVersionDetails).NotTo(BeNil())
 
 			// Create a new subscription using this channel and version
-			subscriptionDetails, err := c.Subscriptions.AddSubscription(testConfig.OrgID, subscriptionName, channelDetails.UUID, versionDetails.VersionUUID, groups)
+			subscriptionDetails, err := c.Subscriptions.AddSubscription(testConfig.OrgID, subscriptionName, channelDetails.UUID, version1Details.VersionUUID, groups)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(subscriptionDetails).NotTo(BeNil())
 
@@ -106,6 +112,32 @@ var _ = Describe("Subscriptions", func() {
 			found = false
 			for _, subscription := range subscriptionList {
 				if subscription.UUID == subscriptionDetails.UUID {
+					found = true
+				}
+			}
+			Expect(found).To(BeTrue())
+
+			// Create a new channel version
+			version2Details, err := c.Versions.AddChannelVersion(testConfig.OrgID, channelDetails.UUID, version2Name, content, description)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(version2Details).NotTo(BeNil())
+
+			// Verify that channel version exists
+			getVersion2Details, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, version2Name)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(getVersion2Details).NotTo(BeNil())
+
+			// Set existing subscription to new version
+			setSubscriptionDetail, err := c.Subscriptions.SetSubscription(testConfig.OrgID, subscriptionDetails.UUID, version2Details.VersionUUID)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(setSubscriptionDetail).NotTo(BeNil())
+
+			// Verify that our newly updated subscription is up to date
+			subscriptionList, err = c.Subscriptions.Subscriptions(testConfig.OrgID)
+			Expect(err).NotTo(HaveOccurred())
+			found = false
+			for _, subscription := range subscriptionList {
+				if subscription.UUID == setSubscriptionDetail.UUID && subscription.Version == version2Name {
 					found = true
 				}
 			}
@@ -127,13 +159,23 @@ var _ = Describe("Subscriptions", func() {
 			}
 			Expect(found).To(BeFalse())
 
-			// Remove channel version
-			removeVersionDetails, err := c.Versions.RemoveChannelVersion(testConfig.OrgID, versionDetails.VersionUUID)
+			// Remove channel version 1
+			removeVersionDetails, err := c.Versions.RemoveChannelVersion(testConfig.OrgID, version1Details.VersionUUID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(removeVersionDetails).NotTo(BeNil())
 
-			// Verify that channel version has been removed
-			getVersionDetails, err = c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName)
+			// Verify that channel version 1 has been removed
+			getVersionDetails, err = c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, version1Name)
+			Expect(err).To(HaveOccurred())
+			Expect(getVersionDetails).To(BeNil())
+
+			// Remove channel version 2
+			removeVersionDetails, err = c.Versions.RemoveChannelVersion(testConfig.OrgID, version2Details.VersionUUID)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(removeVersionDetails).NotTo(BeNil())
+
+			// Verify that channel version 2 has been removed
+			getVersionDetails, err = c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, version2Name)
 			Expect(err).To(HaveOccurred())
 			Expect(getVersionDetails).To(BeNil())
 

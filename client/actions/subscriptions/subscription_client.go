@@ -14,6 +14,7 @@ import (
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . SubscriptionService
 type SubscriptionService interface {
 	AddSubscription(orgID, name, channelUuid, versionUuid string, groups []string) (*AddSubscriptionResponseDataDetails, error)
+	SetSubscription(orgID string, subscriptionUuid string, versionUuid string) (*SetSubscriptionResponseDataDetails, error)
 	RemoveSubscription(orgID, uuid string) (*RemoveSubscriptionResponseDataDetails, error)
 	Subscriptions(orgID string) (types.SubscriptionList, error)
 }
