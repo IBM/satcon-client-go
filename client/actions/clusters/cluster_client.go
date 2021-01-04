@@ -17,6 +17,8 @@ type ClusterService interface {
 	RegisterCluster(string, types.Registration) (*RegisterClusterResponseDataDetails, error)
 	// ClustersByOrgID lists the clusters registered under the specified organization.
 	ClustersByOrgID(string) (types.ClusterList, error)
+	// ClusterByName returns the cluster registered under the specified organization and name.
+	ClusterByName(string, string) (*types.Cluster, error)
 	// DeleteClusterByClusterID deletes the specified cluster from the specified org,
 	// including all resources under that cluster.
 	DeleteClusterByClusterID(string, string) (*DeleteClustersResponseDataDetails, error)

@@ -57,6 +57,11 @@ var _ = Describe("Clusters", func() {
 			}
 			Expect(found).To(BeTrue())
 
+			cluster, err := c.Clusters.ClusterByName(testConfig.OrgID, clusterName)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(cluster).NotTo(BeNil())
+			Expect(cluster.ClusterID).To(Equal(details.ClusterID))
+
 			delDetails, err := c.Clusters.DeleteClusterByClusterID(testConfig.OrgID, details.ClusterID)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(delDetails.DeletedClusterCount).To(Equal(1))
