@@ -65,6 +65,7 @@ var _ = Describe("ClusterByName", func() {
 						ID:        "asdf",
 						OrgID:     orgID,
 						ClusterID: "cluster1",
+						Name:      "cluster1",
 					},
 				},
 			}
@@ -88,7 +89,7 @@ var _ = Describe("ClusterByName", func() {
 			Expect(httpClient.DoCallCount()).To(Equal(1))
 		})
 
-		It("Returns the list of clusters", func() {
+		It("Returns a cluster by name", func() {
 			clusters, _ := c.ClusterByName(orgID, clusterName)
 			expected := clusterResponse.Data.Cluster
 			Expect(clusters).To(Equal(expected))
