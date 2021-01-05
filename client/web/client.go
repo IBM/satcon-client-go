@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -35,6 +36,46 @@ func (s *SatConClient) DoQuery(requestTemplate string, vars interface{}, funcs t
 	}
 
 	req, err := actions.BuildRequest(payload, s.Endpoint, s.AuthClient)
+	if err != nil {
+		return err
+	}
+
+	response, err := s.HTTPClient.Do(req)
+	if err != nil {
+		return err
+	}
+
+	if response.Body != nil {
+		defer response.Body.Close()
+		body, err := ioutil.ReadAll(response.Body)
+		if err != nil {
+			return err
+		}
+
+		if err = CheckResponseForErrors(body); err != nil {
+			return err
+		}
+
+		err = json.Unmarshal(body, result)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// DoQueryNoAuth makes the graphql query request and returns the result
+// This function does use a fake auth client and is used for operations that
+// do not require previous authentication (such as the local auth login itself)
+func (s *SatConClient) DoQueryNoAuth(requestTemplate string, vars interface{}, funcs template.FuncMap, result interface{}) error {
+	payload, err := actions.BuildRequestBody(requestTemplate, vars, funcs)
+	if err != nil {
+		return err
+	}
+
+	req, err := actions.BuildRequest(payload, s.Endpoint, &authfakes.FakeAuthClient{})
 	if err != nil {
 		return err
 	}
