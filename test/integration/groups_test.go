@@ -68,6 +68,12 @@ var _ = Describe("Groups", func() {
 			}
 			Expect(found).To(BeTrue())
 
+			// get group by name
+			group1, err := c.Groups.GroupByName(testConfig.OrgID, groupName1)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(group1).NotTo(BeNil())
+			Expect(group1.Name).To(Equal(groupName1))
+
 			// delete the group using RemoveGroupByName
 			removeGroup1, err := c.Groups.RemoveGroupByName(testConfig.OrgID, groupName1)
 			Expect(err).NotTo(HaveOccurred())
