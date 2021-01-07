@@ -40,6 +40,21 @@ type FakeSubscriptionService struct {
 		result1 *subscriptions.RemoveSubscriptionResponseDataDetails
 		result2 error
 	}
+	SetSubscriptionStub        func(string, string, string) (*subscriptions.SetSubscriptionResponseDataDetails, error)
+	setSubscriptionMutex       sync.RWMutex
+	setSubscriptionArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}
+	setSubscriptionReturns struct {
+		result1 *subscriptions.SetSubscriptionResponseDataDetails
+		result2 error
+	}
+	setSubscriptionReturnsOnCall map[int]struct {
+		result1 *subscriptions.SetSubscriptionResponseDataDetails
+		result2 error
+	}
 	SubscriptionsStub        func(string) (types.SubscriptionList, error)
 	subscriptionsMutex       sync.RWMutex
 	subscriptionsArgsForCall []struct {
@@ -195,6 +210,72 @@ func (fake *FakeSubscriptionService) RemoveSubscriptionReturnsOnCall(i int, resu
 	}{result1, result2}
 }
 
+func (fake *FakeSubscriptionService) SetSubscription(arg1 string, arg2 string, arg3 string) (*subscriptions.SetSubscriptionResponseDataDetails, error) {
+	fake.setSubscriptionMutex.Lock()
+	ret, specificReturn := fake.setSubscriptionReturnsOnCall[len(fake.setSubscriptionArgsForCall)]
+	fake.setSubscriptionArgsForCall = append(fake.setSubscriptionArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 string
+	}{arg1, arg2, arg3})
+	stub := fake.SetSubscriptionStub
+	fakeReturns := fake.setSubscriptionReturns
+	fake.recordInvocation("SetSubscription", []interface{}{arg1, arg2, arg3})
+	fake.setSubscriptionMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeSubscriptionService) SetSubscriptionCallCount() int {
+	fake.setSubscriptionMutex.RLock()
+	defer fake.setSubscriptionMutex.RUnlock()
+	return len(fake.setSubscriptionArgsForCall)
+}
+
+func (fake *FakeSubscriptionService) SetSubscriptionCalls(stub func(string, string, string) (*subscriptions.SetSubscriptionResponseDataDetails, error)) {
+	fake.setSubscriptionMutex.Lock()
+	defer fake.setSubscriptionMutex.Unlock()
+	fake.SetSubscriptionStub = stub
+}
+
+func (fake *FakeSubscriptionService) SetSubscriptionArgsForCall(i int) (string, string, string) {
+	fake.setSubscriptionMutex.RLock()
+	defer fake.setSubscriptionMutex.RUnlock()
+	argsForCall := fake.setSubscriptionArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeSubscriptionService) SetSubscriptionReturns(result1 *subscriptions.SetSubscriptionResponseDataDetails, result2 error) {
+	fake.setSubscriptionMutex.Lock()
+	defer fake.setSubscriptionMutex.Unlock()
+	fake.SetSubscriptionStub = nil
+	fake.setSubscriptionReturns = struct {
+		result1 *subscriptions.SetSubscriptionResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeSubscriptionService) SetSubscriptionReturnsOnCall(i int, result1 *subscriptions.SetSubscriptionResponseDataDetails, result2 error) {
+	fake.setSubscriptionMutex.Lock()
+	defer fake.setSubscriptionMutex.Unlock()
+	fake.SetSubscriptionStub = nil
+	if fake.setSubscriptionReturnsOnCall == nil {
+		fake.setSubscriptionReturnsOnCall = make(map[int]struct {
+			result1 *subscriptions.SetSubscriptionResponseDataDetails
+			result2 error
+		})
+	}
+	fake.setSubscriptionReturnsOnCall[i] = struct {
+		result1 *subscriptions.SetSubscriptionResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeSubscriptionService) Subscriptions(arg1 string) (types.SubscriptionList, error) {
 	fake.subscriptionsMutex.Lock()
 	ret, specificReturn := fake.subscriptionsReturnsOnCall[len(fake.subscriptionsArgsForCall)]
@@ -266,6 +347,8 @@ func (fake *FakeSubscriptionService) Invocations() map[string][][]interface{} {
 	defer fake.addSubscriptionMutex.RUnlock()
 	fake.removeSubscriptionMutex.RLock()
 	defer fake.removeSubscriptionMutex.RUnlock()
+	fake.setSubscriptionMutex.RLock()
+	defer fake.setSubscriptionMutex.RUnlock()
 	fake.subscriptionsMutex.RLock()
 	defer fake.subscriptionsMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
