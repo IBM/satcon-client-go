@@ -51,6 +51,26 @@ var _ = Describe("Client", func() {
 		Expect(local).NotTo(BeNil())
 	})
 
+	Describe("Local razee errors", func() {
+		It("Should error when url is empty", func() {
+			local, err := auth.NewLocalRazeeClient("", "user", "password")
+			Expect(err).To(HaveOccurred())
+			Expect(local).To(BeNil())
+		})
+
+		It("Should error when login is empty", func() {
+			local, err := auth.NewLocalRazeeClient("http://foo.bar", "", "password")
+			Expect(err).To(HaveOccurred())
+			Expect(local).To(BeNil())
+		})
+
+		It("Should error when password is empty", func() {
+			local, err := auth.NewLocalRazeeClient("http://foo.bar", "user", "")
+			Expect(err).To(HaveOccurred())
+			Expect(local).To(BeNil())
+		})
+	})
+
 	Describe("Local razee testing", func() {
 		token := "ey123.mytoken"
 		expectedHeaderValue := "Bearer ey123.mytoken"

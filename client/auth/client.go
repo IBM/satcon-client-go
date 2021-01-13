@@ -64,6 +64,15 @@ func NewLocalRazeeClient(url string, login string, password string) (*LocalRazee
 }
 
 func NewLocalRazeeClientWithHttpClient(httpClient web.HTTPClient, url string, login string, password string) (*LocalRazeeClient, error) {
+	if url == "" {
+		return nil, fmt.Errorf("Field 'url' cannot be empty!")
+	}
+	if login == "" {
+		return nil, fmt.Errorf("Field 'login' cannot be empty!")
+	}
+	if password == "" {
+		return nil, fmt.Errorf("Field 'password' cannot be empty!")
+	}
 	client := &LocalRazeeClient{
 		HTTPClient: httpClient,
 		url:        url,
