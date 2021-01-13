@@ -7,10 +7,12 @@ import (
 	"github.com/IBM/satcon-client-go/client/auth/local"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
+	"github.com/dgrijalva/jwt-go"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 var _ = Describe("Client", func() {
@@ -72,13 +74,21 @@ var _ = Describe("Client", func() {
 	})
 
 	Describe("Local razee testing", func() {
-		token := "ey123.mytoken"
-		expectedHeaderValue := "Bearer ey123.mytoken"
+		var token string
 		var h *webfakes.FakeHTTPClient
 		var response *http.Response
 		var signInResponse local.SignInResponse
 
 		BeforeEach(func() {
+			var err error
+			hmacSampleSecret := []byte("secret")
+			tokenWithClaim := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+				"exp": time.Now().Add(4 * time.Hour).Unix(),
+			})
+
+			// Sign and get the complete encoded token as a string using the secret
+			token, err = tokenWithClaim.SignedString(hmacSampleSecret)
+
 			h = &webfakes.FakeHTTPClient{}
 			response = &http.Response{
 				Header: http.Header{},
@@ -107,10 +117,20 @@ var _ = Describe("Client", func() {
 				Header: http.Header{},
 			}
 			request.Header.Add("content-type", "application/json")
+			// Call authenticate to check if the bearer token gets injected
 			err = local.Authenticate(&request)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).NotTo(BeEmpty())
-			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).To(Equal(expectedHeaderValue))
+			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).To(Equal("Bearer " + token))
+
+			// Call authenticate to check if the bearer token gets injected again
+			err = local.Authenticate(&request)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).NotTo(BeEmpty())
+			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).To(Equal("Bearer " + token))
+
+			// Check that there was only one invocation (the second authenticate should come from the cache)
+			Expect(len(h.Invocations())).To(Equal(1))
 		})
 	})
 })

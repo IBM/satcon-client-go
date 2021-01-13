@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	github.com/IBM/go-sdk-core/v4 v4.8.0
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fatih/color v1.9.0
 	github.com/hokaccha/go-prettyjson v0.0.0-20190818114111-108c894c2c0e
 	github.com/kr/text v0.2.0 // indirect
