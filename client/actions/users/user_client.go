@@ -9,9 +9,7 @@ import (
 	"github.com/IBM/satcon-client-go/client/web"
 )
 
-// UserService is the interface used to perform all user-centric actions
-// in Razee local mode (Satellite Config is using IAM).
-// Razee local mode is recommended to be used for development only!
+// UserService is the interface used to perform all user-centric actions.
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . UserService
 type UserService interface {
 	Me() (*types.User, error)

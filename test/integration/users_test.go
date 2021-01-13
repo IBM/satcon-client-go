@@ -35,8 +35,6 @@ var _ = Describe("Users", func() {
 			Expect(me).NotTo(BeNil())
 			Expect(me.OrgId).To(Equal(testConfig.OrgID))
 			Expect(me.Type).To(Equal("iam"))
-
-			fmt.Println(me)
 		})
 	})
 })

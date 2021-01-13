@@ -31,9 +31,7 @@ func (s *SatConClient) DoQuery(requestTemplate string, vars interface{}, funcs t
 	return DoQuery(s.HTTPClient, s.Endpoint, s.AuthClient, requestTemplate, vars, funcs, result)
 }
 
-// DoQueryNoAuth makes the graphql query request and returns the result
-// This function does use a fake auth client and is used for operations that
-// do not require previous authentication (such as the local auth login itself)
+// DoQuery makes the graphql query request and returns the result
 func DoQuery(httpClient HTTPClient,
 	endpoint string,
 	authClient actions.AuthClient,
