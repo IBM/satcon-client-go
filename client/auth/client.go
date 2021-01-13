@@ -1,6 +1,5 @@
 package auth
 
-
 import (
 	"fmt"
 	"github.com/IBM/satcon-client-go/client/actions"
@@ -32,14 +31,15 @@ func NewIAMClient(apiKey string) (*IAMClient, error) {
 }
 
 const TokenValidityDuration = 40 * time.Minute
+const AuthorizationHeaderKey = "Authorization"
 
 type LocalRazeeClient struct {
-	HTTPClient web.HTTPClient
-	url      string
-	login    string
-	password string
+	HTTPClient     web.HTTPClient
+	url            string
+	login          string
+	password       string
 	tokenTimestamp time.Time
-	token    types.Token
+	token          types.Token
 }
 
 func (l *LocalRazeeClient) Authenticate(request *http.Request) error {
@@ -55,15 +55,20 @@ func (l *LocalRazeeClient) Authenticate(request *http.Request) error {
 		l.token = *token
 		l.tokenTimestamp = time.Now()
 	}
-	request.Header.Add("Authorization", "Bearer " + string(l.token))
+	request.Header.Add(AuthorizationHeaderKey, "Bearer "+string(l.token))
 	return nil
 }
 
 func NewLocalRazeeClient(url string, login string, password string) (*LocalRazeeClient, error) {
+	return NewLocalRazeeClientWithHttpClient(http.DefaultClient, url, login, password)
+}
+
+func NewLocalRazeeClientWithHttpClient(httpClient web.HTTPClient, url string, login string, password string) (*LocalRazeeClient, error) {
 	client := &LocalRazeeClient{
-		url:      url,
-		login:    login,
-		password: password,
+		HTTPClient: httpClient,
+		url:        url,
+		login:      login,
+		password:   password,
 	}
 	return client, nil
 }

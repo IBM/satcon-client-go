@@ -1,16 +1,22 @@
 package auth_test
 
 import (
+	"bytes"
+	"encoding/json"
 	"github.com/IBM/satcon-client-go/client/auth"
+	"github.com/IBM/satcon-client-go/client/auth/local"
+	"github.com/IBM/satcon-client-go/client/types"
+	"github.com/IBM/satcon-client-go/client/web/webfakes"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"io/ioutil"
+	"net/http"
 )
 
 var _ = Describe("Client", func() {
 
 	var apiKey string
 	BeforeEach(func() {
-
 		apiKey = "some_key"
 	})
 
@@ -39,4 +45,52 @@ var _ = Describe("Client", func() {
 
 	})
 
+	It("returns a LocalRazeeClient", func() {
+		local, err := auth.NewLocalRazeeClient("http://foo.bar", "user", "password")
+		Expect(err).NotTo(HaveOccurred())
+		Expect(local).NotTo(BeNil())
+	})
+
+	Describe("Local razee testing", func() {
+		token := "ey123.mytoken"
+		expectedHeaderValue := "Bearer ey123.mytoken"
+		var h *webfakes.FakeHTTPClient
+		var response *http.Response
+		var signInResponse local.SignInResponse
+
+		BeforeEach(func() {
+			h = &webfakes.FakeHTTPClient{}
+			response = &http.Response{
+				Header: http.Header{},
+			}
+
+			signInResponse = local.SignInResponse{
+				Data: &local.SignInResponseData{
+					Details: &local.SignInResponseDataDetails{
+						Token: types.Token(token),
+					},
+				},
+			}
+
+			respBodyBytes, err := json.Marshal(signInResponse)
+			Expect(err).NotTo(HaveOccurred())
+
+			response.Body = ioutil.NopCloser(bytes.NewReader(respBodyBytes))
+			h.DoReturns(response, nil)
+		})
+
+		It("executes token retrieval", func() {
+			local, err := auth.NewLocalRazeeClientWithHttpClient(h, "http://foo.bar", "user", "password")
+			Expect(err).NotTo(HaveOccurred())
+			Expect(local).NotTo(BeNil())
+			request := http.Request{
+				Header: http.Header{},
+			}
+			request.Header.Add("content-type", "application/json")
+			err = local.Authenticate(&request)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).NotTo(BeEmpty())
+			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).To(Equal(expectedHeaderValue))
+		})
+	})
 })

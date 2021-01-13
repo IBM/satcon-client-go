@@ -18,8 +18,8 @@ import (
 var _ = Describe("Signing in a User", func() {
 	var (
 		endpoint, login, password string
-		h               *webfakes.FakeHTTPClient
-		response        *http.Response
+		h                         *webfakes.FakeHTTPClient
+		response                  *http.Response
 	)
 
 	BeforeEach(func() {

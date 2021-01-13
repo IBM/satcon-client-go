@@ -20,10 +20,10 @@ import (
 var _ = Describe("Adding a User", func() {
 	var (
 		endpoint, username, email, password, orgName, role string
-		c                                        UserService
-		h                                        *webfakes.FakeHTTPClient
-		response                                 *http.Response
-		fakeAuthClient                           authfakes.FakeAuthClient
+		c                                                  UserService
+		h                                                  *webfakes.FakeHTTPClient
+		response                                           *http.Response
+		fakeAuthClient                                     authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
