@@ -1,7 +1,7 @@
 package auth_test
 
 import (
-	. "github.com/IBM/satcon-client-go/client/auth"
+	"github.com/IBM/satcon-client-go/client/auth"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -16,7 +16,7 @@ var _ = Describe("Client", func() {
 
 	It("returns a new IAMClient", func() {
 
-		iamClient, err := NewIAMClient(apiKey)
+		iamClient, err := auth.NewIAMClient(apiKey)
 		Expect(iamClient.Client).NotTo(BeNil())
 		Expect(err).NotTo(HaveOccurred())
 
@@ -31,7 +31,7 @@ var _ = Describe("Client", func() {
 
 		It("returns an error", func() {
 
-			iamClient, err := NewIAMClient(apiKey)
+			iamClient, err := auth.NewIAMClient(apiKey)
 			Expect(err).To(HaveOccurred())
 			Expect(iamClient).To(BeNil())
 

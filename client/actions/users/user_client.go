@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/IBM/satcon-client-go/client/auth"
+	"github.com/IBM/satcon-client-go/client/actions"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web"
 )
@@ -14,8 +14,6 @@ import (
 // Razee local mode is recommended to be used for development only!
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . UserService
 type UserService interface {
-	SignUp(username string, email string, password string, orgName string, role string) (*types.Token, error)
-	SignIn(login string, password string) (*types.Token, error)
 	Me() (*types.User, error)
 }
 
@@ -26,7 +24,7 @@ type Client struct {
 
 // NewClient returns a configured instance of ClusterService which can then be used
 // to perform cluster queries against Satellite Config.
-func NewClient(endpointURL string, httpClient web.HTTPClient, authClient auth.AuthClient) (UserService, error) {
+func NewClient(endpointURL string, httpClient web.HTTPClient, authClient actions.AuthClient) (UserService, error) {
 	if endpointURL == "" {
 		return nil, errors.New("Must supply a valid endpoint URL")
 	}

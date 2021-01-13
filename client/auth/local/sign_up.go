@@ -1,8 +1,9 @@
-package users
+package local
 
 import (
 	"github.com/IBM/satcon-client-go/client/actions"
 	"github.com/IBM/satcon-client-go/client/types"
+	"github.com/IBM/satcon-client-go/client/web"
 )
 
 const (
@@ -62,12 +63,12 @@ type SignUpResponseDataDetails struct {
 	Token types.Token `json:"token,omitempty"`
 }
 
-func (c *Client) SignUp(username string, email string, password string, orgName string, role string) (*types.Token, error) {
+func SignUp(client web.HTTPClient, endpoint string, username string, email string, password string, orgName string, role string) (*types.Token, error) {
 	var response SignUpResponse
 
 	vars := NewSignUpVariables(username, email, password, orgName, role)
 
-	err := c.DoQueryNoAuth(SignUpVarTemplate, vars, nil, &response)
+	err := web.DoQuery(client, endpoint, nil, SignUpVarTemplate, vars, nil, &response)
 
 	if err != nil {
 		return nil, err

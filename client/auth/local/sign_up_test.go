@@ -1,9 +1,10 @@
-package users_test
+package local_test
 
 import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"github.com/IBM/satcon-client-go/client/auth/local"
 	"io/ioutil"
 	"net/http"
 
@@ -18,7 +19,7 @@ import (
 
 var _ = Describe("Adding a User", func() {
 	var (
-		username, email, password, orgName, role string
+		endpoint, username, email, password, orgName, role string
 		c                                        UserService
 		h                                        *webfakes.FakeHTTPClient
 		response                                 *http.Response
@@ -26,6 +27,7 @@ var _ = Describe("Adding a User", func() {
 	)
 
 	BeforeEach(func() {
+		endpoint = "https://foo.bar"
 		username = "foo"
 		email = "foo@bar.ibm.com"
 		password = "supersecretpassword"
@@ -38,7 +40,7 @@ var _ = Describe("Adding a User", func() {
 	})
 
 	JustBeforeEach(func() {
-		c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
+		c, _ = NewClient(endpoint, h, &fakeAuthClient)
 		Expect(c).NotTo(BeNil())
 
 		Expect(h.DoCallCount()).To(Equal(0))
@@ -46,9 +48,9 @@ var _ = Describe("Adding a User", func() {
 
 	Describe("NewSignUpVariables", func() {
 		It("Returns a correctly configured set of variables", func() {
-			vars := NewSignUpVariables(username, email, password, orgName, role)
+			vars := local.NewSignUpVariables(username, email, password, orgName, role)
 			Expect(vars.Type).To(Equal(actions.QueryTypeMutation))
-			Expect(vars.QueryName).To(Equal(MutationSignUp))
+			Expect(vars.QueryName).To(Equal(local.MutationSignUp))
 			Expect(vars.Username).To(Equal(username))
 			Expect(vars.Email).To(Equal(email))
 			Expect(vars.Password).To(Equal(password))
@@ -69,13 +71,13 @@ var _ = Describe("Adding a User", func() {
 
 	Describe("SignUp", func() {
 		var (
-			signUpResponse SignUpResponse
+			signUpResponse local.SignUpResponse
 		)
 
 		BeforeEach(func() {
-			signUpResponse = SignUpResponse{
-				Data: &SignUpResponseData{
-					Details: &SignUpResponseDataDetails{
+			signUpResponse = local.SignUpResponse{
+				Data: &local.SignUpResponseData{
+					Details: &local.SignUpResponseDataDetails{
 						Token: "ey123.mytoken",
 					},
 				},
@@ -88,13 +90,13 @@ var _ = Describe("Adding a User", func() {
 		})
 
 		It("Sends the http request", func() {
-			_, err := c.SignUp(username, email, password, orgName, role)
+			_, err := local.SignUp(h, endpoint, username, email, password, orgName, role)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the token of the new user", func() {
-			details, _ := c.SignUp(username, email, password, orgName, role)
+			details, _ := local.SignUp(h, endpoint, username, email, password, orgName, role)
 			Expect(details).NotTo(BeNil())
 
 			expected := signUpResponse.Data.Details.Token
@@ -107,19 +109,19 @@ var _ = Describe("Adding a User", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.SignUp(username, email, password, orgName, role)
+				_, err := local.SignUp(h, endpoint, username, email, password, orgName, role)
 				Expect(err).To(MatchError("Fart Monkeys!"))
 			})
 		})
 
 		Context("When the response is empty for some reason", func() {
 			BeforeEach(func() {
-				respBodyBytes, _ := json.Marshal(SignUpResponse{})
+				respBodyBytes, _ := json.Marshal(local.SignUpResponse{})
 				response.Body = ioutil.NopCloser(bytes.NewReader(respBodyBytes))
 			})
 
 			It("Returns nil", func() {
-				details, err := c.SignUp(username, email, password, orgName, role)
+				details, err := local.SignUp(h, endpoint, username, email, password, orgName, role)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(details).To(BeNil())
 			})

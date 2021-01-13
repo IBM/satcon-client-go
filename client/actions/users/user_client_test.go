@@ -1,6 +1,7 @@
 package users_test
 
 import (
+	"github.com/IBM/satcon-client-go/client/auth"
 	"net/http"
 	"time"
 
@@ -8,7 +9,6 @@ import (
 	. "github.com/onsi/gomega"
 
 	. "github.com/IBM/satcon-client-go/client/actions/users"
-	"github.com/IBM/satcon-client-go/client/auth"
 )
 
 var _ = Describe("UserClient", func() {

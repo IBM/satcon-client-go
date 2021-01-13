@@ -1,9 +1,10 @@
-package users_test
+package local_test
 
 import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"github.com/IBM/satcon-client-go/client/auth/local"
 	"io/ioutil"
 	"net/http"
 
@@ -11,21 +12,18 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client/actions"
-	. "github.com/IBM/satcon-client-go/client/actions/users"
-	"github.com/IBM/satcon-client-go/client/auth/authfakes"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
 var _ = Describe("Signing in a User", func() {
 	var (
-		login, password string
-		c               UserService
+		endpoint, login, password string
 		h               *webfakes.FakeHTTPClient
 		response        *http.Response
-		fakeAuthClient  authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
+		endpoint = "https://foo.bar"
 		login = "foo@bar.ibm.com"
 		password = "supersecretpassword"
 
@@ -35,17 +33,14 @@ var _ = Describe("Signing in a User", func() {
 	})
 
 	JustBeforeEach(func() {
-		c, _ = NewClient("https://foo.bar", h, &fakeAuthClient)
-		Expect(c).NotTo(BeNil())
-
 		Expect(h.DoCallCount()).To(Equal(0))
 	})
 
 	Describe("NewSignInVariables", func() {
 		It("Returns a correctly configured set of variables", func() {
-			vars := NewSignInVariables(login, password)
+			vars := local.NewSignInVariables(login, password)
 			Expect(vars.Type).To(Equal(actions.QueryTypeMutation))
-			Expect(vars.QueryName).To(Equal(MutationSignIn))
+			Expect(vars.QueryName).To(Equal(local.MutationSignIn))
 			Expect(vars.Login).To(Equal(login))
 			Expect(vars.Password).To(Equal(password))
 			Expect(vars.Args).To(Equal(map[string]string{
@@ -60,13 +55,13 @@ var _ = Describe("Signing in a User", func() {
 
 	Describe("SignIn", func() {
 		var (
-			signInResponse SignInResponse
+			signInResponse local.SignInResponse
 		)
 
 		BeforeEach(func() {
-			signInResponse = SignInResponse{
-				Data: &SignInResponseData{
-					Details: &SignInResponseDataDetails{
+			signInResponse = local.SignInResponse{
+				Data: &local.SignInResponseData{
+					Details: &local.SignInResponseDataDetails{
 						Token: "ey123.mytoken",
 					},
 				},
@@ -79,13 +74,13 @@ var _ = Describe("Signing in a User", func() {
 		})
 
 		It("Sends the http request", func() {
-			_, err := c.SignIn(login, password)
+			_, err := local.SignIn(h, endpoint, login, password)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns the sign in token", func() {
-			details, _ := c.SignIn(login, password)
+			details, _ := local.SignIn(h, endpoint, login, password)
 			Expect(details).NotTo(BeNil())
 
 			expected := signInResponse.Data.Details.Token
@@ -98,19 +93,19 @@ var _ = Describe("Signing in a User", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := c.SignIn(login, password)
+				_, err := local.SignIn(h, endpoint, login, password)
 				Expect(err).To(MatchError("Fart Monkeys!"))
 			})
 		})
 
 		Context("When the response is empty for some reason", func() {
 			BeforeEach(func() {
-				respBodyBytes, _ := json.Marshal(SignInResponse{})
+				respBodyBytes, _ := json.Marshal(local.SignInResponse{})
 				response.Body = ioutil.NopCloser(bytes.NewReader(respBodyBytes))
 			})
 
 			It("Returns nil", func() {
-				details, err := c.SignIn(login, password)
+				details, err := local.SignIn(h, endpoint, login, password)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(details).To(BeNil())
 			})
