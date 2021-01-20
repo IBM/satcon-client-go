@@ -4,7 +4,7 @@ A `satcon-client-go` release is a tagged git sha and a GitHub release. Please fo
 
 To cut a release:
 
-1. Run `go mod tidy` and run all tests. Commit any changes.
+1. Run `go mod tidy` and run all tests (e.g. `go test ./...`). Commit any changes.
 1. Ensure CHANGELOG.md is up to date.
   - Check dependency changes since last release: `git diff vX.X.X HEAD -- go.mod`
   - Use `git log --pretty=format:'- %s [%h]' HEAD...vX.X.X` to list all the commits since the last release
