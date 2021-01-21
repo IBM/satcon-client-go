@@ -21,3 +21,6 @@
 
 # Unit test coverage
 *.coverprofile
+
+# Possible credentials
+/test/integration/integration.json
