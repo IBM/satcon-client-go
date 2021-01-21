@@ -1,5 +1,5 @@
 {
-  "apiKey": "eE_t6_RadxyrQLYYt6RlamPXQO2LCpin-vpMZKA5bzMu",
+  "apiKey": "",
   "satconEndpoint": "https://config.satellite.cloud.ibm.com/graphql",
-  "orgId": "ff1d25c81c197c3fb4f907fe0976f22d"
+  "orgId": ""
 }
