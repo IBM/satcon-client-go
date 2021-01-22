@@ -40,9 +40,9 @@ After following these steps, you can then query both SatCon and the k8s API on t
 
 The integration tests are run as a suite of [Ginkgo](https://github.com/onsi/ginkgo) tests.  You will first need to install `ginkgo` (this has probably already been done by `go mod` for you).
 
-Next, navigate to the `test/integration` directory and update the `integration.json` config file.
+Next, navigate to the `test/integration` directory and _copy_ the `integration-sample.json` config file to `integration.json`. Do _not_ change `intergation-sample.json`. Add your credentials to `integration.json`, which is not tracked by git.
 
-- Set `apiKey` to an IAM API key with sufficient permissions.  _Be sure not to push any commits that contain actual credentials._
+- Set `apiKey` to an IAM API key with sufficient permissions.  _Again, be sure not to push any commits that contain actual credentials._
 - Set `iamEndpoint` to the IAM token endpoint you want to use.  This is prepopulated with the production IAM token endpoint.
 - Set `satconEndpoint` to the Satellite Config API endpoint you want to use.  This is also prepopulated with the production SatCon endpoint.
 - Set `orgId` to the Satellite organization ID you will use for running the tests.  At this time, the tests only support using a single orgId value for all of the tests.
