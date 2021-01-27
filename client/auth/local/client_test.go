@@ -3,6 +3,7 @@ package local_test
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/IBM/satcon-client-go/client/auth/local"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 	"github.com/dgrijalva/jwt-go"
@@ -15,26 +16,26 @@ import (
 
 var _ = Describe("Client", func() {
 	It("returns a LocalRazeeClient", func() {
-		local, err := NewClient("http://foo.bar", "user", "password")
+		local, err := local.NewClient("http://foo.bar", "user", "password")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(local).NotTo(BeNil())
 	})
 
 	Describe("Local razee errors", func() {
 		It("Should error when url is empty", func() {
-			local, err := NewClient("", "user", "password")
+			local, err := local.NewClient("", "user", "password")
 			Expect(err).To(HaveOccurred())
 			Expect(local).To(BeNil())
 		})
 
 		It("Should error when login is empty", func() {
-			local, err := NewClient("http://foo.bar", "", "password")
+			local, err := local.NewClient("http://foo.bar", "", "password")
 			Expect(err).To(HaveOccurred())
 			Expect(local).To(BeNil())
 		})
 
 		It("Should error when password is empty", func() {
-			local, err := NewClient("http://foo.bar", "user", "")
+			local, err := local.NewClient("http://foo.bar", "user", "")
 			Expect(err).To(HaveOccurred())
 			Expect(local).To(BeNil())
 		})
@@ -44,7 +45,7 @@ var _ = Describe("Client", func() {
 		var token string
 		var h *webfakes.FakeHTTPClient
 		var response *http.Response
-		var signInResponse SignInResponse
+		var signInResponse local.SignInResponse
 
 		BeforeEach(func() {
 			var err error
@@ -61,9 +62,9 @@ var _ = Describe("Client", func() {
 				Header: http.Header{},
 			}
 
-			signInResponse = SignInResponse{
-				Data: &SignInResponseData{
-					Details: &SignInResponseDataDetails{
+			signInResponse = local.SignInResponse{
+				Data: &local.SignInResponseData{
+					Details: &local.SignInResponseDataDetails{
 						Token: types.Token(token),
 					},
 				},
@@ -77,7 +78,7 @@ var _ = Describe("Client", func() {
 		})
 
 		It("executes token retrieval", func() {
-			localClient, err := NewClientWithHttpClient(h, "http://foo.bar", "user", "password")
+			localClient, err := local.NewClientWithHttpClient(h, "http://foo.bar", "user", "password")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(localClient).NotTo(BeNil())
 			request := http.Request{
@@ -87,14 +88,14 @@ var _ = Describe("Client", func() {
 			// Call authenticate to check if the bearer token gets injected
 			err = localClient.Authenticate(&request)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(request.Header.Get(AuthorizationHeaderKey)).NotTo(BeEmpty())
-			Expect(request.Header.Get(AuthorizationHeaderKey)).To(Equal("Bearer " + token))
+			Expect(request.Header.Get(local.AuthorizationHeaderKey)).NotTo(BeEmpty())
+			Expect(request.Header.Get(local.AuthorizationHeaderKey)).To(Equal("Bearer " + token))
 
 			// Call authenticate to check if the bearer token gets injected again
 			err = localClient.Authenticate(&request)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(request.Header.Get(AuthorizationHeaderKey)).NotTo(BeEmpty())
-			Expect(request.Header.Get(AuthorizationHeaderKey)).To(Equal("Bearer " + token))
+			Expect(request.Header.Get(local.AuthorizationHeaderKey)).NotTo(BeEmpty())
+			Expect(request.Header.Get(local.AuthorizationHeaderKey)).To(Equal("Bearer " + token))
 
 			// Check that there was only one invocation (the second authenticate should come from the cache)
 			Expect(len(h.Invocations())).To(Equal(1))
