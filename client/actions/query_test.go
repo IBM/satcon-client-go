@@ -192,7 +192,7 @@ var _ = Describe("Query", func() {
 			buf, _ := BuildRequestBody(requestTemplate, vars, funcs)
 			Expect(buf).NotTo(BeNil())
 			b, _ := ioutil.ReadAll(buf)
-			for k, _ := range vars.Args {
+			for k := range vars.Args {
 				Expect(b).To(MatchRegexp(`\\n  %s\([^\)]*%s: \$%s`, vars.QueryName, k, k))
 			}
 		})
@@ -211,7 +211,7 @@ var _ = Describe("Query", func() {
 			Expect(buf).NotTo(BeNil())
 			b, _ := ioutil.ReadAll(buf)
 			v := reflect.ValueOf(vars)
-			for k, _ := range vars.Args {
+			for k := range vars.Args {
 				Expect(b).To(MatchRegexp(`"variables":{[^}]*"%s":"%s"`,
 					k, v.FieldByName(strings.Title(k))))
 			}

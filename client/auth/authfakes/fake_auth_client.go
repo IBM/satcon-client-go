@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/IBM/satcon-client-go/client/actions"
+	"github.com/IBM/satcon-client-go/client/auth"
 )
 
 type FakeAuthClient struct {
@@ -109,4 +109,4 @@ func (fake *FakeAuthClient) recordInvocation(key string, args []interface{}) {
 	fake.invocations[key] = append(fake.invocations[key], args)
 }
 
-var _ actions.AuthClient = new(FakeAuthClient)
+var _ auth.AuthClient = new(FakeAuthClient)

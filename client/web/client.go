@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/IBM/satcon-client-go/client/auth"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -23,7 +24,7 @@ type HTTPClient interface {
 type SatConClient struct {
 	Endpoint   string
 	HTTPClient HTTPClient
-	AuthClient actions.AuthClient
+	AuthClient auth.AuthClient
 }
 
 // DoQuery makes the graphql query request and returns the result
@@ -34,7 +35,7 @@ func (s *SatConClient) DoQuery(requestTemplate string, vars interface{}, funcs t
 // DoQuery makes the graphql query request and returns the result
 func DoQuery(httpClient HTTPClient,
 	endpoint string,
-	authClient actions.AuthClient,
+	authClient auth.AuthClient,
 	requestTemplate string,
 	vars interface{},
 	funcs template.FuncMap,

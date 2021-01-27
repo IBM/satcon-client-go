@@ -3,12 +3,12 @@ package integration_test
 import (
 	"encoding/base64"
 	"fmt"
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client"
-	"github.com/IBM/satcon-client-go/client/auth"
 	. "github.com/IBM/satcon-client-go/test/integration"
 )
 
@@ -17,12 +17,12 @@ var _ = Describe("Versions", func() {
 		description string
 		c           client.SatCon
 		content     []byte
-		iamClient   *auth.IAMClient
+		iamClient   *iam.IAMClient
 	)
 
 	BeforeEach(func() {
 		var err error
-		iamClient, err = auth.NewIAMClient(testConfig.APIKey)
+		iamClient, err = iam.NewIAMClient(testConfig.APIKey)
 		Expect(err).ToNot(HaveOccurred())
 		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
 		Expect(c.Versions).NotTo(BeNil())

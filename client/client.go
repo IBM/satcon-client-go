@@ -1,7 +1,6 @@
 package client
 
 import (
-	"github.com/IBM/satcon-client-go/client/actions"
 	"github.com/IBM/satcon-client-go/client/actions/channels"
 	"github.com/IBM/satcon-client-go/client/actions/channels/channelsfakes"
 	"github.com/IBM/satcon-client-go/client/actions/clusters"
@@ -16,6 +15,7 @@ import (
 	"github.com/IBM/satcon-client-go/client/actions/users/usersfakes"
 	"github.com/IBM/satcon-client-go/client/actions/versions"
 	"github.com/IBM/satcon-client-go/client/actions/versions/versionsfakes"
+	"github.com/IBM/satcon-client-go/client/auth"
 	"github.com/IBM/satcon-client-go/client/web"
 )
 
@@ -31,7 +31,7 @@ type SatCon struct {
 }
 
 //New creates new SatCon clients
-func New(endpointURL string, httpClient web.HTTPClient, authClient actions.AuthClient) (SatCon, error) {
+func New(endpointURL string, httpClient web.HTTPClient, authClient auth.AuthClient) (SatCon, error) {
 	var (
 		err error
 		s   SatCon

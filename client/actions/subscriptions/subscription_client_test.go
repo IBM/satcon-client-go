@@ -1,6 +1,7 @@
 package subscriptions_test
 
 import (
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 	"net/http"
 	"time"
 
@@ -8,13 +9,12 @@ import (
 	. "github.com/onsi/gomega"
 
 	. "github.com/IBM/satcon-client-go/client/actions/subscriptions"
-	"github.com/IBM/satcon-client-go/client/auth"
 )
 
 var _ = Describe("ClusterClient", func() {
 	Describe("NewClient", func() {
 		var (
-			iamClient *auth.IAMClient
+			iamClient *iam.IAMClient
 			err       error
 			h         *http.Client
 			endpoint  string
@@ -22,7 +22,7 @@ var _ = Describe("ClusterClient", func() {
 
 		BeforeEach(func() {
 			endpoint = "https://satcon.foo"
-			iamClient, err = auth.NewIAMClient("some_key")
+			iamClient, err = iam.NewIAMClient("some_key")
 			Expect(err).ToNot(HaveOccurred())
 		})
 

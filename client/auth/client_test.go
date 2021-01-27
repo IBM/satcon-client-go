@@ -3,7 +3,7 @@ package auth_test
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/IBM/satcon-client-go/client/auth"
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 	"github.com/IBM/satcon-client-go/client/auth/local"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
@@ -24,7 +24,7 @@ var _ = Describe("Client", func() {
 
 	It("returns a new IAMClient", func() {
 
-		iamClient, err := auth.NewIAMClient(apiKey)
+		iamClient, err := iam.NewIAMClient(apiKey)
 		Expect(iamClient.Client).NotTo(BeNil())
 		Expect(err).NotTo(HaveOccurred())
 
@@ -39,7 +39,7 @@ var _ = Describe("Client", func() {
 
 		It("returns an error", func() {
 
-			iamClient, err := auth.NewIAMClient(apiKey)
+			iamClient, err := iam.NewIAMClient(apiKey)
 			Expect(err).To(HaveOccurred())
 			Expect(iamClient).To(BeNil())
 
@@ -48,26 +48,26 @@ var _ = Describe("Client", func() {
 	})
 
 	It("returns a LocalRazeeClient", func() {
-		local, err := auth.NewLocalRazeeClient("http://foo.bar", "user", "password")
+		local, err := local.NewLocalRazeeClient("http://foo.bar", "user", "password")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(local).NotTo(BeNil())
 	})
 
 	Describe("Local razee errors", func() {
 		It("Should error when url is empty", func() {
-			local, err := auth.NewLocalRazeeClient("", "user", "password")
+			local, err := local.NewLocalRazeeClient("", "user", "password")
 			Expect(err).To(HaveOccurred())
 			Expect(local).To(BeNil())
 		})
 
 		It("Should error when login is empty", func() {
-			local, err := auth.NewLocalRazeeClient("http://foo.bar", "", "password")
+			local, err := local.NewLocalRazeeClient("http://foo.bar", "", "password")
 			Expect(err).To(HaveOccurred())
 			Expect(local).To(BeNil())
 		})
 
 		It("Should error when password is empty", func() {
-			local, err := auth.NewLocalRazeeClient("http://foo.bar", "user", "")
+			local, err := local.NewLocalRazeeClient("http://foo.bar", "user", "")
 			Expect(err).To(HaveOccurred())
 			Expect(local).To(BeNil())
 		})
@@ -110,24 +110,24 @@ var _ = Describe("Client", func() {
 		})
 
 		It("executes token retrieval", func() {
-			local, err := auth.NewLocalRazeeClientWithHttpClient(h, "http://foo.bar", "user", "password")
+			localClient, err := local.NewLocalRazeeClientWithHttpClient(h, "http://foo.bar", "user", "password")
 			Expect(err).NotTo(HaveOccurred())
-			Expect(local).NotTo(BeNil())
+			Expect(localClient).NotTo(BeNil())
 			request := http.Request{
 				Header: http.Header{},
 			}
 			request.Header.Add("content-type", "application/json")
 			// Call authenticate to check if the bearer token gets injected
-			err = local.Authenticate(&request)
+			err = localClient.Authenticate(&request)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).NotTo(BeEmpty())
-			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).To(Equal("Bearer " + token))
+			Expect(request.Header.Get(local.AuthorizationHeaderKey)).NotTo(BeEmpty())
+			Expect(request.Header.Get(local.AuthorizationHeaderKey)).To(Equal("Bearer " + token))
 
 			// Call authenticate to check if the bearer token gets injected again
-			err = local.Authenticate(&request)
+			err = localClient.Authenticate(&request)
 			Expect(err).NotTo(HaveOccurred())
-			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).NotTo(BeEmpty())
-			Expect(request.Header.Get(auth.AuthorizationHeaderKey)).To(Equal("Bearer " + token))
+			Expect(request.Header.Get(local.AuthorizationHeaderKey)).NotTo(BeEmpty())
+			Expect(request.Header.Get(local.AuthorizationHeaderKey)).To(Equal("Bearer " + token))
 
 			// Check that there was only one invocation (the second authenticate should come from the cache)
 			Expect(len(h.Invocations())).To(Equal(1))

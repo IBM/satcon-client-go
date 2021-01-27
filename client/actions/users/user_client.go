@@ -2,9 +2,9 @@ package users
 
 import (
 	"errors"
+	"github.com/IBM/satcon-client-go/client/auth"
 	"net/http"
 
-	"github.com/IBM/satcon-client-go/client/actions"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web"
 )
@@ -22,7 +22,7 @@ type Client struct {
 
 // NewClient returns a configured instance of ClusterService which can then be used
 // to perform cluster queries against Satellite Config.
-func NewClient(endpointURL string, httpClient web.HTTPClient, authClient actions.AuthClient) (UserService, error) {
+func NewClient(endpointURL string, httpClient web.HTTPClient, authClient auth.AuthClient) (UserService, error) {
 	if endpointURL == "" {
 		return nil, errors.New("Must supply a valid endpoint URL")
 	}

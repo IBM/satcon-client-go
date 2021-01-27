@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/IBM/satcon-client-go/client/auth"
 	"io"
 	"net/http"
 	"regexp"
@@ -21,11 +22,6 @@ const (
 const (
 	QueryTemplate = `{"query":"{{.Type}} {{buildArgsList .Args}} {\n  {{.QueryName}}{{buildArgVarsList .Args}}{{print " {"}}{{range .Returns}}{{printf "\\n    %s" .}}{{end}}\n  }\n}","variables":{{print "{"}}{{block "vars" .}}{{end}}{{print "}}"}}`
 )
-
-//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 -o ../auth/authfakes/fake_auth_client.go . AuthClient
-type AuthClient interface {
-	Authenticate(request *http.Request) error
-}
 
 type GraphQLQuery struct {
 	Type      QueryType
@@ -55,7 +51,7 @@ func BuildArgVarsList(args map[string]string) string {
 
 	argVarStrings := make([]string, 0)
 
-	for k, _ := range args {
+	for k := range args {
 		argVarStrings = append(argVarStrings, fmt.Sprintf("%s: $%s", k, k))
 	}
 
@@ -63,7 +59,7 @@ func BuildArgVarsList(args map[string]string) string {
 }
 
 //BuildRequest builds the request and it sets the headers
-func BuildRequest(payload io.Reader, endpoint string, authClient AuthClient) (*http.Request, error) {
+func BuildRequest(payload io.Reader, endpoint string, authClient auth.AuthClient) (*http.Request, error) {
 	req, _ := http.NewRequest(http.MethodPost, endpoint, payload)
 	req.Header.Add("content-type", "application/json")
 	if authClient != nil {

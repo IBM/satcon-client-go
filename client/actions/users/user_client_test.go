@@ -1,7 +1,7 @@
 package users_test
 
 import (
-	"github.com/IBM/satcon-client-go/client/auth"
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 	"net/http"
 	"time"
 
@@ -16,13 +16,13 @@ var _ = Describe("UserClient", func() {
 		var (
 			h         *http.Client
 			endpoint  string
-			iamClient *auth.IAMClient
+			iamClient *iam.IAMClient
 			err       error
 		)
 
 		BeforeEach(func() {
 			endpoint = "https://satcon.foo"
-			iamClient, err = auth.NewIAMClient("some_key")
+			iamClient, err = iam.NewIAMClient("some_key")
 			Expect(err).ToNot(HaveOccurred())
 		})
 
