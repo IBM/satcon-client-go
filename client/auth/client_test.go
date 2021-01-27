@@ -48,26 +48,26 @@ var _ = Describe("Client", func() {
 	})
 
 	It("returns a LocalRazeeClient", func() {
-		local, err := local.NewLocalRazeeClient("http://foo.bar", "user", "password")
+		local, err := local.NewClient("http://foo.bar", "user", "password")
 		Expect(err).NotTo(HaveOccurred())
 		Expect(local).NotTo(BeNil())
 	})
 
 	Describe("Local razee errors", func() {
 		It("Should error when url is empty", func() {
-			local, err := local.NewLocalRazeeClient("", "user", "password")
+			local, err := local.NewClient("", "user", "password")
 			Expect(err).To(HaveOccurred())
 			Expect(local).To(BeNil())
 		})
 
 		It("Should error when login is empty", func() {
-			local, err := local.NewLocalRazeeClient("http://foo.bar", "", "password")
+			local, err := local.NewClient("http://foo.bar", "", "password")
 			Expect(err).To(HaveOccurred())
 			Expect(local).To(BeNil())
 		})
 
 		It("Should error when password is empty", func() {
-			local, err := local.NewLocalRazeeClient("http://foo.bar", "user", "")
+			local, err := local.NewClient("http://foo.bar", "user", "")
 			Expect(err).To(HaveOccurred())
 			Expect(local).To(BeNil())
 		})
@@ -110,7 +110,7 @@ var _ = Describe("Client", func() {
 		})
 
 		It("executes token retrieval", func() {
-			localClient, err := local.NewLocalRazeeClientWithHttpClient(h, "http://foo.bar", "user", "password")
+			localClient, err := local.NewClientWithHttpClient(h, "http://foo.bar", "user", "password")
 			Expect(err).NotTo(HaveOccurred())
 			Expect(localClient).NotTo(BeNil())
 			request := http.Request{

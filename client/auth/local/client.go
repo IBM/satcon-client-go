@@ -59,11 +59,11 @@ func (l *LocalRazeeClient) Authenticate(request *http.Request) error {
 	return nil
 }
 
-func NewLocalRazeeClient(url string, login string, password string) (*LocalRazeeClient, error) {
-	return NewLocalRazeeClientWithHttpClient(http.DefaultClient, url, login, password)
+func NewClient(url string, login string, password string) (*LocalRazeeClient, error) {
+	return NewClientWithHttpClient(http.DefaultClient, url, login, password)
 }
 
-func NewLocalRazeeClientWithHttpClient(httpClient web.HTTPClient, url string, login string, password string) (*LocalRazeeClient, error) {
+func NewClientWithHttpClient(httpClient web.HTTPClient, url string, login string, password string) (*LocalRazeeClient, error) {
 	if url == "" {
 		return nil, fmt.Errorf("Field 'url' cannot be empty!")
 	}
