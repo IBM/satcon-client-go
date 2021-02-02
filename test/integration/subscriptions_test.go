@@ -3,11 +3,11 @@ package integration_test
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/IBM/satcon-client-go/client/auth/iam"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client"
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 	. "github.com/IBM/satcon-client-go/test/integration"
 )
 

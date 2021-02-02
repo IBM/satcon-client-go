@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/IBM/satcon-client-go/client/auth/local"
 	"io/ioutil"
 	"net/http"
 
@@ -14,6 +13,7 @@ import (
 	"github.com/IBM/satcon-client-go/client/actions"
 	. "github.com/IBM/satcon-client-go/client/actions/users"
 	"github.com/IBM/satcon-client-go/client/auth/authfakes"
+	"github.com/IBM/satcon-client-go/client/auth/local"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 

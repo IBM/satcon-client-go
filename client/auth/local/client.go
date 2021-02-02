@@ -2,11 +2,12 @@ package local
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web"
 	"github.com/dgrijalva/jwt-go"
-	"net/http"
-	"time"
 )
 
 const TokenValidityDuration = 40 * time.Minute

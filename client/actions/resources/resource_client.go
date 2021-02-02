@@ -2,9 +2,9 @@ package resources
 
 import (
 	"errors"
-	"github.com/IBM/satcon-client-go/client/auth"
 	"net/http"
 
+	"github.com/IBM/satcon-client-go/client/auth"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web"
 )

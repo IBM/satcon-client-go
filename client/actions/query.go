@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/IBM/satcon-client-go/client/auth"
 	"io"
 	"net/http"
 	"regexp"
 	"strings"
 	"text/template"
+
+	"github.com/IBM/satcon-client-go/client/auth"
 )
 
 type QueryType string

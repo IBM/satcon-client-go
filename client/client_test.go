@@ -1,7 +1,6 @@
 package client_test
 
 import (
-	"github.com/IBM/satcon-client-go/client/auth/iam"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -13,6 +12,7 @@ import (
 	"github.com/IBM/satcon-client-go/client/actions/resources/resourcesfakes"
 	"github.com/IBM/satcon-client-go/client/actions/subscriptions/subscriptionsfakes"
 	"github.com/IBM/satcon-client-go/client/actions/versions/versionsfakes"
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 )
 
 var _ = Describe("Client", func() {

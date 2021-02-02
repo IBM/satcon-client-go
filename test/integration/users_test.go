@@ -2,12 +2,12 @@ package integration_test
 
 import (
 	"fmt"
-	"github.com/IBM/satcon-client-go/client/auth/iam"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client"
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 )
 
 var _ = Describe("Users", func() {

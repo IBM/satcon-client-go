@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/IBM/satcon-client-go/client/auth"
 	"io/ioutil"
 	"net/http"
 	"strings"
 	"text/template"
 
 	"github.com/IBM/satcon-client-go/client/actions"
+	"github.com/IBM/satcon-client-go/client/auth"
 	"github.com/IBM/satcon-client-go/client/types"
 )
 
