@@ -19,7 +19,7 @@ var _ = Describe("Client", func() {
 	Describe("New", func() {
 		var (
 			endpointURL string
-			iamClient   *iam.IAMClient
+			iamClient   *iam.Client
 			err         error
 		)
 

@@ -17,7 +17,7 @@ var _ = Describe("Versions", func() {
 		description string
 		c           client.SatCon
 		content     []byte
-		iamClient   *iam.IAMClient
+		iamClient   *iam.Client
 	)
 
 	BeforeEach(func() {

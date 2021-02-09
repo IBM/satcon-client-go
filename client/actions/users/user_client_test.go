@@ -16,7 +16,7 @@ var _ = Describe("UserClient", func() {
 		var (
 			h         *http.Client
 			endpoint  string
-			iamClient *iam.IAMClient
+			iamClient *iam.Client
 			err       error
 		)
 

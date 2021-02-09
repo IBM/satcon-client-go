@@ -1,4 +1,4 @@
-package auth_test
+package iam_test
 
 import (
 	"github.com/IBM/satcon-client-go/client/auth/iam"

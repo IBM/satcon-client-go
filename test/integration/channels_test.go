@@ -19,7 +19,7 @@ var _ = Describe("Channels", func() {
 
 	BeforeEach(func() {
 		var err error
-		var iamClient *iam.IAMClient
+		var iamClient *iam.Client
 		iamClient, err = iam.NewIAMClient(testConfig.APIKey)
 		Expect(err).ToNot(HaveOccurred())
 		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)

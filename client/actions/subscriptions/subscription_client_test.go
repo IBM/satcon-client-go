@@ -14,7 +14,7 @@ import (
 var _ = Describe("ClusterClient", func() {
 	Describe("NewClient", func() {
 		var (
-			iamClient *iam.IAMClient
+			iamClient *iam.Client
 			err       error
 			h         *http.Client
 			endpoint  string

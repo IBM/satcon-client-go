@@ -15,7 +15,7 @@ var _ = Describe("Subscriptions", func() {
 	var (
 		c         client.SatCon
 		content   []byte
-		iamClient *iam.IAMClient
+		iamClient *iam.Client
 	)
 
 	BeforeEach(func() {

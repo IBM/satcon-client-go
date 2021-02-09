@@ -13,7 +13,7 @@ import (
 var _ = Describe("Users", func() {
 	var (
 		c         client.SatCon
-		iamClient *iam.IAMClient
+		iamClient *iam.Client
 	)
 
 	BeforeEach(func() {

@@ -15,7 +15,7 @@ import (
 var _ = Describe("Clusters", func() {
 	var (
 		c         client.SatCon
-		iamClient *iam.IAMClient
+		iamClient *iam.Client
 	)
 
 	BeforeEach(func() {

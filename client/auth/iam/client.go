@@ -5,18 +5,18 @@ import (
 	"github.com/IBM/satcon-client-go/client/auth"
 )
 
-//IAMClient manages authorization for Satcon Client requests
-type IAMClient struct {
+//Client manages authorization for Satcon Client requests
+type Client struct {
 	Client auth.AuthClient
 }
 
-//New returns a new core.IamAuthenticator struct and also returns the error
-func NewIAMClient(apiKey string) (*IAMClient, error) {
+//NewIAMClient returns a new core.IamAuthenticator struct and also returns the error
+func NewIAMClient(apiKey string) (*Client, error) {
 
 	iamClient, err := core.NewIamAuthenticator(apiKey, "", "", "", false, nil)
 
 	if err == nil {
-		return &IAMClient{Client: iamClient}, nil
+		return &Client{Client: iamClient}, nil
 	}
 
 	return nil, err
