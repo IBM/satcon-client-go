@@ -13,19 +13,19 @@ const (
 // ResourcesVariables variable to query resources for specified cluster
 type ResourcesVariables struct {
 	actions.GraphQLQuery
-	OrgID              string
+	OrgID string
 }
 
 // NewResourcesVariables returns necessary variables for query
 func NewResourcesVariables(orgID string) ResourcesVariables {
 	vars := ResourcesVariables{
-		OrgID:              orgID,
+		OrgID: orgID,
 	}
 
 	vars.Type = actions.QueryTypeQuery
 	vars.QueryName = QueryResources
 	vars.Args = map[string]string{
-		"orgId":              "String!",
+		"orgId": "String!",
 	}
 	vars.Returns = []string{
 		"count",

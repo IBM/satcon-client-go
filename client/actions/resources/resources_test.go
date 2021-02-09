@@ -20,8 +20,8 @@ import (
 var _ = Describe("Resources", func() {
 
 	var (
-		orgID 							string
-		fakeAuthClient                  authfakes.FakeAuthClient
+		orgID          string
+		fakeAuthClient authfakes.FakeAuthClient
 	)
 
 	BeforeEach(func() {
@@ -34,7 +34,7 @@ var _ = Describe("Resources", func() {
 		Expect(vars.QueryName).To(Equal(QueryResources))
 		Expect(vars.OrgID).To(Equal(orgID))
 		Expect(vars.Args).To(Equal(map[string]string{
-			"orgId":              "String!",
+			"orgId": "String!",
 		}))
 		Expect(vars.Returns).To(ConsistOf(
 			"count",
@@ -65,7 +65,7 @@ var _ = Describe("Resources", func() {
 									ClusterID: "cluster-ID",
 									Name:      "cluster-name",
 								},
-								SelfLink:     "/api/v1/namespaces/razeedeploy/pods/watch-keeper-5dd8f8b5b8-k5t5h",
+								SelfLink: "/api/v1/namespaces/razeedeploy/pods/watch-keeper-5dd8f8b5b8-k5t5h",
 							},
 						},
 					},

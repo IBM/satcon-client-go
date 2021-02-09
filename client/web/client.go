@@ -29,17 +29,28 @@ type SatConClient struct {
 
 // DoQuery makes the graphql query request and returns the result
 func (s *SatConClient) DoQuery(requestTemplate string, vars interface{}, funcs template.FuncMap, result interface{}) error {
+	return DoQuery(s.HTTPClient, s.Endpoint, s.AuthClient, requestTemplate, vars, funcs, result)
+}
+
+// DoQuery makes the graphql query request and returns the result
+func DoQuery(httpClient HTTPClient,
+	endpoint string,
+	authClient auth.AuthClient,
+	requestTemplate string,
+	vars interface{},
+	funcs template.FuncMap,
+	result interface{}) error {
 	payload, err := actions.BuildRequestBody(requestTemplate, vars, funcs)
 	if err != nil {
 		return err
 	}
 
-	req, err := actions.BuildRequest(payload, s.Endpoint, s.AuthClient)
+	req, err := actions.BuildRequest(payload, endpoint, authClient)
 	if err != nil {
 		return err
 	}
 
-	response, err := s.HTTPClient.Do(req)
+	response, err := httpClient.Do(req)
 	if err != nil {
 		return err
 	}

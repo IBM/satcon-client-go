@@ -8,7 +8,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	. "github.com/IBM/satcon-client-go/client/actions/channels"
-	"github.com/IBM/satcon-client-go/client/auth"
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 )
 
 var _ = Describe("ClusterClient", func() {
@@ -16,13 +16,13 @@ var _ = Describe("ClusterClient", func() {
 		var (
 			h         *http.Client
 			endpoint  string
-			iamClient *auth.IAMClient
+			iamClient *iam.Client
 			err       error
 		)
 
 		BeforeEach(func() {
 			endpoint = "https://satcon.foo"
-			iamClient, err = auth.NewIAMClient("some_key")
+			iamClient, err = iam.NewIAMClient("some_key")
 			Expect(err).ToNot(HaveOccurred())
 		})
 

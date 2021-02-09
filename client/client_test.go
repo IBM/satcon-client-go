@@ -12,20 +12,20 @@ import (
 	"github.com/IBM/satcon-client-go/client/actions/resources/resourcesfakes"
 	"github.com/IBM/satcon-client-go/client/actions/subscriptions/subscriptionsfakes"
 	"github.com/IBM/satcon-client-go/client/actions/versions/versionsfakes"
-	"github.com/IBM/satcon-client-go/client/auth"
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 )
 
 var _ = Describe("Client", func() {
 	Describe("New", func() {
 		var (
 			endpointURL string
-			iamClient   *auth.IAMClient
+			iamClient   *iam.Client
 			err         error
 		)
 
 		BeforeEach(func() {
 			endpointURL = "https://foo.bar"
-			iamClient, err = auth.NewIAMClient("some_key")
+			iamClient, err = iam.NewIAMClient("some_key")
 			Expect(err).NotTo(HaveOccurred())
 		})
 
