@@ -1,4 +1,4 @@
-package auth_test
+package iam_test
 
 import (
 	"testing"
