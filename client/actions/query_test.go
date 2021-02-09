@@ -37,7 +37,12 @@ var _ = Describe("Query", func() {
 			// sort map keys, nor do we really want to require them to be sorted.
 			// So we tokenize the returned string and make sure it has the right elements and
 			// has no trailing comma/whitespace.
-			tokens := strings.Split(argList, ", ")
+
+			Expect(argList).To(HavePrefix("("))
+			Expect(argList).To(HaveSuffix(")"))
+			trimedList := argList[1 : len(argList)-1]
+
+			tokens := strings.Split(trimedList, ", ")
 			Expect(tokens).To(ConsistOf(
 				"$orgId: String!",
 				"$flavor: String!",
@@ -46,13 +51,22 @@ var _ = Describe("Query", func() {
 
 			Expect(argList).NotTo(HaveSuffix(", "))
 		})
+
+		It("Returns an empty string for an empty arg map", func() {
+			argList := BuildArgsList(map[string]string{})
+			Expect(argList).To(BeEmpty())
+		})
 	})
 
 	Describe("BuildArgVarsList", func() {
 		It("Returns a correct GraphQL string for the argument variables", func() {
 			argVarList := BuildArgVarsList(argMap)
 
-			tokens := strings.Split(argVarList, ", ")
+			Expect(argVarList).To(HavePrefix("("))
+			Expect(argVarList).To(HaveSuffix(")"))
+			trimedList := argVarList[1 : len(argVarList)-1]
+
+			tokens := strings.Split(trimedList, ", ")
 			Expect(tokens).To(ConsistOf(
 				"orgId: $orgId",
 				"flavor: $flavor",
@@ -60,6 +74,11 @@ var _ = Describe("Query", func() {
 			))
 
 			Expect(argVarList).NotTo(HaveSuffix(", "))
+		})
+
+		It("Returns an empty string for an empty arg map", func() {
+			argList := BuildArgVarsList(map[string]string{})
+			Expect(argList).To(BeEmpty())
 		})
 	})
 
@@ -173,7 +192,7 @@ var _ = Describe("Query", func() {
 			buf, _ := BuildRequestBody(requestTemplate, vars, funcs)
 			Expect(buf).NotTo(BeNil())
 			b, _ := ioutil.ReadAll(buf)
-			for k, _ := range vars.Args {
+			for k := range vars.Args {
 				Expect(b).To(MatchRegexp(`\\n  %s\([^\)]*%s: \$%s`, vars.QueryName, k, k))
 			}
 		})
@@ -192,7 +211,7 @@ var _ = Describe("Query", func() {
 			Expect(buf).NotTo(BeNil())
 			b, _ := ioutil.ReadAll(buf)
 			v := reflect.ValueOf(vars)
-			for k, _ := range vars.Args {
+			for k := range vars.Args {
 				Expect(b).To(MatchRegexp(`"variables":{[^}]*"%s":"%s"`,
 					k, v.FieldByName(strings.Title(k))))
 			}

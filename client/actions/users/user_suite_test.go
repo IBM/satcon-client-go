@@ -1,4 +1,4 @@
-package auth_test
+package users_test
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestAuth(t *testing.T) {
+func TestChannels(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Auth Suite")
+	RunSpecs(t, "Users Suite")
 }

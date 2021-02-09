@@ -187,3 +187,14 @@ type Subscription struct {
 
 // SubscriptionList list of subscriptions
 type SubscriptionList []Subscription
+
+type Token string
+
+type User struct {
+	Id         string `json:"id,omitempty"`
+	Type       string `json:"type,omitempty"`
+	OrgId      string `json:"orgId,omitempty"`
+	Identifier string `json:"identifier,omitempty"`
+	Email      string `json:"email,omitempty"`
+	Role       string `json:"role,omitempty"`
+}

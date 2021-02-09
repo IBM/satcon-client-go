@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client"
-	"github.com/IBM/satcon-client-go/client/auth"
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 	. "github.com/IBM/satcon-client-go/test/integration"
 )
 
@@ -15,12 +15,12 @@ var _ = Describe("Subscriptions", func() {
 	var (
 		c         client.SatCon
 		content   []byte
-		iamClient *auth.IAMClient
+		iamClient *iam.Client
 	)
 
 	BeforeEach(func() {
 		var err error
-		iamClient, err = auth.NewIAMClient(testConfig.APIKey)
+		iamClient, err = iam.NewIAMClient(testConfig.APIKey)
 		Expect(err).ToNot(HaveOccurred())
 		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
 		Expect(c.Subscriptions).NotTo(BeNil())

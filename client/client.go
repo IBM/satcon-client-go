@@ -11,6 +11,8 @@ import (
 	"github.com/IBM/satcon-client-go/client/actions/resources/resourcesfakes"
 	"github.com/IBM/satcon-client-go/client/actions/subscriptions"
 	"github.com/IBM/satcon-client-go/client/actions/subscriptions/subscriptionsfakes"
+	"github.com/IBM/satcon-client-go/client/actions/users"
+	"github.com/IBM/satcon-client-go/client/actions/users/usersfakes"
 	"github.com/IBM/satcon-client-go/client/actions/versions"
 	"github.com/IBM/satcon-client-go/client/actions/versions/versionsfakes"
 	"github.com/IBM/satcon-client-go/client/auth"
@@ -25,6 +27,7 @@ type SatCon struct {
 	Resources     resources.ResourceService
 	Subscriptions subscriptions.SubscriptionService
 	Versions      versions.VersionService
+	Users         users.UserService
 }
 
 //New creates new SatCon clients
@@ -58,6 +61,10 @@ func New(endpointURL string, httpClient web.HTTPClient, authClient auth.AuthClie
 	if err != nil {
 		return SatCon{}, err
 	}
+	s.Users, err = users.NewClient(endpointURL, httpClient, authClient)
+	if err != nil {
+		return SatCon{}, err
+	}
 
 	return s, nil
 }
@@ -73,6 +80,7 @@ func NewTesting(endpointURL string, httpClient web.HTTPClient) SatCon {
 	s.Resources = &resourcesfakes.FakeResourceService{}
 	s.Subscriptions = &subscriptionsfakes.FakeSubscriptionService{}
 	s.Versions = &versionsfakes.FakeVersionService{}
+	s.Users = &usersfakes.FakeUserService{}
 
 	return s
 }

@@ -21,7 +21,7 @@ const (
 )
 
 const (
-	QueryTemplate = `{"query":"{{.Type}} ({{buildArgsList .Args}}) {\n  {{.QueryName}}({{buildArgVarsList .Args}}{{print ") {"}}{{range .Returns}}{{printf "\\n    %s" .}}{{end}}\n  }\n}","variables":{{print "{"}}{{block "vars" .}}{{end}}{{print "}}"}}`
+	QueryTemplate = `{"query":"{{.Type}} {{buildArgsList .Args}} {\n  {{.QueryName}}{{buildArgVarsList .Args}}{{print " {"}}{{range .Returns}}{{printf "\\n    %s" .}}{{end}}\n  }\n}","variables":{{print "{"}}{{block "vars" .}}{{end}}{{print "}}"}}`
 )
 
 type GraphQLQuery struct {
@@ -32,32 +32,42 @@ type GraphQLQuery struct {
 }
 
 func BuildArgsList(args map[string]string) string {
+	if len(args) == 0 {
+		return ""
+	}
+
 	argStrings := make([]string, 0)
 
 	for k, v := range args {
 		argStrings = append(argStrings, fmt.Sprintf("$%s: %s", k, v))
 	}
 
-	return strings.Join(argStrings, ", ")
+	return "(" + strings.Join(argStrings, ", ") + ")"
 }
 
 func BuildArgVarsList(args map[string]string) string {
+	if len(args) == 0 {
+		return ""
+	}
+
 	argVarStrings := make([]string, 0)
 
-	for k, _ := range args {
+	for k := range args {
 		argVarStrings = append(argVarStrings, fmt.Sprintf("%s: $%s", k, k))
 	}
 
-	return strings.Join(argVarStrings, ", ")
+	return "(" + strings.Join(argVarStrings, ", ") + ")"
 }
 
 //BuildRequest builds the request and it sets the headers
 func BuildRequest(payload io.Reader, endpoint string, authClient auth.AuthClient) (*http.Request, error) {
 	req, _ := http.NewRequest(http.MethodPost, endpoint, payload)
 	req.Header.Add("content-type", "application/json")
-	err := authClient.Authenticate(req)
-	if err != nil {
-		return nil, err
+	if authClient != nil {
+		err := authClient.Authenticate(req)
+		if err != nil {
+			return nil, err
+		}
 	}
 	return req, nil
 }

@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client"
-	"github.com/IBM/satcon-client-go/client/auth"
+	"github.com/IBM/satcon-client-go/client/auth/iam"
 	"github.com/IBM/satcon-client-go/client/types"
 	. "github.com/IBM/satcon-client-go/test/integration"
 )
@@ -15,12 +15,12 @@ import (
 var _ = Describe("Clusters", func() {
 	var (
 		c         client.SatCon
-		iamClient *auth.IAMClient
+		iamClient *iam.Client
 	)
 
 	BeforeEach(func() {
 		var err error
-		iamClient, err = auth.NewIAMClient(testConfig.APIKey)
+		iamClient, err = iam.NewIAMClient(testConfig.APIKey)
 		Expect(err).ToNot(HaveOccurred())
 		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
 		Expect(c.Clusters).NotTo(BeNil())

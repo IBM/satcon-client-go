@@ -1,4 +1,4 @@
-package subscriptions_test
+package users_test
 
 import (
 	"net/http"
@@ -7,17 +7,17 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	. "github.com/IBM/satcon-client-go/client/actions/subscriptions"
+	. "github.com/IBM/satcon-client-go/client/actions/users"
 	"github.com/IBM/satcon-client-go/client/auth/iam"
 )
 
-var _ = Describe("ClusterClient", func() {
+var _ = Describe("UserClient", func() {
 	Describe("NewClient", func() {
 		var (
-			iamClient *iam.Client
-			err       error
 			h         *http.Client
 			endpoint  string
+			iamClient *iam.Client
+			err       error
 		)
 
 		BeforeEach(func() {
