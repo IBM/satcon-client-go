@@ -114,11 +114,12 @@ type RequestErrorDetails struct {
 type GroupList []Group
 
 type Group struct {
-	UUID    string    `json:"uuid,omitempty"`
-	OrgID   string    `json:"orgId,omitempty"`
-	Name    string    `json:"name,omitempty"`
-	Owner   BasicUser `json:"owner,omitempty"`
-	Created string    `json:"created,omitempty"`
+	UUID     string    `json:"uuid,omitempty"`
+	OrgID    string    `json:"orgId,omitempty"`
+	Name     string    `json:"name,omitempty"`
+	Owner    BasicUser `json:"owner,omitempty"`
+	Created  string    `json:"created,omitempty"`
+	Clusters []Cluster `json:"clusters,omitempty"`
 }
 
 // Registration is the encapsulation of the JSON registration body, which at this
