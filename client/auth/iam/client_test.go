@@ -15,7 +15,7 @@ var _ = Describe("Client", func() {
 
 	It("returns a new IAMClient", func() {
 
-		iamClient, err := iam.NewIAMClient(apiKey)
+		iamClient, err := iam.NewIAMClient(apiKey, "")
 		Expect(iamClient.Client).NotTo(BeNil())
 		Expect(err).NotTo(HaveOccurred())
 
@@ -30,7 +30,7 @@ var _ = Describe("Client", func() {
 
 		It("returns an error", func() {
 
-			iamClient, err := iam.NewIAMClient(apiKey)
+			iamClient, err := iam.NewIAMClient(apiKey, "")
 			Expect(err).To(HaveOccurred())
 			Expect(iamClient).To(BeNil())
 
