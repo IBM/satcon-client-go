@@ -30,10 +30,10 @@ This diagram provides an overview of the relationships between the various entit
 
 A typical SatCon workflow might proceed roughly as follows:
 
-1. **Register a cluster to SatCon.**  This makes the cluster known to SatCon, and the API call will return the URL for a Kubernetes yaml file which can be applied to the actual cluster.  This yaml will deploy and configure the SatCon (razee) agent, which in turn will connect back to SatCon to begin managing the cluster.
-1. **Add the cluster to one or more groups.**  If no group exists in the IBM Cloud account, you will first need to create a group.  You can then add your cluster to the group.
+1. **Register a cluster to SatCon.**  This makes the cluster known to SatCon, and the API call will return the URL for a Kubernetes YAML file which can be applied to the actual cluster.  Applying this YAML via e.g. kubectl will deploy and configure the SatCon (razee) agent, which in turn will connect back to SatCon to begin managing the cluster.
+1. **Add the cluster to one or more groups.**  If no group exists within the organization (i.e. the IBM Cloud account), you will first need to create a group.  You can then add your cluster to the group. (note *Organization* is the Razee term for the owner of the clusters; in a Satellite Config setting it is always the IBM Cloud account.)
 1. **Create a channel.**  To begin defining resources for distribution, you first need a channel.
-1. **Add a channel version.**  If you have the correct yaml to deploy a desired Kubernetes resource, you can create a version to encapsulate that yaml within SatCon.  A version is created within the context of a specific channel.
+1. **Add a channel version.**  If you have the correct YAML to deploy a desired Kubernetes resource, you can create a version to encapsulate that YAML within SatCon.  A version is created within the context of a specific channel.
 1. **Subscribe a cluster group to a channel/version tuple.**  Creating a subscription, which associates a group with a version (and the owning channel), triggers the agent to download the configuration and apply it to the cluster.
 
 After following these steps, you can then query both SatCon and the k8s API on the cluster itself to see your newly deployed resources.
@@ -48,7 +48,7 @@ Next, navigate to the `test/integration` directory and _copy_ the `integration-s
 
 - Set `apiKey` to an IAM API key with sufficient permissions.  _Again, be sure not to push any commits that contain actual credentials._
 - Set `satconEndpoint` to the Satellite Config API endpoint you want to use.  This is also pre-populated with the production SatCon endpoint.
-- Set `orgId` to the IBM Cloud account ID you will use for running the tests. This is generally a 32-character hexadecimal string. At this time, the tests only support using a single orgId/account value for all of the tests. (*Organization* is the Razee term for the owner of the clusters; in a Satellite Config setting it is always the IBM Cloud account.)
+- Set `orgId` to the IBM Cloud account ID you will use for running the tests. This is generally a 32-character hexadecimal string. At this time, the tests only support using a single orgId/account value for all of the tests.
 
 Then, from that same directory, you can just run `ginkgo .` to execute the integration suite.  This is a much simpler suite than e.g. the [CF Acceptance Tests](https://github.com/cloudfoundry/cf-acceptance-tests), and there is not currently a way to execute only a specific set of tests other than to use the ginkgo-specific focus/pending prefixes within the test code files themselves.
 
