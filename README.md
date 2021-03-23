@@ -44,9 +44,17 @@ After following these steps, you can then query both SatCon and the k8s API on t
 
 The integration tests are run as a suite of [Ginkgo](https://github.com/onsi/ginkgo) tests.  You will first need to install `ginkgo` (this has probably already been done by `go mod` for you).
 
-Next, navigate to the `test/integration` directory and _copy_ the `integration-sample.json` config file to `integration.json`. Do _not_ change `intergation-sample.json`. Add your credentials to `integration.json`, which is not tracked by git.
+Next, navigate to the `test/integration` directory and create a JSON file called `integration.json`. Here is a example of what this should look like:
 
-- Set `apiKey` to an IAM API key with sufficient permissions.  _Again, be sure not to push any commits that contain actual credentials._
+```json
+{
+  "apiKey": "",
+  "satconEndpoint": "https://config.satellite.cloud.ibm.com/graphql",
+  "orgId": ""
+}
+```
+
+- Set `apiKey` to an IAM API key with sufficient permissions.  Don't put real credentials in any other file, to avoid accidentally pushing them to GitHub!
 - Set `satconEndpoint` to the Satellite Config API endpoint you want to use.  This is also pre-populated with the production SatCon endpoint.
 - Set `orgId` to the IBM Cloud account ID you will use for running the tests. This is generally a 32-character hexadecimal string. At this time, the tests only support using a single orgId/account value for all of the tests.
 
