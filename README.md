@@ -50,15 +50,13 @@ Next, navigate to the `test/integration` directory and create a JSON file called
 {
   "apiKey": "",
   "satconEndpoint": "https://config.satellite.cloud.ibm.com/graphql",
-  "orgId": "",
-  "iamEndpoint": "https://optional.com/iam"
+  "orgId": ""
 }
 ```
 
 - Set `apiKey` to an IAM API key with sufficient permissions.  Don't put real credentials in any other file, to avoid accidentally pushing them to GitHub!
 - Set `satconEndpoint` to the Satellite Config API endpoint you want to use.  This is also pre-populated with the production SatCon endpoint.
 - Set `orgId` to the IBM Cloud account ID you will use for running the tests. This is generally a 32-character hexadecimal string. At this time, the tests only support using a single orgId/account value for all of the tests.
-- `iamEndpoint` is optional and should only be set when targeting an alternative SatCon endpoint. Otherwise omit the field. This is probably only relevant to internal IBM users.
 
 Then, from that same directory, you can just run `ginkgo .` to execute the integration suite.  This is a much simpler suite than e.g. the [CF Acceptance Tests](https://github.com/cloudfoundry/cf-acceptance-tests), and there is not currently a way to execute only a specific set of tests other than to use the ginkgo-specific focus/pending prefixes within the test code files themselves.
 
