@@ -1,5 +1,6 @@
 {
   "apiKey": "",
   "satconEndpoint": "https://config.satellite.cloud.ibm.com/graphql",
+  "iamEndpoint": "https://example.com/iam",
   "orgId": ""
 }

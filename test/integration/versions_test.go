@@ -22,7 +22,7 @@ var _ = Describe("Versions", func() {
 
 	BeforeEach(func() {
 		var err error
-		iamClient, err = iam.NewIAMClient(testConfig.APIKey, "")
+		iamClient, err = iam.NewIAMClient(testConfig.APIKey, testConfig.IAMEndpoint)
 		Expect(err).ToNot(HaveOccurred())
 		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
 		Expect(c.Versions).NotTo(BeNil())
