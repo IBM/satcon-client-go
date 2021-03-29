@@ -3,6 +3,7 @@ package integration_test
 import (
 	"encoding/base64"
 	"fmt"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -20,7 +21,7 @@ var _ = Describe("Subscriptions", func() {
 
 	BeforeEach(func() {
 		var err error
-		iamClient, err = iam.NewIAMClient(testConfig.APIKey)
+		iamClient, err = iam.NewIAMClient(testConfig.APIKey, testConfig.IAMEndpoint)
 		Expect(err).ToNot(HaveOccurred())
 		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
 		Expect(c.Subscriptions).NotTo(BeNil())

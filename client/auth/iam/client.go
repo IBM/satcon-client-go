@@ -11,9 +11,9 @@ type Client struct {
 }
 
 //NewIAMClient returns a new core.IamAuthenticator struct and also returns the error
-func NewIAMClient(apiKey string) (*Client, error) {
+func NewIAMClient(apiKey string, url string) (*Client, error) {
 
-	iamClient, err := core.NewIamAuthenticator(apiKey, "", "", "", false, nil)
+	iamClient, err := core.NewIamAuthenticator(apiKey, url, "", "", false, nil)
 
 	if err == nil {
 		return &Client{Client: iamClient}, nil

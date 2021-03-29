@@ -22,7 +22,7 @@ var _ = Describe("UserClient", func() {
 
 		BeforeEach(func() {
 			endpoint = "https://satcon.foo"
-			iamClient, err = iam.NewIAMClient("some_key")
+			iamClient, err = iam.NewIAMClient("some_key", "")
 			Expect(err).ToNot(HaveOccurred())
 		})
 

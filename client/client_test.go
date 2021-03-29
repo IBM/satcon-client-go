@@ -25,7 +25,7 @@ var _ = Describe("Client", func() {
 
 		BeforeEach(func() {
 			endpointURL = "https://foo.bar"
-			iamClient, err = iam.NewIAMClient("some_key")
+			iamClient, err = iam.NewIAMClient("some_key", "")
 			Expect(err).NotTo(HaveOccurred())
 		})
 
