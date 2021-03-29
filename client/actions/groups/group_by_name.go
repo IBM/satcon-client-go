@@ -33,6 +33,7 @@ func NewGroupByNameVariables(orgID string, name string) GroupByNameVariables {
 		"orgId",
 		"name",
 		"created",
+		"clusters{id,orgId,clusterId,name,metadata}",
 	}
 
 	return vars

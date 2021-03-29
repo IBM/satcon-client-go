@@ -30,6 +30,7 @@ func NewGroupsVariables(orgID string) GroupsVariables {
 		"orgId",
 		"name",
 		"created",
+		"clusters{id,orgId,clusterId,name,metadata}",
 	}
 
 	return vars

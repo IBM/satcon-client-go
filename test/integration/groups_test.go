@@ -2,6 +2,7 @@ package integration_test
 
 import (
 	"fmt"
+	"github.com/IBM/satcon-client-go/client/types"
 	"strings"
 
 	. "github.com/onsi/ginkgo"
@@ -30,14 +31,16 @@ var _ = Describe("Groups", func() {
 	Describe("Group Lifecycle", func() {
 
 		var (
-			groupName1 string
-			groupName2 string
+			groupName1  string
+			groupName2  string
+			clusterName string
 		)
 
 		BeforeEach(func() {
 			groupName1 = RandStringBytes(8)
 			groupName2 = RandStringBytes(8)
-			fmt.Printf("groupName1 = %s\ngroupName2 = %s\n", groupName1, groupName2)
+			clusterName = RandStringBytes(8)
+			fmt.Printf("groupName1 = %s\ngroupName2 = %s\nclusterName = %s\n", groupName1, groupName2, clusterName)
 		})
 
 		It("Lists the groups, creates our new group, lists again and finds it, deletes it, and finally lists to see that it's gone", func() {
@@ -67,12 +70,6 @@ var _ = Describe("Groups", func() {
 				}
 			}
 			Expect(found).To(BeTrue())
-
-			// get group by name
-			group1, err := c.Groups.GroupByName(testConfig.OrgID, groupName1)
-			Expect(err).NotTo(HaveOccurred())
-			Expect(group1).NotTo(BeNil())
-			Expect(group1.Name).To(Equal(groupName1))
 
 			// delete the group using RemoveGroupByName
 			removeGroup1, err := c.Groups.RemoveGroupByName(testConfig.OrgID, groupName1)
@@ -132,6 +129,68 @@ var _ = Describe("Groups", func() {
 				}
 			}
 			Expect(found).To(BeFalse())
+		})
+
+		It("Assign group and check if servers are listed", func() {
+			// List the groups to check that group does not exist
+			groups, err := c.Groups.Groups(testConfig.OrgID)
+			Expect(err).NotTo(HaveOccurred())
+			found := false
+			for _, group := range groups {
+				if strings.Compare(group.Name, groupName1) == 0 {
+					found = true
+				}
+			}
+			Expect(found).To(BeFalse())
+
+			// create a new group
+			newGroupDetails, err := c.Groups.AddGroup(testConfig.OrgID, groupName1)
+			Expect(newGroupDetails.UUID).NotTo(BeEmpty())
+			Expect(err).NotTo(HaveOccurred())
+
+			// create new cluster
+			newClusterDetails, err := c.Clusters.RegisterCluster(testConfig.OrgID, types.Registration{Name: clusterName})
+			Expect(err).NotTo(HaveOccurred())
+			Expect(newClusterDetails).NotTo(BeNil())
+
+			// add new cluster to the group
+			_, err = c.Groups.GroupClusters(testConfig.OrgID, newGroupDetails.UUID, []string{newClusterDetails.ClusterID})
+			Expect(err).NotTo(HaveOccurred())
+
+			// get group by name and verify that the new cluster is part of it
+			group1, err := c.Groups.GroupByName(testConfig.OrgID, groupName1)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(group1).NotTo(BeNil())
+			Expect(group1.Name).To(Equal(groupName1))
+			Expect(group1.Clusters).To(HaveLen(1))
+			Expect(group1.Clusters[0].ClusterID).To(Equal(newClusterDetails.ClusterID))
+			Expect(group1.Clusters[0].Name).To(Equal(clusterName))
+
+			// delete cluster
+			delClusterDetails, err := c.Clusters.DeleteClusterByClusterID(testConfig.OrgID, newClusterDetails.ClusterID)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(delClusterDetails.DeletedClusterCount).To(Equal(1))
+
+			// delete the group using RemoveGroupByName
+			removeGroup1, err := c.Groups.RemoveGroupByName(testConfig.OrgID, groupName1)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(removeGroup1.UUID).To(MatchRegexp(newGroupDetails.UUID))
+
+			// list groups again and prove group is gone
+			groups, err = c.Groups.Groups(testConfig.OrgID)
+			Expect(err).NotTo(HaveOccurred())
+			found = false
+			for _, group := range groups {
+				if strings.Compare(group.Name, groupName1) == 0 {
+					found = true
+				}
+			}
+			Expect(found).To(BeFalse())
+
+			// get group by name and verify that it does not exist
+			group1, err = c.Groups.GroupByName(testConfig.OrgID, groupName1)
+			Expect(err).To(HaveOccurred())
+			Expect(group1).To(BeNil())
 		})
 
 	})

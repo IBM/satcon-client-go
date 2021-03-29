@@ -45,6 +45,7 @@ var _ = Describe("GroupByName", func() {
 				"orgId",
 				"name",
 				"created",
+				"clusters{id,orgId,clusterId,name,metadata}",
 			))
 		})
 	})
@@ -64,6 +65,14 @@ var _ = Describe("GroupByName", func() {
 						UUID:  "asdf",
 						OrgID: orgID,
 						Name:  "group1",
+						Clusters: []types.Cluster{
+							{
+								ID:        "cid",
+								OrgID:     "oid",
+								ClusterID: "cid",
+								Name:      "cluster1",
+							},
+						},
 					},
 				},
 			}
