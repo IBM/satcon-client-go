@@ -23,4 +23,4 @@
 *.coverprofile
 
 # Possible credentials
-/test/integration/integration.json
+/test/integration/integration*.json
