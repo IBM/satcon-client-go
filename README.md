@@ -22,7 +22,7 @@ There are six primary entity classes in SatCon (or Razee), at least from a user 
 1. **Subscription** - a subscription associates a cluster group with a version and the owning channel/configuration, so that the SatCon agent will then know to pull that version down and apply it to every cluster within that group
 1. **Resource** - versions applied to clusters produce resources, which are essentially just that - representations of Kubernetes resources which have been deployed to the cluster(s)
 
-This diagram provides an overview of the relationships between the various entities:
+This simple [UML class diagram](https://en.wikipedia.org/wiki/Class_diagram) provides an overview of the relationships between the various entities:
 
 ![SatCon Entity Relationships](diagrams/images/CE_Isolation_SatCon_Workflow.png)
 
