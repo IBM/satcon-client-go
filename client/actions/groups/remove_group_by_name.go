@@ -4,7 +4,7 @@ import "github.com/IBM/satcon-client-go/client/actions"
 
 const (
 	QueryRemoveGroupByName       = "removeGroupByName"
-	RemoveGroupByNameVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","name":"{{js .Name}}"{{end}}`
+	RemoveGroupByNameVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}","name":"{{json .Name}}"{{end}}`
 )
 
 // RemoveGroupByNameVariables are the variables specific to removing a group by name.

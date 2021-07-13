@@ -6,7 +6,7 @@ import (
 
 const (
 	QueryAddChannel       = "addChannel"
-	AddChannelVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","name":"{{js .Name}}"{{end}}`
+	AddChannelVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}","name":"{{json .Name}}"{{end}}`
 )
 
 // AddChannelVariables are the variables specific to adding a group.

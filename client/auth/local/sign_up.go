@@ -8,7 +8,7 @@ import (
 
 const (
 	MutationSignUp    = "signUp"
-	SignUpVarTemplate = `{{define "vars"}}"username":"{{js .Username}}","email":"{{js .Email}}","password":"{{js .Password}}","orgName":"{{js .OrgName}}","role":"{{js .Role}}"{{end}}`
+	SignUpVarTemplate = `{{define "vars"}}"username":"{{json .Username}}","email":"{{json .Email}}","password":"{{json .Password}}","orgName":"{{json .OrgName}}","role":"{{json .Role}}"{{end}}`
 )
 
 // AddSignUpVariables are the variables specific to adding a user.

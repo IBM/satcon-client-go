@@ -9,7 +9,7 @@ const (
 	//QuerySubscriptions specifies the query
 	QuerySubscriptions = "subscriptions"
 	//SubscriptionsVarTemplate is the template used to create the graphql query
-	SubscriptionsVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}"{{end}}`
+	SubscriptionsVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}"{{end}}`
 )
 
 //SubscriptionsVariables are the variables used for the subscription query

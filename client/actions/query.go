@@ -2,6 +2,7 @@ package actions
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -59,6 +60,22 @@ func BuildArgVarsList(args map[string]string) string {
 	return "(" + strings.Join(argVarStrings, ", ") + ")"
 }
 
+func JsonMarshalToString(v interface{}) (string, error) {
+	bytes, err := json.Marshal(v)
+
+	// we don't want the starting and ending double quotes if this is a string, so leave off first and last chars
+	switch v.(type) {
+	case string:
+		untrimmed := string(bytes)
+		if len(untrimmed) < 2 {
+			return "", errors.New("json.Marshal returned invalid JSON string?!?")
+		}
+		return untrimmed[1 : len(untrimmed)-1], err
+	default:
+		return string(bytes), err
+	}
+}
+
 //BuildRequest builds the request and it sets the headers
 func BuildRequest(payload io.Reader, endpoint string, authClient auth.AuthClient) (*http.Request, error) {
 	req, _ := http.NewRequest(http.MethodPost, endpoint, payload)
@@ -82,16 +99,17 @@ func BuildRequest(payload io.Reader, endpoint string, authClient auth.AuthClient
 // e.g.:
 // `{{define "vars"}}"var_1":"{{.Var1}},"var2":"{{.Var2}}"{{end}}`
 func BuildRequestBody(requestTemplate string, vars interface{}, funcs template.FuncMap) (io.Reader, RequestBodyError) {
-	// First we scan to make sure all variables are escaped using the "js" built-in function
-	reString := `\{\{\w*(?:js){0}\w*\.`
+	// First we scan to make sure all variables are escaped using the "json" function
+	reString := `\{\{\w*(?:json){0}\w*\.`
 	re, _ := regexp.Compile(reString)
 	if re.MatchString(requestTemplate) {
-		return nil, errors.New("All variables must be escaped using 'js' built-in")
+		return nil, errors.New("All variables must be escaped using 'json' template function")
 	}
 
 	defaultFuncs := template.FuncMap{
 		"buildArgsList":    BuildArgsList,
 		"buildArgVarsList": BuildArgVarsList,
+		"json":             JsonMarshalToString,
 	}
 
 	// Merge in user-supplied functions

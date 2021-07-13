@@ -12,7 +12,7 @@ import (
 
 const (
 	QueryRegisterCluster       = "registerCluster"
-	RegisterClusterVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","registration":{{printf "%s" .Registration}}{{end}}`
+	RegisterClusterVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}","registration":{{printf "%s" .Registration}}{{end}}`
 )
 
 // RegisterClusterVariables are the variables specific to cluster registration.
