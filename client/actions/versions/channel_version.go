@@ -9,7 +9,7 @@ const (
 	//QueryChannelVersion specifies the query
 	QueryChannelVersion = "channelVersion"
 	// ChannelVersionVarTemplate is the template used to create the graphql query
-	ChannelVersionVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}","channelUuid":"{{json .ChannelUUID}}","versionUuid":"{{json .VersionUUID}}"{{end}}`
+	ChannelVersionVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"channelUuid":{{json .ChannelUUID}},"versionUuid":{{json .VersionUUID}}{{end}}`
 )
 
 // ChannelVersionVariables are the variables used for the subscription query

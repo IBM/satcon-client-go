@@ -7,7 +7,7 @@ import (
 
 const (
 	QueryClusterByName       = "clusterByName"
-	ClusterByNameVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}","clusterName":"{{json .ClusterName}}"{{end}}`
+	ClusterByNameVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"clusterName":{{json .ClusterName}}{{end}}`
 )
 
 type ClusterByNameVariables struct {

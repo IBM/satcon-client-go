@@ -147,7 +147,7 @@ var _ = Describe("Query", func() {
 		)
 
 		BeforeEach(func() {
-			requestTemplate = `{{define "vars"}}"first":"{{json .First}}","last":"{{json .Last}}"{{end}}`
+			requestTemplate = `{{define "vars"}}"first":{{json .First}},"last":{{json .Last}}{{end}}`
 			vars = requestVars{
 				First: "Don",
 				Last:  "Quixote",
@@ -219,7 +219,7 @@ var _ = Describe("Query", func() {
 
 		Context("When additional helper functions are passed in", func() {
 			BeforeEach(func() {
-				requestTemplate = `{{define "vars"}}"first":"{{json (toUpper .First)}}"{{end}}`
+				requestTemplate = `{{define "vars"}}"first":{{json (toUpper .First)}}{{end}}`
 				funcs = template.FuncMap{
 					"toUpper": strings.ToUpper,
 				}
@@ -236,7 +236,7 @@ var _ = Describe("Query", func() {
 
 		Context("When the variable template does not escape json for all variables", func() {
 			BeforeEach(func() {
-				requestTemplate = `{{define "vars"}}"first":"{{json .First}}","last":"{{.Last}}"{{end}}`
+				requestTemplate = `{{define "vars"}}"first":{{json .First}},"last":"{{.Last}}"{{end}}`
 			})
 
 			It("Returns nil and an error", func() {
@@ -260,7 +260,7 @@ var _ = Describe("Query", func() {
 
 		Context("When the template references variables not part of the struct", func() {
 			BeforeEach(func() {
-				requestTemplate = `{{define "vars"}}"first":"{{json .Foo}}"{{end}}`
+				requestTemplate = `{{define "vars"}}"first":{{json .Foo}}{{end}}`
 			})
 
 			It("Returns nil and an error", func() {

@@ -7,7 +7,7 @@ import (
 
 const (
 	QueryGroupByName       = "groupByName"
-	GroupByNameVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}","name":"{{json .Name}}"{{end}}`
+	GroupByNameVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"name":{{json .Name}}{{end}}`
 )
 
 type GroupByNameVariables struct {

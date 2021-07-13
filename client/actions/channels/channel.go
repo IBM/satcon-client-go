@@ -7,7 +7,7 @@ import (
 
 const (
 	QueryChannel       = "channel"
-	ChannelVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}","uuid":"{{json .UUID}}"{{end}}`
+	ChannelVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"uuid":{{json .UUID}}{{end}}`
 )
 
 // ChannelVariables to query channel

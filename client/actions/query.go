@@ -62,18 +62,7 @@ func BuildArgVarsList(args map[string]string) string {
 
 func JsonMarshalToString(v interface{}) (string, error) {
 	bytes, err := json.Marshal(v)
-
-	// we don't want the starting and ending double quotes if this is a string, so leave off first and last chars
-	switch v.(type) {
-	case string:
-		untrimmed := string(bytes)
-		if len(untrimmed) < 2 {
-			return "", errors.New("json.Marshal returned invalid JSON string?!?")
-		}
-		return untrimmed[1 : len(untrimmed)-1], err
-	default:
-		return string(bytes), err
-	}
+	return string(bytes), err
 }
 
 //BuildRequest builds the request and it sets the headers

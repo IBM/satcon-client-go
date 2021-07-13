@@ -7,7 +7,7 @@ import (
 
 const (
 	QueryChannelByName       = "channelByName"
-	ChannelByNameVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}","name":"{{json .Name}}"{{end}}`
+	ChannelByNameVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"name":{{json .Name}}{{end}}`
 )
 
 // ChannelByNameVariables to query channel by name

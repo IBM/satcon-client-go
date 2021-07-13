@@ -8,7 +8,7 @@ import (
 
 const (
 	MutationSignIn    = "signIn"
-	SignInVarTemplate = `{{define "vars"}}"login":"{{json .Login}}","password":"{{json .Password}}"{{end}}`
+	SignInVarTemplate = `{{define "vars"}}"login":{{json .Login}},"password":{{json .Password}}{{end}}`
 )
 
 // AddSignInVariables are the variables specific to log in a user.

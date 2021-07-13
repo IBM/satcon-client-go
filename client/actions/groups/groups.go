@@ -7,7 +7,7 @@ import (
 
 const (
 	QueryGroups       = "groups"
-	GroupsVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}"{{end}}`
+	GroupsVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}}{{end}}`
 )
 
 type GroupsVariables struct {

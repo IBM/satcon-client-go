@@ -7,7 +7,7 @@ import (
 const (
 	ContentType                  = "application/yaml"
 	QueryAddChannelVersion       = "addChannelVersion"
-	AddChannelVersionVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}","channelUuid":"{{json .ChannelUUID}}","name":"{{json .Name}}","type":"{{json .ContentType}}","content":"{{json .Content}}","description":"{{json .Description}}"{{end}}`
+	AddChannelVersionVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"channelUuid":{{json .ChannelUUID}},"name":{{json .Name}},"type":{{json .ContentType}},"content":{{json .Content}},"description":{{json .Description}}{{end}}`
 )
 
 // AddChannelVersionVariables to create addChannelVersion graphql request

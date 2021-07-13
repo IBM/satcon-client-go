@@ -6,7 +6,7 @@ import (
 
 const (
 	QueryAddSubscription       = "addSubscription"
-	AddSubscriptionVarTemplate = `{{define "vars"}}"orgId":"{{json .OrgID}}","name":"{{json .Name}}","groups":[{{range $i,$e := .Groups}}{{if gt $i 0}},{{end}}"{{json $e}}"{{end}}],"channelUuid":"{{json .ChannelUUID}}","versionUuid":"{{json .VersionUUID}}"{{end}}`
+	AddSubscriptionVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"name":{{json .Name}},"groups":[{{range $i,$e := .Groups}}{{if gt $i 0}},{{end}}{{json $e}}{{end}}],"channelUuid":{{json .ChannelUUID}},"versionUuid":{{json .VersionUUID}}{{end}}`
 )
 
 type AddSubscriptionVariables struct {
