@@ -30,6 +30,34 @@ var _ = Describe("Query", func() {
 		}
 	})
 
+	Describe("json template function", func() {
+		type Special struct {
+			A string
+			B string
+			C string
+		}
+
+		FIt("Correctly escapes special characters", func() {
+			testSpecial := Special{
+					A: `'apostrophes'`,
+					B:  `"quotes"`,
+					C:  `\backslashes\`,
+			}
+			funcs := template.FuncMap{
+				"json": JsonMarshalToString,
+			}
+
+			tmpl, err := template.New("test").Funcs(funcs).Parse("{{json .A}} {{json .B}} {{json .C}}")
+			Expect(err).NotTo(HaveOccurred())
+
+			buf := &bytes.Buffer{}
+			err = tmpl.Execute(buf, testSpecial)
+			Expect(err).NotTo(HaveOccurred())
+			finalBytes, err := ioutil.ReadAll(buf)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(finalBytes).To(Equal([]byte(`"'apostrophes'" "\"quotes\"" "\\backslashes\\"`)))
+		})
+	})
 	Describe("BuildArgsList", func() {
 		It("Returns a string containing a list delimited by ', '", func() {
 			argList := BuildArgsList(argMap)
