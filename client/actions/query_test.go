@@ -37,11 +37,11 @@ var _ = Describe("Query", func() {
 			C string
 		}
 
-		FIt("Correctly escapes special characters", func() {
+		It("Correctly escapes special characters", func() {
 			testSpecial := Special{
-					A: `'apostrophes'`,
-					B:  `"quotes"`,
-					C:  `\backslashes\`,
+				A: `'apostrophes'`,
+				B: `"quotes"`,
+				C: `\backslashes\`,
 			}
 			funcs := template.FuncMap{
 				"json": JsonMarshalToString,
