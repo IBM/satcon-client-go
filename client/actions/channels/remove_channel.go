@@ -6,7 +6,7 @@ import (
 
 const (
 	QueryRemoveChannel       = "removeChannel"
-	RemoveChannelVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","uuid":"{{js .UUID}}"{{end}}`
+	RemoveChannelVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"uuid":{{json .UUID}}{{end}}`
 )
 
 // RemoveChannelVariables are the variables specific to adding a group.

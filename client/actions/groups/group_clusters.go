@@ -6,7 +6,7 @@ import (
 
 const (
 	QueryGroupClusters       = "groupClusters"
-	GroupClustersVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","uuid":"{{js .UUID}}","clusters":[{{range $i,$e := .Clusters}}{{if gt $i 0}},{{end}}"{{js $e}}"{{end}}]{{end}}`
+	GroupClustersVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"uuid":{{json .UUID}},"clusters":[{{range $i,$e := .Clusters}}{{if gt $i 0}},{{end}}{{json $e}}{{end}}]{{end}}`
 )
 
 // GroupClustersVariables are the variables specific to grouping clusters.

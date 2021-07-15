@@ -7,7 +7,7 @@ import (
 
 const (
 	QueryChannels       = "channels"
-	ChannelsVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}"{{end}}`
+	ChannelsVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}}{{end}}`
 )
 
 type ChannelsVariables struct {

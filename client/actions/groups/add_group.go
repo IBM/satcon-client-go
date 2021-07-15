@@ -6,7 +6,7 @@ import (
 
 const (
 	QueryAddGroup       = "addGroup"
-	AddGroupVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","name":"{{js .Name}}"{{end}}`
+	AddGroupVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"name":{{json .Name}}{{end}}`
 )
 
 // AddGroupVariables are the variables specific to adding a group.

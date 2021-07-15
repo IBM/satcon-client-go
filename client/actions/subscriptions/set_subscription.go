@@ -6,7 +6,7 @@ import (
 
 const (
 	QuerySetSubscription       = "setSubscription"
-	SetSubscriptionVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","uuid":"{{js .UUID}}","versionUuid":"{{js .VersionUUID}}"{{end}}`
+	SetSubscriptionVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"uuid":{{json .UUID}},"versionUuid":{{json .VersionUUID}}{{end}}`
 )
 
 type SetSubscriptionVariables struct {

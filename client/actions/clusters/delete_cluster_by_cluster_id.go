@@ -6,7 +6,7 @@ import (
 
 const (
 	QueryDeleteClusterByClusterID       = "deleteClusterByClusterId"
-	DeleteClusterByClusterIDVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","clusterId":"{{js .ClusterID}}"{{end}}`
+	DeleteClusterByClusterIDVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"clusterId":{{json .ClusterID}}{{end}}`
 )
 
 type DeleteClusterByClusterIDVariables struct {

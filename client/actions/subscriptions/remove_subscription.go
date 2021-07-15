@@ -6,7 +6,7 @@ import (
 
 const (
 	QueryRemoveSubscription       = "removeSubscription"
-	RemoveSubscriptionVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","uuid":"{{js .UUID}}"{{end}}`
+	RemoveSubscriptionVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"uuid":{{json .UUID}}{{end}}`
 )
 
 // RemoveSubscriptionVariables are the variables specific to adding a group.

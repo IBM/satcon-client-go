@@ -76,7 +76,7 @@ var _ = Describe("Client", func() {
 				h.DoReturns(response, nil)
 
 				// Setup the template
-				requestTemplate = `{{define "vars"}}"name":"{{js .Name}}"{{end}}`
+				requestTemplate = `{{define "vars"}}"name":{{json .Name}}{{end}}`
 				vars = QueryVars{
 					Name: "foo",
 				}

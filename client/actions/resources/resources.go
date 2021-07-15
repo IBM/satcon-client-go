@@ -7,7 +7,7 @@ import (
 
 const (
 	QueryResources       = "resources"
-	ResourcesVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}"{{end}}`
+	ResourcesVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}}{{end}}`
 )
 
 // ResourcesVariables variable to query resources for specified cluster

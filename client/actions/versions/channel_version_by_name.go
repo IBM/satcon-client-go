@@ -9,7 +9,7 @@ const (
 	//QueryChannelVersionByName specifies the query
 	QueryChannelVersionByName = "channelVersionByName"
 	// ChannelVersionByNameVarTemplate is the template used to create the graphql query
-	ChannelVersionByNameVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","channelName":"{{js .ChannelName}}","versionName":"{{js .VersionName}}"{{end}}`
+	ChannelVersionByNameVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"channelName":{{json .ChannelName}},"versionName":{{json .VersionName}}{{end}}`
 )
 
 //SubscriptionsVariables are the variables used for the subscription query

@@ -7,7 +7,7 @@ import (
 
 const (
 	QueryResourcesByCluster       = "resourcesByCluster"
-	ResourcesByClusterVarTemplate = `{{define "vars"}}"orgId":"{{js .OrgID}}","clusterId":"{{js .ClusterID}}", "filter":"{{js .Filter}}","limit":{{js .Limit}}{{end}}`
+	ResourcesByClusterVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"clusterId":{{json .ClusterID}}, "filter":{{json .Filter}},"limit":{{json .Limit}}{{end}}`
 )
 
 // ResourcesByClusterVariables variable to query resources for specified cluster
