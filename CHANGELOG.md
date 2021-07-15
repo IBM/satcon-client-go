@@ -1,6 +1,6 @@
 ## 0.2.0 15 July 2021
 
-## New Features
+### New Features
 - Functions that query for groups now return more detailed information about the clusters in the groups [95a8bcb]
 - Allow passing alternate url for IAM endpoint (#31) [ece05a6]
 
