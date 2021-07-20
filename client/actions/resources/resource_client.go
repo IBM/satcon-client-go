@@ -13,8 +13,8 @@ import (
 // in Satellite Config.
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . ResourceService
 type ResourceService interface {
-	ResourcesByCluster(orgID, clusterID, filter string, limit int) (*types.ResourceList, error)
-	Resources(orgID string) (*types.ResourceList, error)
+	ResourcesByCluster(orgID, clusterID, filter string, limit int, lastResource *types.Resource) (*types.ResourceList, error)
+	ResourcesByOrgID(orgID string) (*types.ResourceList, error)
 	ResourceContent(orgID, clusterID, resourceSelfLink string) (*types.ResourceContentObj, error)
 }
 

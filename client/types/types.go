@@ -1,5 +1,9 @@
 package types
 
+import (
+	"time"
+)
+
 type BasicUser struct {
 	ID   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
@@ -168,6 +172,27 @@ type SearchableData struct {
 	APIVersion           string                 `json:"apiVersion,omitempty"`
 	SearchableExpression string                 `json:"searchableExpression,omitempty"`
 	Errors               map[string]interface{} `json:"errors,omitempty"`
+}
+
+type SortObj struct {
+	Field      string `json:"field,omitempty"`
+	Descending bool   `json:"desc,omitempty"`
+}
+
+//Json is intended to be any arbitary json; any type that can be marshalled into a json
+type JSON interface{}
+
+// ResourcesParams variable to query resources for specified cluster
+type ResourcesParams struct {
+	OrgID              string
+	Filter             string
+	MongoQuery         JSON
+	FromDate           time.Time
+	ToDate             time.Time
+	Limit              int
+	Kinds              []string
+	Sort               []SortObj
+	SubscriptionsLimit int
 }
 
 // Subscription encapsulates satellite subscription data

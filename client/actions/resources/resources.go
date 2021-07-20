@@ -7,20 +7,17 @@ import (
 
 const (
 	QueryResources       = "resources"
-	ResourcesVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}}{{end}}`
+	ResourcesVarTemplate = `{{define "vars"}}"orgId":{{json .OrgID}},"filter":{{json .Filter}},"limit":{{json .Limit}}{{end}}`
 )
 
-// ResourcesVariables variable to query resources for specified cluster
 type ResourcesVariables struct {
 	actions.GraphQLQuery
-	OrgID string
+	types.ResourcesParams
 }
 
 // NewResourcesVariables returns necessary variables for query
 func NewResourcesVariables(orgID string) ResourcesVariables {
-	vars := ResourcesVariables{
-		OrgID: orgID,
-	}
+	vars := ResourcesVariables{}
 
 	vars.Type = actions.QueryTypeQuery
 	vars.QueryName = QueryResources

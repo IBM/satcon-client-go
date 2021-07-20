@@ -55,7 +55,7 @@ type ResourcesByClusterResponseData struct {
 }
 
 // ResourcesByCluster queries specified cluster for list of resources, i.e. Pod, Deployment, Service, etc.
-func (c *Client) ResourcesByCluster(orgID, clusterID, filter string, limit int) (*types.ResourceList, error) {
+func (c *Client) ResourcesByCluster(orgID, clusterID, filter string, limit int, lastResource *types.Resource) (*types.ResourceList, error) {
 	var response ResourcesByClusterResponse
 
 	vars := NewResourcesByClusterVariables(orgID, clusterID, filter, limit)
@@ -72,3 +72,29 @@ func (c *Client) ResourcesByCluster(orgID, clusterID, filter string, limit int) 
 
 	return nil, err
 }
+
+
+/*
+
+	fromDate, limit 		
+
+	-For the first call, don't include fromDate
+	
+
+	fromDate: some 2020ish date 
+
+	call the api using fromDate and the limit to get the first page
+
+	1) the resources need to be sorted by creation time. 
+
+	2) loop through fromDate to now
+		get the *limit number of resources (the current batch/page of reources)
+
+		- now update query using the lastResource and use the limit again 
+
+
+	
+
+
+
+*/

@@ -141,13 +141,13 @@ var _ = Describe("ResourcesByCluster", func() {
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := r.ResourcesByCluster(orgID, clusterID, filter, limit)
+			_, err := r.ResourcesByCluster(orgID, clusterID, filter, limit, nil)
 			Expect(err).To(Not(HaveOccurred()))
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns resources for the specified cluster", func() {
-			resources, _ := r.ResourcesByCluster(orgID, clusterID, filter, limit)
+			resources, _ := r.ResourcesByCluster(orgID, clusterID, filter, limit, nil)
 			expected := resourcesResponse.Data.ResourceList
 			Expect(resources).To(Equal(expected))
 		})
@@ -158,7 +158,7 @@ var _ = Describe("ResourcesByCluster", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := r.ResourcesByCluster(orgID, clusterID, filter, limit)
+				_, err := r.ResourcesByCluster(orgID, clusterID, filter, limit, nil)
 				Expect(err).To(MatchError("Oh no, Something went wrong!"))
 			})
 		})
@@ -170,7 +170,7 @@ var _ = Describe("ResourcesByCluster", func() {
 			})
 
 			It("Returns nil", func() {
-				groups, err := r.ResourcesByCluster(orgID, clusterID, filter, limit)
+				groups, err := r.ResourcesByCluster(orgID, clusterID, filter, limit, nil)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(groups).To(BeNil())
 			})

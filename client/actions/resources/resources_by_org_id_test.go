@@ -17,7 +17,7 @@ import (
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
 )
 
-var _ = Describe("Resources", func() {
+var _ = Describe("ResourcesByOrgID", func() {
 
 	var (
 		orgID          string
@@ -28,10 +28,10 @@ var _ = Describe("Resources", func() {
 		orgID = "some-cybORG"
 	})
 
-	Describe("NewResourcesVariables", func() {
-		vars := NewResourcesVariables(orgID)
+	Describe("NewResourcesByOrgIDVariables", func() {
+		vars := NewResourcesByOrgIDVariables(orgID)
 		Expect(vars.Type).To(Equal(actions.QueryTypeQuery))
-		Expect(vars.QueryName).To(Equal(QueryResources))
+		Expect(vars.QueryName).To(Equal(QueryResourcesByOrgID))
 		Expect(vars.OrgID).To(Equal(orgID))
 		Expect(vars.Args).To(Equal(map[string]string{
 			"orgId": "String!",
@@ -42,18 +42,18 @@ var _ = Describe("Resources", func() {
 		))
 	})
 
-	Describe("Resources", func() {
+	Describe("ResourcesByOrgID", func() {
 
 		var (
 			r                 ResourceService
 			h                 *webfakes.FakeHTTPClient
 			response          *http.Response
-			resourcesResponse ResourcesResponse
+			resourcesResponse ResourcesByOrgIDResponse
 		)
 
 		BeforeEach(func() {
-			resourcesResponse = ResourcesResponse{
-				Data: &ResourcesResponseData{
+			resourcesResponse = ResourcesByOrgIDResponse{
+				Data: &ResourcesByOrgIDResponseData{
 					ResourceList: &types.ResourceList{
 						Count: 1,
 						Resources: []types.Resource{
@@ -86,13 +86,13 @@ var _ = Describe("Resources", func() {
 		})
 
 		It("Makes a valid http request", func() {
-			_, err := r.Resources(orgID)
+			_, err := r.ResourcesByOrgID(orgID)
 			Expect(err).To(Not(HaveOccurred()))
 			Expect(h.DoCallCount()).To(Equal(1))
 		})
 
 		It("Returns resources for the specified orgID", func() {
-			resources, _ := r.Resources(orgID)
+			resources, _ := r.ResourcesByOrgID(orgID)
 			expected := resourcesResponse.Data.ResourceList
 			Expect(resources).To(Equal(expected))
 		})
@@ -103,19 +103,19 @@ var _ = Describe("Resources", func() {
 			})
 
 			It("Bubbles up the error", func() {
-				_, err := r.Resources(orgID)
+				_, err := r.ResourcesByOrgID(orgID)
 				Expect(err).To(MatchError("Oh no, Something went wrong!"))
 			})
 		})
 
 		Context("When the response is empty for some reason", func() {
 			BeforeEach(func() {
-				respBodyBytes, _ := json.Marshal(ResourcesResponse{})
+				respBodyBytes, _ := json.Marshal(ResourcesByOrgIDResponse{})
 				response.Body = ioutil.NopCloser(bytes.NewReader(respBodyBytes))
 			})
 
 			It("Returns nil", func() {
-				groups, err := r.Resources(orgID)
+				groups, err := r.ResourcesByOrgID(orgID)
 				Expect(err).NotTo(HaveOccurred())
 				Expect(groups).To(BeNil())
 			})
