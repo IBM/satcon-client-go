@@ -22,7 +22,6 @@ var _ = Describe("ResourcesByCluster", func() {
 		orgID, clusterID, filter string
 		limit                    int
 	)
-
 	BeforeEach(func() {
 		orgID = "mercury-org"
 		clusterID = "gemini-cluster"
@@ -80,7 +79,7 @@ var _ = Describe("ResourcesByCluster", func() {
 								Hash:         "bb5d00c8173bbb63704342f885385cfb1f5c3c25",
 								Data:         "{\"kind\":\"Pod\",\"apiVersion\":\"v1\",\"metadata\":{\"name\":\"watch-keeper-abcdefg-xxxx\",\"generateName\":\"watch-keeper-abcdefg-\",\"namespace\":\"razeedeploy\",\"selfLink\":\"/api/v1/namespaces/razeedeploy/pods/watch-keeper-abcdefg-xxxx\",\"uid\":\"whatever-uid\",\"resourceVersion\":\"0000001\",\"creationTimestamp\":\"a-few-days-ago\",\"labels\":{\"app\":\"watch-keeper\",\"pod-template-hash\":\"1234hash\",\"razee/watch-resource\":\"lite\"},\"annotations\":{\"kubernetes.io/psp\":\"ibm-privileged-psp\"},\"ownerReferences\":[{\"apiVersion\":\"apps/v1\",\"kind\":\"ReplicaSet\",\"name\":\"watch-keeper-abcdefg\",\"uid\":\"some-other-uid\",\"controller\":true,\"blockOwnerDeletion\":true}]},\"status\":{\"phase\":\"Running\",\"conditions\":[{\"type\":\"Initialized\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"seconds-ago\"},{\"type\":\"Ready\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"not-long-ago\"},{\"type\":\"ContainersReady\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"yesterday\"},{\"type\":\"PodScheduled\",\"status\":\"True\",\"lastProbeTime\":null,\"lastTransitionTime\":\"who-know?\"}],\"hostIP\":\"some-host\",\"podIP\":\"some-pod-IP\",\"podIPs\":[{\"ip\":\"some-pod-IP\"}],\"startTime\":\"2020-06-30T17:52:02Z\",\"containerStatuses\":[{\"name\":\"watch-keeper\",\"state\":{\"running\":{\"startedAt\":\"beginning-of-time\"}},\"lastState\":{},\"ready\":true,\"restartCount\":0,\"image\":\"quay.io/razee/watch-keeper:tag\",\"imageID\":\"quay.io/razee/watch-keeper\",\"containerID\":\"containerd://1234567890\",\"started\":true}],\"qosClass\":\"Burstable\"}}",
 								Deleted:      false,
-								Created:      "a few days ago",
+								Created:      "some string",
 								Updated:      "a little while ago",
 								LastModified: "now",
 								SearchableData: types.SearchableData{

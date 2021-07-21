@@ -16,6 +16,7 @@ type ResourceService interface {
 	ResourcesByCluster(orgID, clusterID, filter string, limit int, lastResource *types.Resource) (*types.ResourceList, error)
 	ResourcesByOrgID(orgID string) (*types.ResourceList, error)
 	ResourceContent(orgID, clusterID, resourceSelfLink string) (*types.ResourceContentObj, error)
+	Resources(params types.ResourcesParams) (*types.ResourceList, error)
 }
 
 // Client is an implementation of a satcon client.

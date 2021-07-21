@@ -1,6 +1,8 @@
 package resources
 
 import (
+	"time"
+
 	"github.com/IBM/satcon-client-go/client/actions"
 	"github.com/IBM/satcon-client-go/client/types"
 )
@@ -56,44 +58,52 @@ type ResourcesByClusterResponseData struct {
 
 // ResourcesByCluster queries specified cluster for list of resources, i.e. Pod, Deployment, Service, etc.
 func (c *Client) ResourcesByCluster(orgID, clusterID, filter string, limit int, lastResource *types.Resource) (*types.ResourceList, error) {
-	var response ResourcesByClusterResponse
 
-	vars := NewResourcesByClusterVariables(orgID, clusterID, filter, limit)
-
-	err := c.DoQuery(ResourcesByClusterVarTemplate, vars, nil, &response)
-
-	if err != nil {
-		return nil, err
+	sorting := []types.SortObj{{Field: "created", Descending: false}}
+	clusterFilter := types.ResourceSearchFilter{
+		OrgID:     orgID,
+		ClusterID: clusterID,
+		Deleted:   false,
 	}
 
-	if response.Data != nil {
-		return response.Data.ResourceList, err
+	params := types.ResourcesParams{
+		OrgID:      orgID,
+		Filter:     filter,
+		Sort:       sorting,
+		MongoQuery: clusterFilter,
 	}
 
-	return nil, err
+	if limit > 0 {
+		params.Limit = limit
+	}
+
+	if lastResource != nil {
+		params.FromDate, _ = time.Parse(lastResource.Created, "2020-10-16T15:12:50.100Z")
+
+	}
+	return c.Resources(params)
 }
-
 
 /*
 
-	fromDate, limit 		
+	fromDate, limit
 
 	-For the first call, don't include fromDate
-	
 
-	fromDate: some 2020ish date 
+
+	fromDate: some 2020ish date
 
 	call the api using fromDate and the limit to get the first page
 
-	1) the resources need to be sorted by creation time. 
+	1) the resources need to be sorted by creation time.    //DONE
 
 	2) loop through fromDate to now
 		get the *limit number of resources (the current batch/page of reources)
 
-		- now update query using the lastResource and use the limit again 
+		- now update query using the lastResource and use the limit again
 
 
-	
+
 
 
 

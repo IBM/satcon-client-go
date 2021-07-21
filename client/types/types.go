@@ -151,6 +151,9 @@ type Resource struct {
 	Subscription       ChannelSubscription `json:"subscription,omitempty"`
 }
 
+// ResourceSearchFilter is for searching/filtering
+type ResourceSearchFilter Resource
+
 // ResourceList encapsulates list of resource
 type ResourceList struct {
 	Count     int        `json:"count,omitempty"`
@@ -179,7 +182,7 @@ type SortObj struct {
 	Descending bool   `json:"desc,omitempty"`
 }
 
-//Json is intended to be any arbitary json; any type that can be marshalled into a json
+//Json is intended to be any arbitrary json; any type that can be marshalled into a json
 type JSON interface{}
 
 // ResourcesParams variable to query resources for specified cluster

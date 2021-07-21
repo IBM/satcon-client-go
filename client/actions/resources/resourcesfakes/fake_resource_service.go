@@ -24,6 +24,19 @@ type FakeResourceService struct {
 		result1 *types.ResourceContentObj
 		result2 error
 	}
+	ResourcesStub        func(types.ResourcesParams) (*types.ResourceList, error)
+	resourcesMutex       sync.RWMutex
+	resourcesArgsForCall []struct {
+		arg1 types.ResourcesParams
+	}
+	resourcesReturns struct {
+		result1 *types.ResourceList
+		result2 error
+	}
+	resourcesReturnsOnCall map[int]struct {
+		result1 *types.ResourceList
+		result2 error
+	}
 	ResourcesByClusterStub        func(string, string, string, int, *types.Resource) (*types.ResourceList, error)
 	resourcesByClusterMutex       sync.RWMutex
 	resourcesByClusterArgsForCall []struct {
@@ -120,6 +133,70 @@ func (fake *FakeResourceService) ResourceContentReturnsOnCall(i int, result1 *ty
 	}
 	fake.resourceContentReturnsOnCall[i] = struct {
 		result1 *types.ResourceContentObj
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeResourceService) Resources(arg1 types.ResourcesParams) (*types.ResourceList, error) {
+	fake.resourcesMutex.Lock()
+	ret, specificReturn := fake.resourcesReturnsOnCall[len(fake.resourcesArgsForCall)]
+	fake.resourcesArgsForCall = append(fake.resourcesArgsForCall, struct {
+		arg1 types.ResourcesParams
+	}{arg1})
+	stub := fake.ResourcesStub
+	fakeReturns := fake.resourcesReturns
+	fake.recordInvocation("Resources", []interface{}{arg1})
+	fake.resourcesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeResourceService) ResourcesCallCount() int {
+	fake.resourcesMutex.RLock()
+	defer fake.resourcesMutex.RUnlock()
+	return len(fake.resourcesArgsForCall)
+}
+
+func (fake *FakeResourceService) ResourcesCalls(stub func(types.ResourcesParams) (*types.ResourceList, error)) {
+	fake.resourcesMutex.Lock()
+	defer fake.resourcesMutex.Unlock()
+	fake.ResourcesStub = stub
+}
+
+func (fake *FakeResourceService) ResourcesArgsForCall(i int) types.ResourcesParams {
+	fake.resourcesMutex.RLock()
+	defer fake.resourcesMutex.RUnlock()
+	argsForCall := fake.resourcesArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeResourceService) ResourcesReturns(result1 *types.ResourceList, result2 error) {
+	fake.resourcesMutex.Lock()
+	defer fake.resourcesMutex.Unlock()
+	fake.ResourcesStub = nil
+	fake.resourcesReturns = struct {
+		result1 *types.ResourceList
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeResourceService) ResourcesReturnsOnCall(i int, result1 *types.ResourceList, result2 error) {
+	fake.resourcesMutex.Lock()
+	defer fake.resourcesMutex.Unlock()
+	fake.ResourcesStub = nil
+	if fake.resourcesReturnsOnCall == nil {
+		fake.resourcesReturnsOnCall = make(map[int]struct {
+			result1 *types.ResourceList
+			result2 error
+		})
+	}
+	fake.resourcesReturnsOnCall[i] = struct {
+		result1 *types.ResourceList
 		result2 error
 	}{result1, result2}
 }
@@ -261,6 +338,8 @@ func (fake *FakeResourceService) Invocations() map[string][][]interface{} {
 	defer fake.invocationsMutex.RUnlock()
 	fake.resourceContentMutex.RLock()
 	defer fake.resourceContentMutex.RUnlock()
+	fake.resourcesMutex.RLock()
+	defer fake.resourcesMutex.RUnlock()
 	fake.resourcesByClusterMutex.RLock()
 	defer fake.resourcesByClusterMutex.RUnlock()
 	fake.resourcesByOrgIDMutex.RLock()
