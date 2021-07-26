@@ -52,9 +52,7 @@ type ResourcesByClusterResponse struct {
 }
 
 // ResourcesByClusterResponseData encapsulates ResourceList response
-type ResourcesByClusterResponseData struct {
-	ResourceList *types.ResourceList `json:"resourcesByCluster,omitempty"`
-}
+type ResourcesByClusterResponseData ResourcesResponseData
 
 // ResourcesByCluster queries specified cluster for list of resources, i.e. Pod, Deployment, Service, etc.
 func (c *Client) ResourcesByCluster(orgID, clusterID, filter string, limit int, lastResource *types.Resource) (*types.ResourceList, error) {
