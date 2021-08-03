@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -58,14 +57,14 @@ var _ = Describe("ResourceContent", func() {
 
 	Describe("ResourceContent", func() {
 		BeforeEach(func() {
-			resourceContentResponse = fmt.Sprintf(`{
+			resourceContentResponse = `{
   "data": {
     "resourceContent": {
       "id": "somefakeid1234567",
       "content": "{\"kind\":\"Deployment\",\"apiVersion\":\"apps/v1\",\"metadata\":{\"message\":\"Deployment has minimum availability.\"},{\"type\":\"Progressing\",\"status\":\"True\",\"lastUpdateTime\":\"2020-12-15T21:08:07Z\",\"lastTransitionTime\":\"2020-12-11T17:05:17Z\",\"reason\":\"NewReplicaSetAvailable\",\"message\":\"ReplicaSet \\\"some-pod-123456asdfg\\\" has successfully progressed.\"}]}}"
     }
   }
-}`)
+}`
 
 			err := json.Unmarshal([]byte(resourceContentResponse), &responseStruct)
 			Expect(err).NotTo(HaveOccurred())
