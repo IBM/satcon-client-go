@@ -199,3 +199,7 @@ type User struct {
 	Email      string `json:"email,omitempty"`
 	Role       string `json:"role,omitempty"`
 }
+
+type UuidOnly struct {
+	UUID        string    `json:"uuid,omitempty"`
+}

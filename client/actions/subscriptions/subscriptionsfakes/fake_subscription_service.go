@@ -55,6 +55,20 @@ type FakeSubscriptionService struct {
 		result1 *subscriptions.SetSubscriptionResponseDataDetails
 		result2 error
 	}
+	SubscriptionIdsForClusterStub        func(string, string) ([]string, error)
+	subscriptionIdsForClusterMutex       sync.RWMutex
+	subscriptionIdsForClusterArgsForCall []struct {
+		arg1 string
+		arg2 string
+	}
+	subscriptionIdsForClusterReturns struct {
+		result1 []string
+		result2 error
+	}
+	subscriptionIdsForClusterReturnsOnCall map[int]struct {
+		result1 []string
+		result2 error
+	}
 	SubscriptionsStub        func(string) (types.SubscriptionList, error)
 	subscriptionsMutex       sync.RWMutex
 	subscriptionsArgsForCall []struct {
@@ -276,6 +290,71 @@ func (fake *FakeSubscriptionService) SetSubscriptionReturnsOnCall(i int, result1
 	}{result1, result2}
 }
 
+func (fake *FakeSubscriptionService) SubscriptionIdsForCluster(arg1 string, arg2 string) ([]string, error) {
+	fake.subscriptionIdsForClusterMutex.Lock()
+	ret, specificReturn := fake.subscriptionIdsForClusterReturnsOnCall[len(fake.subscriptionIdsForClusterArgsForCall)]
+	fake.subscriptionIdsForClusterArgsForCall = append(fake.subscriptionIdsForClusterArgsForCall, struct {
+		arg1 string
+		arg2 string
+	}{arg1, arg2})
+	stub := fake.SubscriptionIdsForClusterStub
+	fakeReturns := fake.subscriptionIdsForClusterReturns
+	fake.recordInvocation("SubscriptionIdsForCluster", []interface{}{arg1, arg2})
+	fake.subscriptionIdsForClusterMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeSubscriptionService) SubscriptionIdsForClusterCallCount() int {
+	fake.subscriptionIdsForClusterMutex.RLock()
+	defer fake.subscriptionIdsForClusterMutex.RUnlock()
+	return len(fake.subscriptionIdsForClusterArgsForCall)
+}
+
+func (fake *FakeSubscriptionService) SubscriptionIdsForClusterCalls(stub func(string, string) ([]string, error)) {
+	fake.subscriptionIdsForClusterMutex.Lock()
+	defer fake.subscriptionIdsForClusterMutex.Unlock()
+	fake.SubscriptionIdsForClusterStub = stub
+}
+
+func (fake *FakeSubscriptionService) SubscriptionIdsForClusterArgsForCall(i int) (string, string) {
+	fake.subscriptionIdsForClusterMutex.RLock()
+	defer fake.subscriptionIdsForClusterMutex.RUnlock()
+	argsForCall := fake.subscriptionIdsForClusterArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeSubscriptionService) SubscriptionIdsForClusterReturns(result1 []string, result2 error) {
+	fake.subscriptionIdsForClusterMutex.Lock()
+	defer fake.subscriptionIdsForClusterMutex.Unlock()
+	fake.SubscriptionIdsForClusterStub = nil
+	fake.subscriptionIdsForClusterReturns = struct {
+		result1 []string
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeSubscriptionService) SubscriptionIdsForClusterReturnsOnCall(i int, result1 []string, result2 error) {
+	fake.subscriptionIdsForClusterMutex.Lock()
+	defer fake.subscriptionIdsForClusterMutex.Unlock()
+	fake.SubscriptionIdsForClusterStub = nil
+	if fake.subscriptionIdsForClusterReturnsOnCall == nil {
+		fake.subscriptionIdsForClusterReturnsOnCall = make(map[int]struct {
+			result1 []string
+			result2 error
+		})
+	}
+	fake.subscriptionIdsForClusterReturnsOnCall[i] = struct {
+		result1 []string
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeSubscriptionService) Subscriptions(arg1 string) (types.SubscriptionList, error) {
 	fake.subscriptionsMutex.Lock()
 	ret, specificReturn := fake.subscriptionsReturnsOnCall[len(fake.subscriptionsArgsForCall)]
@@ -349,6 +428,8 @@ func (fake *FakeSubscriptionService) Invocations() map[string][][]interface{} {
 	defer fake.removeSubscriptionMutex.RUnlock()
 	fake.setSubscriptionMutex.RLock()
 	defer fake.setSubscriptionMutex.RUnlock()
+	fake.subscriptionIdsForClusterMutex.RLock()
+	defer fake.subscriptionIdsForClusterMutex.RUnlock()
 	fake.subscriptionsMutex.RLock()
 	defer fake.subscriptionsMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}

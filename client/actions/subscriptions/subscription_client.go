@@ -17,6 +17,7 @@ type SubscriptionService interface {
 	SetSubscription(orgID string, subscriptionUuid string, versionUuid string) (*SetSubscriptionResponseDataDetails, error)
 	RemoveSubscription(orgID, uuid string) (*RemoveSubscriptionResponseDataDetails, error)
 	Subscriptions(orgID string) (types.SubscriptionList, error)
+	SubscriptionIdsForCluster(orgID string, clusterID string) ([]string, error)
 }
 
 // Client is an implementation of a satcon client.
