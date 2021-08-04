@@ -93,7 +93,8 @@ var _ = Describe("Client", func() {
 			})
 
 			It("Deserializes the response body into the result", func() {
-				s.DoQuery(requestTemplate, vars, nil, &result)
+				err := s.DoQuery(requestTemplate, vars, nil, &result)
+				Expect(err).NotTo(HaveOccurred())
 				Expect(result.Name).To(Equal(name))
 			})
 
@@ -136,7 +137,7 @@ var _ = Describe("Client", func() {
 				})
 			})
 
-			Context("When unmarshalling errors", func() {
+			Context("When unmarshaling errors", func() {
 				It("Bubbles up the unmarshal error", func() {
 					err := s.DoQuery(requestTemplate, vars, nil, nil)
 					_, ok := err.(*json.InvalidUnmarshalError)
@@ -167,7 +168,7 @@ var _ = Describe("Client", func() {
 					}
 
 					response = &http.Response{
-						Body: ioutil.NopCloser(bytes.NewBufferString(fmt.Sprint(`{"errors": [{"message": "Context creation failed: Your session expired. Sign in again","extensions": {"code": "UNAUTHENTICATED"}}]}`))),
+						Body: ioutil.NopCloser(bytes.NewBufferString(`{"errors": [{"message": "Context creation failed: Your session expired. Sign in again","extensions": {"code": "UNAUTHENTICATED"}}]}`)),
 					}
 
 					h.DoReturns(response, nil)

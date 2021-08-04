@@ -23,7 +23,7 @@ var _ = Describe("Subscriptions", func() {
 		var err error
 		iamClient, err = iam.NewIAMClient(testConfig.APIKey, testConfig.IAMEndpoint)
 		Expect(err).ToNot(HaveOccurred())
-		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
+		c, _ = client.New(testConfig.SatConEndpoint, iamClient.Client)
 		Expect(c.Subscriptions).NotTo(BeNil())
 
 		encodedContent := "YXBpVmVyc2lvbjogdjEKa2luZDogUG9kCm1ldGFkYXRhOgogIG5hbWU6IGludGVncmF0aW9uX3Rlc3QKc3BlYzoKICBjb250YWluZXJzOgogIC0gbmFtZTogaW50ZWdyYXRpb25fdGVzdAogICAgaW1hZ2U6IGh0dHBkOmFscGluZQo="

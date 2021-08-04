@@ -24,7 +24,7 @@ var _ = Describe("Versions", func() {
 		var err error
 		iamClient, err = iam.NewIAMClient(testConfig.APIKey, testConfig.IAMEndpoint)
 		Expect(err).ToNot(HaveOccurred())
-		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
+		c, _ = client.New(testConfig.SatConEndpoint, iamClient.Client)
 		Expect(c.Versions).NotTo(BeNil())
 
 		encodedContent := "YXBpVmVyc2lvbjogdjEKa2luZDogUG9kCm1ldGFkYXRhOgogIG5hbWU6IGludGVncmF0aW9uX3Rlc3QKc3BlYzoKICBjb250YWluZXJzOgogIC0gbmFtZTogaW50ZWdyYXRpb25fdGVzdAogICAgaW1hZ2U6IGh0dHBkOmFscGluZQo="
@@ -48,7 +48,7 @@ var _ = Describe("Versions", func() {
 		})
 
 		It("Gets our channel version by name to show it does not exist, creates a channel, creates a "+
-			"channel version, gets the versionby name, removes the version, removes the channel, then tries "+
+			"channel version, gets the version by name, removes the version, removes the channel, then tries "+
 			"to get the version by name again to show it no longer exists", func() {
 			// Demonstrate channel version does not exist for the arguments of the current channelName and versionName
 			version, err := c.Versions.ChannelVersionByName(testConfig.OrgID, channelName, versionName)

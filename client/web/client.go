@@ -3,7 +3,6 @@ package web
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -96,9 +95,9 @@ func CheckResponseForErrors(body []byte) error {
 			var errorMessage string
 			errLength := len(errorDetails.Errors)
 			for i := range errorDetails.Errors {
-				errorMessage += fmt.Sprintf("%s", errorDetails.Errors[i].Message)
+				errorMessage += errorDetails.Errors[i].Message
 				if i < (errLength - 1) {
-					errorMessage += fmt.Sprint(", ")
+					errorMessage += ", "
 				}
 			}
 			return errors.New(errorMessage)
