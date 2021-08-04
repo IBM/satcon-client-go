@@ -160,7 +160,7 @@ var _ = Describe("Subscriptions", func() {
 
 		})
 
-		FWhen("using both Subscriptions APIs", func() {
+		When("using both Subscriptions APIs", func() {
 			It("Lists the subscriptions, creates our new subscription, lists again and finds it, deletes it, and finally lists to see that it's gone", func() {
 				// Verify that our subscription does not already exist
 				// Can't use SubscriptionIdsForCluster here, we don't have an id yet
