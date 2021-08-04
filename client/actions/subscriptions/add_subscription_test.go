@@ -58,7 +58,7 @@ var _ = Describe("AddSubscription", func() {
 		})
 	})
 
-	Describe("AddSubcription", func() {
+	Describe("AddSubscription", func() {
 
 		var (
 			addSubscriptionResponse AddSubscriptionResponse
