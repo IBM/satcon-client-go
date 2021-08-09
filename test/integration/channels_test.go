@@ -22,7 +22,7 @@ var _ = Describe("Channels", func() {
 		var iamClient *iam.Client
 		iamClient, err = iam.NewIAMClient(testConfig.APIKey, testConfig.IAMEndpoint)
 		Expect(err).ToNot(HaveOccurred())
-		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
+		c, _ = client.New(testConfig.SatConEndpoint, iamClient.Client)
 		Expect(c.Channels).NotTo(BeNil())
 	})
 

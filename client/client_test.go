@@ -30,7 +30,7 @@ var _ = Describe("Client", func() {
 		})
 
 		It("Creates a new SatCon client", func() {
-			s, err := New(endpointURL, nil, iamClient.Client)
+			s, err := New(endpointURL, iamClient.Client)
 			Expect(err).NotTo(HaveOccurred())
 			Expect(s.Channels).NotTo(BeNil())
 			Expect(s.Clusters).NotTo(BeNil())
@@ -41,7 +41,7 @@ var _ = Describe("Client", func() {
 		})
 
 		It("Errors when endpointURL is empty", func() {
-			s, err := New("", nil, iamClient.Client)
+			s, err := New("", iamClient.Client)
 			Expect(err).To(HaveOccurred())
 			Expect(s.Channels).To(BeNil())
 			Expect(s.Clusters).To(BeNil())

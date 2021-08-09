@@ -31,7 +31,12 @@ type SatCon struct {
 }
 
 //New creates new SatCon clients
-func New(endpointURL string, httpClient web.HTTPClient, authClient auth.AuthClient) (SatCon, error) {
+func New(endpointURL string, authClient auth.AuthClient) (SatCon, error) {
+	return NewWithCustomHTTPClient(endpointURL, nil, authClient)
+}
+
+//NewWithCustomHTTPClient creates new SatCon clients with a custom web.HTTPClient
+func NewWithCustomHTTPClient(endpointURL string, httpClient web.HTTPClient, authClient auth.AuthClient) (SatCon, error) {
 	var (
 		err error
 		s   SatCon

@@ -24,7 +24,7 @@ var _ = Describe("Groups", func() {
 		var err error
 		iamClient, err = iam.NewIAMClient(testConfig.APIKey, testConfig.IAMEndpoint)
 		Expect(err).ToNot(HaveOccurred())
-		c, _ = client.New(testConfig.SatConEndpoint, nil, iamClient.Client)
+		c, _ = client.New(testConfig.SatConEndpoint, iamClient.Client)
 		Expect(c.Groups).NotTo(BeNil())
 	})
 
