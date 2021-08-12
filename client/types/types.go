@@ -168,6 +168,7 @@ type SearchableData struct {
 	APIVersion           string                 `json:"apiVersion,omitempty"`
 	SearchableExpression string                 `json:"searchableExpression,omitempty"`
 	Errors               map[string]interface{} `json:"errors,omitempty"`
+	Children             []string               `json:"children,omitempty"`
 }
 
 // Subscription encapsulates satellite subscription data
@@ -201,5 +202,5 @@ type User struct {
 }
 
 type UuidOnly struct {
-	UUID        string    `json:"uuid,omitempty"`
+	UUID string `json:"uuid,omitempty"`
 }
