@@ -10,7 +10,7 @@ import (
 	"github.com/IBM/satcon-client-go/client/auth/local"
 	"github.com/IBM/satcon-client-go/client/types"
 	"github.com/IBM/satcon-client-go/client/web/webfakes"
-	"github.com/golang-jwt/jwt"
+	"github.com/golang-jwt/jwt/v4"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
