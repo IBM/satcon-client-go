@@ -1,7 +1,7 @@
 package iam
 
 import (
-	"github.com/IBM/go-sdk-core/v4/core"
+	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/IBM/satcon-client-go/client/auth"
 )
 
