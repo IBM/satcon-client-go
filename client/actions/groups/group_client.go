@@ -19,6 +19,7 @@ type GroupService interface {
 	RemoveGroup(orgID, uuid string) (*RemoveGroupResponseDataDetails, error)
 	RemoveGroupByName(orgID, name string) (*RemoveGroupByNameResponseDataDetails, error)
 	GroupClusters(orgID, uuid string, clusters []string) (*GroupClustersResponseDataDetails, error)
+	UnGroupClusters(orgID, uuid string, clusters []string) (*UnGroupClustersResponseDataDetails, error)
 }
 
 // Client is an implementation of a satcon client.
