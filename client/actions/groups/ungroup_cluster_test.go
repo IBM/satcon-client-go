@@ -79,7 +79,8 @@ var _ = Describe("UngroupCluster", func() {
 			unGroupClustersResponse groups.UnGroupClustersResponse
 		)
 		BeforeEach(func() {
-			unGroupClustersResponse := groups.UnGroupClustersResponse{
+
+			unGroupClustersResponse = groups.UnGroupClustersResponse{
 				Data: &groups.UnGroupClustersResponseData{
 					Details: &groups.UnGroupClustersResponseDataDetails{
 						Modified: 5,
@@ -115,7 +116,7 @@ var _ = Describe("UngroupCluster", func() {
 
 			It("Bubbles up the error", func() {
 				_, err := c.GroupClusters(orgID, uuid, clusters)
-				Expect(err).To(MatchError("some error"))
+				Expect(err).To(MatchError("some error!"))
 			})
 		})
 		Context("When the response is empty for some reason", func() {
