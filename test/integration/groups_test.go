@@ -170,6 +170,11 @@ var _ = Describe("Groups", func() {
 			_, err = c.Groups.UnGroupClusters(testConfig.OrgID, newGroupDetails.UUID, []string{newClusterDetails.ClusterID})
 			Expect(err).NotTo(HaveOccurred())
 
+			group1, err = c.Groups.GroupByName(testConfig.OrgID, groupName1)
+			Expect(err).NotTo(HaveOccurred())
+			Expect(group1).ToNot(BeNil())
+			Expect(group1.Clusters).To(HaveLen(0))
+
 			// delete cluster
 			delClusterDetails, err := c.Clusters.DeleteClusterByClusterID(testConfig.OrgID, newClusterDetails.ClusterID)
 			Expect(err).NotTo(HaveOccurred())
