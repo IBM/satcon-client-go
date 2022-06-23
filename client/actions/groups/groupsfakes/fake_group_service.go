@@ -93,6 +93,21 @@ type FakeGroupService struct {
 		result1 *groups.RemoveGroupByNameResponseDataDetails
 		result2 error
 	}
+	UnGroupClustersStub        func(string, string, []string) (*groups.UnGroupClustersResponseDataDetails, error)
+	unGroupClustersMutex       sync.RWMutex
+	unGroupClustersArgsForCall []struct {
+		arg1 string
+		arg2 string
+		arg3 []string
+	}
+	unGroupClustersReturns struct {
+		result1 *groups.UnGroupClustersResponseDataDetails
+		result2 error
+	}
+	unGroupClustersReturnsOnCall map[int]struct {
+		result1 *groups.UnGroupClustersResponseDataDetails
+		result2 error
+	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
 }
@@ -492,6 +507,77 @@ func (fake *FakeGroupService) RemoveGroupByNameReturnsOnCall(i int, result1 *gro
 	}{result1, result2}
 }
 
+func (fake *FakeGroupService) UnGroupClusters(arg1 string, arg2 string, arg3 []string) (*groups.UnGroupClustersResponseDataDetails, error) {
+	var arg3Copy []string
+	if arg3 != nil {
+		arg3Copy = make([]string, len(arg3))
+		copy(arg3Copy, arg3)
+	}
+	fake.unGroupClustersMutex.Lock()
+	ret, specificReturn := fake.unGroupClustersReturnsOnCall[len(fake.unGroupClustersArgsForCall)]
+	fake.unGroupClustersArgsForCall = append(fake.unGroupClustersArgsForCall, struct {
+		arg1 string
+		arg2 string
+		arg3 []string
+	}{arg1, arg2, arg3Copy})
+	stub := fake.UnGroupClustersStub
+	fakeReturns := fake.unGroupClustersReturns
+	fake.recordInvocation("UnGroupClusters", []interface{}{arg1, arg2, arg3Copy})
+	fake.unGroupClustersMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeGroupService) UnGroupClustersCallCount() int {
+	fake.unGroupClustersMutex.RLock()
+	defer fake.unGroupClustersMutex.RUnlock()
+	return len(fake.unGroupClustersArgsForCall)
+}
+
+func (fake *FakeGroupService) UnGroupClustersCalls(stub func(string, string, []string) (*groups.UnGroupClustersResponseDataDetails, error)) {
+	fake.unGroupClustersMutex.Lock()
+	defer fake.unGroupClustersMutex.Unlock()
+	fake.UnGroupClustersStub = stub
+}
+
+func (fake *FakeGroupService) UnGroupClustersArgsForCall(i int) (string, string, []string) {
+	fake.unGroupClustersMutex.RLock()
+	defer fake.unGroupClustersMutex.RUnlock()
+	argsForCall := fake.unGroupClustersArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeGroupService) UnGroupClustersReturns(result1 *groups.UnGroupClustersResponseDataDetails, result2 error) {
+	fake.unGroupClustersMutex.Lock()
+	defer fake.unGroupClustersMutex.Unlock()
+	fake.UnGroupClustersStub = nil
+	fake.unGroupClustersReturns = struct {
+		result1 *groups.UnGroupClustersResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeGroupService) UnGroupClustersReturnsOnCall(i int, result1 *groups.UnGroupClustersResponseDataDetails, result2 error) {
+	fake.unGroupClustersMutex.Lock()
+	defer fake.unGroupClustersMutex.Unlock()
+	fake.UnGroupClustersStub = nil
+	if fake.unGroupClustersReturnsOnCall == nil {
+		fake.unGroupClustersReturnsOnCall = make(map[int]struct {
+			result1 *groups.UnGroupClustersResponseDataDetails
+			result2 error
+		})
+	}
+	fake.unGroupClustersReturnsOnCall[i] = struct {
+		result1 *groups.UnGroupClustersResponseDataDetails
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeGroupService) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
@@ -507,6 +593,8 @@ func (fake *FakeGroupService) Invocations() map[string][][]interface{} {
 	defer fake.removeGroupMutex.RUnlock()
 	fake.removeGroupByNameMutex.RLock()
 	defer fake.removeGroupByNameMutex.RUnlock()
+	fake.unGroupClustersMutex.RLock()
+	defer fake.unGroupClustersMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value
