@@ -166,6 +166,10 @@ var _ = Describe("Groups", func() {
 			Expect(group1.Clusters[0].ClusterID).To(Equal(newClusterDetails.ClusterID))
 			Expect(group1.Clusters[0].Name).To(Equal(clusterName))
 
+			//Remove cluster from group
+			_, err = c.Groups.UnGroupClusters(testConfig.OrgID, newGroupDetails.UUID, []string{newClusterDetails.ClusterID})
+			Expect(err).NotTo(HaveOccurred())
+
 			// delete cluster
 			delClusterDetails, err := c.Clusters.DeleteClusterByClusterID(testConfig.OrgID, newClusterDetails.ClusterID)
 			Expect(err).NotTo(HaveOccurred())
