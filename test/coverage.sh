@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Checking code coverage..."
-coverages=($(ginkgo -r -cover client | grep "coverage: " | awk '{print $2}'))
+coverages=($(ginkgo -r -cover client | grep "coverage: " | awk '{print $3}'))
 
 coveragePassedOnce=false
 for i in "${coverages[@]}" ; do
