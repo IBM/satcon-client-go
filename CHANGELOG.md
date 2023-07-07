@@ -1,3 +1,9 @@
+## 0.4.0 07 July 2023
+### New Features
+- Add `UnGroupClusters()` method. (#49) [3580c8b]
+
+### Dependency Upgrades
+- Updated golang-jwt to v4.5 and Go to v1.20 (#52)[56dc8a4]
 ## 0.3.0 16 June 2022
 
 ### **BREAKING CHANGES**
