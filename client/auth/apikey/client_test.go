@@ -1,10 +1,11 @@
 package apikey_test
 
 import (
-	"github.com/IBM/satcon-client-go/client/auth/apikey"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 	"net/http"
+
+	"github.com/IBM/satcon-client-go/client/auth/apikey"
+	. "github.com/onsi/ginkgo/v2"
+	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Client", func() {
