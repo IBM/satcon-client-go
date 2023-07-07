@@ -16,7 +16,7 @@ before_install:
 install: true
 before_script:
   - go mod tidy
-  - go get -u github.com/onsi/ginkgo/ginkgo
+  - go get -u github.com/onsi/ginkgo/ginkgo/v2
   - go get -u github.com/onsi/gomega/...
 script:
   - test/coverage.sh
