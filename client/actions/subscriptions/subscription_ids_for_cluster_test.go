@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/IBM/satcon-client-go/client/actions"
@@ -36,7 +36,7 @@ var _ = Describe("SubscriptionIdsForCluster", func() {
 			Expect(vars.QueryName).To(Equal(QuerySubscriptionIdsForCluster))
 			Expect(vars.OrgID).To(Equal(orgID))
 			Expect(vars.Args).To(Equal(map[string]string{
-				"orgId": "String!",
+				"orgId":     "String!",
 				"clusterId": "String!",
 			}))
 			Expect(vars.Returns).To(ConsistOf(
